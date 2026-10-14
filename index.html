@@ -1,0 +1,3484 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<title>Princess Treatment 👑</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Princess">
+<meta name="theme-color" content="#ffffff">
+<style>
+  :root { color-scheme: light only; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root, [data-theme="pink"] {
+    --pink: #ffb6d5; --pink-deep: #ff7eb3; --pink-soft: #ffe4ef;
+    --lavender: #d8c4f0; --lavender-deep: #b794e0;
+    --gold: #e6b93c; --gold-soft: #ffeeb8;
+    --text: #6b4a5e; --text-soft: #a68a9b;
+    --bg1: #ffe4ef; --bg2: #f3e4ff; --bg3: #e4f0ff;
+    --card-bg: #fff; --card-border: #fff8fc; --modal-bg: #fff;
+    --shadow: 0 8px 24px rgba(255, 126, 179, 0.18);
+    --card-shadow: 0 4px 16px rgba(255,126,179,0.1);
+    --balance-bg: linear-gradient(135deg, #fff 0%, #fff0f7 100%);
+    --emoji-name: "💕"; --emoji-points: "💖";
+    --emoji-tab-today: "🏠"; --emoji-tab-rituals: "🎀"; --emoji-tab-spend: "🎁";
+    --emoji-empty: "🌸"; --emoji-button: "💕";
+    --ok-color: #3ca55c; --ok-bg: #e6ffe9;
+    --err-color: #d66; --err-bg: #ffe0e0;
+    --bday-outline: #e6b93c; --bday-text: #e6b93c; --bday-bg: #ffeeb8;
+  }
+  [data-theme="midnight"] {
+    --pink: #c8a2ff; --pink-deep: #a98aff; --pink-soft: #2d1f4a;
+    --lavender: #8b6fd8; --lavender-deep: #b794f6;
+    --gold: #ffd97d; --gold-soft: #3a2a55;
+    --text: #f0e6ff; --text-soft: #9b8bb8;
+    --bg1: #1a0f2e; --bg2: #241641; --bg3: #2d1b4e;
+    --card-bg: #2a1b47; --card-border: #3d2a5e; --modal-bg: #2a1b47;
+    --shadow: 0 8px 24px rgba(168, 130, 255, 0.25);
+    --card-shadow: 0 4px 16px rgba(168,130,255,0.15);
+    --balance-bg: linear-gradient(135deg, #33214f 0%, #2a1b47 100%);
+    --emoji-name: "🌟"; --emoji-points: "⭐";
+    --emoji-tab-today: "🌃"; --emoji-tab-rituals: "💫"; --emoji-tab-spend: "🌠";
+    --emoji-empty: "🌙"; --emoji-button: "🌟";
+    --ok-color: #8ee0a4; --ok-bg: #1f4a2e;
+    --err-color: #ff8f8f; --err-bg: #4a1f1f;
+    --bday-outline: #ffd97d; --bday-text: #ffd97d; --bday-bg: #3a2a55;
+  }
+  [data-theme="ocean"] {
+    --pink: #8ed4d4; --pink-deep: #4fb8b8; --pink-soft: #dcf5f5;
+    --lavender: #9bc4e2; --lavender-deep: #6ba3cc;
+    --gold: #ffd97d; --gold-soft: #fdf5d8;
+    --text: #2f5560; --text-soft: #7ca0aa;
+    --bg1: #e4f7f7; --bg2: #d8eef5; --bg3: #d5e5f5;
+    --card-bg: #fff; --card-border: #eaf7f7; --modal-bg: #fff;
+    --shadow: 0 8px 24px rgba(79, 184, 184, 0.18);
+    --card-shadow: 0 4px 16px rgba(79,184,184,0.1);
+    --balance-bg: linear-gradient(135deg, #fff 0%, #eaf7f7 100%);
+    --emoji-name: "🌊"; --emoji-points: "🐚";
+    --emoji-tab-today: "🫧"; --emoji-tab-rituals: "🎣"; --emoji-tab-spend: "🦪";
+    --emoji-empty: "🐠"; --emoji-button: "🐚";
+    --ok-color: #3ca55c; --ok-bg: #e6ffe9;
+    --err-color: #d66; --err-bg: #ffe0e0;
+    --bday-outline: #ff8f5e; --bday-text: #e8703a; --bday-bg: #ffe8dd;
+  }
+  [data-theme="summer"] {
+    --pink: #ffb89a; --pink-deep: #ff8f6b; --pink-soft: #ffe6d8;
+    --lavender: #ffd0b3; --lavender-deep: #e8a37b;
+    --gold: #ffb84d; --gold-soft: #ffeecf;
+    --text: #6b3f2e; --text-soft: #b88a72;
+    --bg1: #fff0e4; --bg2: #ffe0cc; --bg3: #ffd5c2;
+    --card-bg: #fffaf5; --card-border: #ffe6d8; --modal-bg: #fffaf5;
+    --shadow: 0 8px 24px rgba(255, 143, 107, 0.2);
+    --card-shadow: 0 4px 16px rgba(255,143,107,0.12);
+    --balance-bg: linear-gradient(135deg, #fffaf5 0%, #ffe6d8 100%);
+    --emoji-name: "🍑"; --emoji-points: "🧡";
+    --emoji-tab-today: "☀️"; --emoji-tab-rituals: "🍹"; --emoji-tab-spend: "🍦";
+    --emoji-empty: "🏖️"; --emoji-button: "🍑";
+    --ok-color: #4fa563; --ok-bg: #e8f5e9;
+    --err-color: #d66; --err-bg: #ffe0e0;
+    --bday-outline: #e8901c; --bday-text: #e8901c; --bday-bg: #ffeecf;
+  }
+  [data-theme="sage"] {
+    --pink: #a8c9a4; --pink-deep: #7ba374; --pink-soft: #e4f0e0;
+    --lavender: #b8d4b3; --lavender-deep: #8eb088;
+    --gold: #d4b96b; --gold-soft: #f5efd8;
+    --text: #3f5540; --text-soft: #88a089;
+    --bg1: #eef5ea; --bg2: #e0eee0; --bg3: #d8e8d8;
+    --card-bg: #fdfefc; --card-border: #eaf4e8; --modal-bg: #fdfefc;
+    --shadow: 0 8px 24px rgba(123, 163, 116, 0.2);
+    --card-shadow: 0 4px 16px rgba(123,163,116,0.1);
+    --balance-bg: linear-gradient(135deg, #fdfefc 0%, #eaf4e8 100%);
+    --emoji-name: "🌿"; --emoji-points: "🍃";
+    --emoji-tab-today: "🌾"; --emoji-tab-rituals: "🌱"; --emoji-tab-spend: "🌻";
+    --emoji-empty: "🕊️"; --emoji-button: "🌿";
+    --ok-color: #3ca55c; --ok-bg: #e6ffe9;
+    --err-color: #d68a5a; --err-bg: #fae5d5;
+    --bday-outline: #c9a029; --bday-text: #c9a029; --bday-bg: #f5efd8;
+  }
+  [data-theme="berry"] {
+    --pink: #d68cb8; --pink-deep: #b85e9b; --pink-soft: #f5dcf0;
+    --lavender: #a888c8; --lavender-deep: #8a68b8;
+    --gold: #ffb8d8; --gold-soft: #ffe8f5;
+    --text: #4d2a4a; --text-soft: #9b7b9b;
+    --bg1: #f5e0ee; --bg2: #ecd5e8; --bg3: #e0d5f0;
+    --card-bg: #fffafc; --card-border: #f5dcf0; --modal-bg: #fffafc;
+    --shadow: 0 8px 24px rgba(184, 94, 155, 0.2);
+    --card-shadow: 0 4px 16px rgba(184,94,155,0.12);
+    --balance-bg: linear-gradient(135deg, #fffafc 0%, #f5dcf0 100%);
+    --emoji-name: "🍇"; --emoji-points: "💜";
+    --emoji-tab-today: "🫐"; --emoji-tab-rituals: "🍓"; --emoji-tab-spend: "🍰";
+    --emoji-empty: "🧺"; --emoji-button: "🍇";
+    --ok-color: #3ca55c; --ok-bg: #e6ffe9;
+    --err-color: #d66; --err-bg: #ffe0e0;
+    --bday-outline: #ffd24d; --bday-text: #c9971c; --bday-bg: #fff5d8;
+  }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: var(--text);
+    padding-bottom: 90px;
+    overflow-x: hidden;
+    transition: background 0.5s, color 0.3s;
+  }
+
+  /* WELCOME */
+  .welcome {
+    position: fixed; inset: 0;
+    background: linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
+    z-index: 500;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 30px; text-align: center;
+    overflow-y: auto;
+    animation: fadeIn 0.6s ease;
+    transition: background 0.5s;
+  }
+  .welcome.hidden { display: none; }
+  .welcome::before, .welcome::after {
+    content: ""; position: absolute; border-radius: 50%; filter: blur(40px);
+    opacity: 0.5; pointer-events: none;
+  }
+  .welcome::before { width: 200px; height: 200px; background: var(--pink); top: 10%; left: -50px; animation: float 6s infinite ease-in-out; }
+  .welcome::after { width: 180px; height: 180px; background: var(--lavender); bottom: 12%; right: -50px; animation: float 7s infinite ease-in-out reverse; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+
+  .welcome-content { position: relative; z-index: 2; max-width: 440px; width: 100%; padding: 20px 0; }
+  .welcome-title {
+    font-family: 'Pacifico', cursive; font-size: 30px; color: var(--pink-deep);
+    text-shadow: 2px 2px 0 var(--card-bg), 0 0 30px rgba(255,126,179,0.4);
+    margin-bottom: 16px; line-height: 1.3;
+  }
+  .welcome-line { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; opacity: 0.9; }
+  .welcome-question { font-size: 15px; font-weight: 700; color: var(--pink-deep); margin: 22px 0 10px; letter-spacing: 0.5px; }
+
+  .name-input {
+    width: 100%; padding: 15px 22px; border-radius: 22px;
+    border: 3px solid var(--pink); background: var(--card-bg);
+    font-family: 'Quicksand', sans-serif; font-size: 16px; font-weight: 700;
+    color: var(--text); text-align: center; outline: none;
+    transition: all 0.25s; box-shadow: 0 8px 24px rgba(255,126,179,0.2);
+  }
+  .name-input::placeholder { color: var(--text-soft); font-weight: 500; }
+  .name-input:focus { border-color: var(--pink-deep); box-shadow: 0 0 0 6px rgba(255,182,213,0.3), 0 8px 24px rgba(255,126,179,0.25); }
+
+  .welcome-btn {
+    margin-top: 16px; width: 100%; padding: 17px;
+    border-radius: 22px; border: none;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff; font-family: 'Quicksand', sans-serif;
+    font-weight: 700; font-size: 16px; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(255,126,179,0.45);
+    transition: all 0.25s;
+  }
+  .welcome-btn:active { transform: scale(0.97); }
+  .welcome-btn:disabled { background: #ccc5; color: var(--text-soft); box-shadow: none; cursor: not-allowed; opacity: 0.7; }
+  .welcome-btn:disabled:active { transform: none; }
+
+  .welcome-import {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--card-border);
+  }
+  .welcome-import-btn {
+    background: none; border: none;
+    font-family: inherit; font-size: 13px; font-weight: 700;
+    color: var(--text-soft);
+    cursor: pointer; transition: all 0.2s;
+    padding: 8px 12px; border-radius: 12px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .welcome-import-btn:hover { color: var(--pink-deep); background: var(--pink-soft); }
+  .welcome-import-btn:active { transform: scale(0.96); }
+
+  .welcome-step { display: none; }
+  .welcome-step.active { display: block; animation: fadeIn 0.4s ease; }
+
+  .theme-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 10px; margin-top: 14px;
+  }
+  .theme-card {
+    background: var(--card-bg);
+    border: 3px solid var(--card-border);
+    border-radius: 20px; padding: 12px 10px 14px;
+    cursor: pointer; text-align: center;
+    transition: all 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+    position: relative; overflow: hidden;
+  }
+  .theme-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--pink);
+    box-shadow: 0 10px 24px rgba(255,126,179,0.25);
+  }
+  .theme-card.selected {
+    border-color: var(--pink-deep);
+    box-shadow: 0 0 0 4px rgba(255,182,213,0.4), 0 10px 24px rgba(255,126,179,0.35);
+    transform: translateY(-3px);
+  }
+  .theme-card.selected::after {
+    content: "✓";
+    position: absolute; top: 6px; right: 8px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff; font-weight: 900; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 8px rgba(255,126,179,0.4);
+  }
+  .theme-emoji { font-size: 22px; margin-bottom: 6px; }
+  .theme-name {
+    font-size: 10px; font-weight: 700;
+    color: var(--text); margin-bottom: 6px;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .theme-palette { display: flex; gap: 3px; justify-content: center; }
+  .theme-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--card-bg);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .app { max-width: 480px; margin: 0 auto; padding: 24px 18px 0; position: relative; z-index: 2; }
+
+  .greeting-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-bottom: 20px;
+  }
+  .greeting { cursor: pointer; user-select: none; transition: all 0.2s; }
+  .greeting:active { transform: scale(0.97); }
+  .greeting-text {
+    font-family: 'Pacifico', cursive; font-size: 26px; color: var(--pink-deep);
+    text-shadow: 2px 2px 0 var(--card-bg), 0 0 20px rgba(255,126,179,0.3);
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 4px 8px; border-radius: 16px; transition: all 0.2s;
+  }
+  .greeting-text:hover { background: var(--card-bg); }
+  .palette-btn {
+    width: 34px; height: 34px; border-radius: 50%; border: none;
+    background: var(--card-bg); color: var(--pink-deep);
+    font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(255,126,179,0.2);
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .palette-btn:active { transform: scale(0.9); }
+  .palette-btn:hover { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: #fff; }
+
+  .balance-card {
+    background: var(--balance-bg);
+    border-radius: 28px; padding: 22px; text-align: center;
+    box-shadow: var(--shadow); border: 2px solid var(--card-bg);
+    margin-bottom: 22px; position: relative; overflow: hidden;
+    transition: background 0.5s;
+  }
+  .balance-card::before {
+    content: ""; position: absolute; top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, var(--pink), transparent 70%);
+    opacity: 0.4; border-radius: 50%;
+  }
+  .balance-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-soft); margin-bottom: 6px; }
+  .balance-value {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; color: var(--pink-deep);
+  }
+  .balance-value .pts-num { font-size: 44px; font-weight: 700; line-height: 1; }
+  .balance-value .pts-emoji { font-size: 22px; line-height: 1; }
+
+  .plan-title {
+    font-family: 'Pacifico', cursive; font-size: 17px; color: var(--pink-deep);
+    margin: 0 0 12px; text-align: center;
+  }
+  .plan-title-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 24px; margin: 0 0 14px; position: relative;
+  }
+  .plan-title-row .plan-title { margin: 0; }
+  .stat-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: none;
+    background: var(--card-bg); color: var(--pink-deep);
+    font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(255,126,179,0.2);
+    transition: all 0.2s;
+  }
+  .stat-btn:active { transform: scale(0.9); }
+  .stat-btn:hover { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: #fff; }
+
+  .bday-note {
+    text-align: center; font-size: 13px; font-weight: 700;
+    color: var(--bday-text); margin-bottom: 14px;
+    padding: 10px 14px; background: var(--bday-bg);
+    border-radius: 16px; border: 2px dashed var(--bday-outline);
+  }
+
+  .backup-note {
+    background: var(--card-bg);
+    border: 2px solid var(--pink-soft);
+    border-radius: 20px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    box-shadow: var(--card-shadow);
+    animation: fadeIn 0.4s ease;
+  }
+  .backup-note-title {
+    font-size: 13px; font-weight: 700; color: var(--pink-deep);
+    margin-bottom: 10px; text-align: center;
+    line-height: 1.4;
+  }
+  .backup-note-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
+  .backup-btn {
+    padding: 7px 12px; border-radius: 12px; border: none;
+    font-family: inherit; font-weight: 700; font-size: 11px;
+    cursor: pointer; transition: all 0.2s;
+    background: var(--pink-soft); color: var(--pink-deep);
+  }
+  .backup-btn:active { transform: scale(0.94); }
+  .backup-btn.save {
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff; box-shadow: 0 3px 10px rgba(255,126,179,0.35);
+    flex: 1;
+  }
+  .backup-btn.mini { font-size: 10px; padding: 6px 10px; }
+
+  .tabs {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--card-bg); opacity: 0.97;
+    backdrop-filter: blur(12px);
+    border-top: 2px solid var(--card-border);
+    padding: 10px 0 max(10px, env(safe-area-inset-bottom));
+    z-index: 100; box-shadow: 0 -4px 20px rgba(255,126,179,0.12);
+    transition: background 0.5s;
+  }
+  .tabs-inner { max-width: 480px; width: 100%; margin: 0 auto; display: flex; justify-content: space-around; }
+  .tab {
+    flex: 1; text-align: center; padding: 8px 2px;
+    cursor: pointer; border: none; background: none;
+    color: var(--text-soft); font-family: inherit;
+    font-size: 10px; font-weight: 600;
+    transition: all 0.25s; border-radius: 16px;
+  }
+  .tab .icon { font-size: 21px; display: block; margin-bottom: 2px; filter: grayscale(0.6); transition: all 0.25s; }
+  .tab.active { color: var(--pink-deep); }
+  .tab.active .icon { filter: none; transform: scale(1.15); }
+
+  .tab-content { display: none; animation: fadeIn 0.35s ease; }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Card wrapper */
+  .card {
+    background: var(--card-bg); border-radius: 22px; padding: 16px 18px;
+    margin-bottom: 12px;
+    box-shadow: var(--card-shadow);
+    border: 2px solid var(--card-border);
+    display: flex; align-items: center; gap: 12px;
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;
+    touch-action: pan-y;
+  }
+  .card.dragging {
+    opacity: 0.95; box-shadow: 0 20px 40px rgba(255,126,179,0.4);
+    transform: scale(1.03); z-index: 1000; cursor: grabbing;
+    touch-action: none;
+  }
+  .card.failed {
+    opacity: 0.65;
+  }
+  .card.failed .habit-name {
+    text-decoration: line-through;
+    text-decoration-color: var(--err-color);
+  }
+  .card.enter { animation: cardIn 0.35s cubic-bezier(0.34, 1.4, 0.64, 1); }
+  @keyframes cardIn { from{opacity:0;transform:translateY(-8px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+  /* Swipe */
+  .swipe-wrapper {
+    position: relative;
+    margin-bottom: 12px;
+    touch-action: pan-y;
+  }
+  .swipe-wrapper .card { margin-bottom: 0; }
+  .swipe-delete-btn {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 100px;
+    background: var(--err-color);
+    color: #fff;
+    border: none;
+    border-radius: 22px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.15s;
+    touch-action: pan-y;
+  }
+  .swipe-delete-btn.visible { opacity: 1; }
+  .swipe-wrapper .card { position: relative; z-index: 2; will-change: transform; }
+  .swipe-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    pointer-events: none;
+    z-index: 3;
+    transition: background 0.1s;
+  }
+
+  /* Drag placeholder */
+  .drag-placeholder {
+    height: 60px;
+    margin-bottom: 12px;
+    background: var(--pink-soft);
+    border-radius: 22px;
+    opacity: 0.5;
+    border: 2px dashed var(--pink);
+  }
+  .card.removing {
+    animation: cardRemove 0.35s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+  }
+  @keyframes cardRemove {
+    to { opacity: 0; transform: translateX(-120%) scale(0.95); max-height: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; }
+  }
+
+  .habit-info { flex: 1; min-width: 0; }
+  .habit-name {
+    font-weight: 700; font-size: 15px; color: var(--text);
+    margin-bottom: 3px; word-break: break-word;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .done-badge {
+    font-size: 12px; background: var(--ok-bg); color: var(--ok-color);
+    padding: 2px 8px; border-radius: 10px; font-weight: 700; white-space: nowrap;
+  }
+  .habit-meta { font-size: 11px; color: var(--text-soft); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .badge { background: var(--pink-soft); color: var(--pink-deep); padding: 2px 8px; border-radius: 10px; font-weight: 600; font-size: 10px; }
+  .badge.minus { background: var(--err-bg); color: var(--err-color); }
+  .badge.freq { background: var(--lavender); opacity: 0.4; color: var(--text); }
+  .badge.time { background: var(--gold-soft); color: var(--gold); }
+  .badge.ok { background: var(--ok-bg); color: var(--ok-color); }
+  .badge.err { background: var(--err-bg); color: var(--err-color); }
+
+  .check {
+    width: 44px; height: 44px; min-width: 44px;
+    border-radius: 50%; border: 3px solid var(--pink);
+    background: var(--card-bg); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: transparent; user-select: none;
+  }
+  .check:hover { border-color: var(--pink-deep); }
+  .check.done {
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    border-color: var(--pink-deep); color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(255,126,179,0.5);
+  }
+
+  .fail-btn {
+    width: 38px; height: 38px; min-width: 38px;
+    border-radius: 50%; border: 2px solid var(--err-color);
+    background: var(--card-bg); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; color: var(--err-color);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .fail-btn:hover { background: var(--err-bg); }
+  .fail-btn.active {
+    background: var(--err-color);
+    border-color: var(--err-color);
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(214,102,102,0.4);
+  }
+
+  .counter { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--pink-deep); font-size: 14px; }
+  .counter-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 2px solid var(--pink); background: var(--card-bg);
+    color: var(--pink-deep); font-size: 18px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .counter-btn:active { transform: scale(0.9); }
+  .counter-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .edit-btn {
+    width: 36px; height: 36px; min-width: 36px;
+    border-radius: 50%; border: none;
+    background: var(--pink-soft); color: var(--pink-deep);
+    font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .edit-btn:active { transform: scale(0.9); }
+
+  .num-input {
+    width: 72px; padding: 8px 10px; border-radius: 12px;
+    border: 2px solid var(--pink-soft); background: var(--card-bg);
+    font-family: inherit; font-size: 14px; font-weight: 700;
+    color: var(--text); text-align: center; outline: none;
+    transition: all 0.2s;
+  }
+  .num-input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(255,182,213,0.2); }
+  .num-input.err { border-color: var(--err-color); }
+  .num-input.ok { border-color: var(--ok-color); }
+  .num-save {
+    width: 36px; height: 36px; border-radius: 50%; border: none;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(255,126,179,0.35);
+    transition: all 0.2s; font-family: inherit;
+  }
+  .num-save:active { transform: scale(0.92); }
+
+  /* Drag handle */
+  .drag-handle {
+    width: 32px;
+    min-width: 32px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--text-soft);
+    opacity: 0.55;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    border-radius: 8px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .drag-handle:hover { opacity: 0.9; background: var(--pink-soft); }
+  .drag-handle:active { opacity: 1; background: var(--pink-soft); }
+
+  .add-btn {
+    width: 100%; padding: 16px; border-radius: 20px;
+    border: 2px dashed var(--pink); background: transparent;
+    color: var(--pink-deep); font-family: inherit; font-weight: 700; font-size: 14px;
+    cursor: pointer; transition: all 0.25s; margin-top: 6px;
+  }
+  .add-btn:hover { background: var(--card-bg); border-style: solid; box-shadow: var(--shadow); }
+  .add-btn:active { transform: scale(0.98); }
+
+  .templates-btn {
+    width: 100%; padding: 14px; border-radius: 20px;
+    border: 2px dashed var(--lavender-deep); background: transparent;
+    color: var(--lavender-deep); font-family: inherit; font-weight: 700; font-size: 13px;
+    cursor: pointer; transition: all 0.25s; margin-top: 6px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .templates-btn:hover { background: var(--card-bg); border-style: solid; }
+  .templates-btn:active { transform: scale(0.98); }
+
+  .empty { text-align: center; padding: 30px 20px; color: var(--text-soft); font-size: 14px; }
+  .empty .emoji { font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.7; }
+
+  .section-title {
+    font-family: 'Pacifico', cursive; font-size: 18px; color: var(--pink-deep);
+    margin: 20px 0 12px; display: flex; align-items: center; justify-content: center;
+    gap: 8px; text-align: center;
+  }
+
+  .progress-bar { height: 6px; background: var(--pink-soft); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pink), var(--lavender-deep)); border-radius: 3px; transition: width 0.4s ease; }
+
+  .reward-price { font-weight: 700; color: var(--lavender-deep); font-size: 15px; white-space: nowrap; }
+  .buy-btn {
+    padding: 8px 14px; border-radius: 14px; border: none;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff; font-family: inherit; font-weight: 700; font-size: 12px;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(255,126,179,0.35);
+  }
+  .buy-btn:active { transform: scale(0.95); }
+  .buy-btn:disabled { background: #ccc5; color: var(--text-soft); box-shadow: none; cursor: not-allowed; }
+
+  .calendar {
+    background: var(--card-bg); border-radius: 24px; padding: 18px;
+    box-shadow: var(--shadow); border: 2px solid var(--card-border); margin-bottom: 20px;
+  }
+  .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .cal-month { font-family: 'Pacifico', cursive; font-size: 18px; color: var(--pink-deep); }
+  .cal-nav { display: flex; gap: 6px; }
+  .cal-nav button {
+    width: 32px; height: 32px; border-radius: 50%; border: none;
+    background: var(--pink-soft); color: var(--pink-deep);
+    font-size: 16px; cursor: pointer; transition: all 0.2s; font-family: inherit;
+  }
+  .cal-nav button:active { transform: scale(0.9); }
+
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-weekday { text-align: center; font-size: 11px; font-weight: 700; color: var(--text-soft); padding: 6px 0; text-transform: uppercase; }
+  .cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; position: relative; color: var(--text);
+  }
+  .cal-day.empty-day { cursor: default; }
+  .cal-day:not(.empty-day):hover { background: var(--pink-soft); }
+  .cal-day.past { opacity: 0.45; }
+  .cal-day.today {
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff; box-shadow: 0 4px 12px rgba(255,126,179,0.5);
+  }
+  .cal-day.selected { outline: 3px solid var(--lavender-deep); outline-offset: 1px; }
+  .cal-day.birthday { outline: 3px solid var(--bday-outline); outline-offset: 1px; background: var(--bday-bg); color: var(--bday-text); }
+  .cal-day.today.birthday {
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff; outline: 3px solid var(--bday-outline); outline-offset: 1px;
+  }
+  .cal-day .dot { position: absolute; bottom: 3px; width: 5px; height: 5px; border-radius: 50%; background: var(--lavender-deep); }
+  .cal-day.today .dot { background: #fff; }
+  .cal-day .cake { position: absolute; top: -2px; right: -2px; font-size: 10px; }
+
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(107, 74, 94, 0.4);
+    backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 200; padding: 20px; animation: fadeIn 0.2s;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--modal-bg); width: 100%; max-width: 440px;
+    border-radius: 28px; padding: 24px 20px;
+    max-height: 90vh; overflow-y: auto;
+    animation: popIn 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+    color: var(--text);
+  }
+  @keyframes popIn { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+
+  .modal-title {
+    font-family: 'Pacifico', cursive; font-size: 22px;
+    color: var(--pink-deep); margin-bottom: 18px; text-align: center;
+  }
+
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block; font-size: 12px; font-weight: 700;
+    color: var(--text-soft); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 6px; padding-left: 4px;
+  }
+  .field input, .field select {
+    width: 100%; padding: 14px 16px; border-radius: 16px;
+    border: 2px solid var(--pink-soft); background: var(--card-bg);
+    font-family: inherit; font-size: 15px; color: var(--text);
+    font-weight: 600; transition: all 0.2s; outline: none;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 4px rgba(255,182,213,0.2);
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip {
+    padding: 8px 14px; border-radius: 14px;
+    border: 2px solid var(--pink-soft); background: var(--card-bg);
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    color: var(--text-soft); cursor: pointer; transition: all 0.2s;
+  }
+  .chip.active { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: #fff; border-color: var(--pink-deep); }
+  .chip:active { transform: scale(0.95); }
+  .chip.time.active { background: linear-gradient(135deg, #ffd88a, #e6b93c); border-color: #e6b93c; color: #fff; }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+  .btn { flex: 1; padding: 15px; border-radius: 18px; border: none; font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: #fff; box-shadow: 0 6px 18px rgba(255,126,179,0.4); }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-secondary { background: var(--pink-soft); color: var(--pink-deep); }
+  .btn-danger { background: var(--err-bg); color: var(--err-color); flex: 0 0 auto; padding: 15px 20px; }
+
+  .history-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px; background: var(--pink-soft); opacity: 0.5;
+    border-radius: 16px; margin-bottom: 8px; font-size: 13px;
+  }
+  .history-item .name { font-weight: 600; color: var(--text); }
+  .history-item .date { font-size: 11px; color: var(--text-soft); }
+  .history-item .cost { color: var(--pink-deep); font-weight: 700; white-space: nowrap; }
+
+  .toast {
+    position: fixed; top: 20px; left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff; padding: 12px 22px; border-radius: 20px;
+    font-weight: 700; font-size: 14px;
+    box-shadow: 0 8px 24px rgba(255,126,179,0.5);
+    z-index: 700;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .gift-overlay {
+    position: fixed; inset: 0;
+    background: rgba(107, 74, 94, 0.5);
+    backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 800; padding: 20px; animation: fadeIn 0.3s;
+  }
+  .gift-overlay.active { display: flex; }
+  .gift-modal {
+    background: var(--balance-bg);
+    border-radius: 32px; padding: 32px 24px 26px;
+    max-width: 400px; width: 100%; text-align: center;
+    box-shadow: 0 20px 60px rgba(255,126,179,0.4);
+    border: 3px solid var(--card-bg);
+    position: relative; overflow: hidden;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.5, 0.64, 1);
+  }
+  .gift-modal::before { content: "🎀"; position: absolute; top: 10px; left: 10px; font-size: 60px; opacity: 0.15; transform: rotate(-20deg); }
+  .gift-modal::after { content: "👑"; position: absolute; bottom: -10px; right: 10px; font-size: 80px; opacity: 0.12; transform: rotate(15deg); }
+  .gift-emoji { font-size: 56px; margin-bottom: 10px; animation: bounce 1.6s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .gift-title { font-family: 'Pacifico', cursive; font-size: 24px; color: var(--pink-deep); margin-bottom: 12px; line-height: 1.3; }
+  .gift-text { font-size: 15px; color: var(--text); font-weight: 600; margin-bottom: 22px; line-height: 1.5; }
+  .gift-btn {
+    padding: 16px 32px; border-radius: 22px; border: none;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff; font-family: inherit; font-weight: 700; font-size: 20px;
+    cursor: pointer; box-shadow: 0 10px 28px rgba(255,126,179,0.5);
+    transition: all 0.25s; position: relative; z-index: 2;
+  }
+  .gift-btn:active { transform: scale(0.95); }
+  .gift-btn:hover { transform: scale(1.03); }
+  .gift-btn:disabled { background: #ccc5; color: var(--text-soft); box-shadow: none; cursor: default; transform: none; }
+
+  .stat-period {
+    display: flex; gap: 6px; margin-bottom: 18px;
+    background: var(--pink-soft); padding: 5px; border-radius: 18px;
+  }
+  .stat-period button {
+    flex: 1; padding: 10px 6px; border-radius: 14px; border: none;
+    background: transparent; color: var(--pink-deep);
+    font-family: inherit; font-weight: 700; font-size: 12px;
+    cursor: pointer; transition: all 0.25s;
+  }
+  .stat-period button.active {
+    background: var(--card-bg); color: var(--pink-deep);
+    box-shadow: 0 4px 12px rgba(255,126,179,0.25);
+  }
+
+  .stat-card {
+    background: var(--pink-soft); opacity: 0.5;
+    border-radius: 20px;
+    padding: 14px 16px; margin-bottom: 10px;
+    border: 2px solid var(--card-border);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .stat-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .stat-name { font-weight: 700; font-size: 14px; color: var(--text); word-break: break-word; flex: 1; }
+  .stat-pct {
+    font-family: 'Pacifico', cursive; font-size: 20px;
+    color: var(--pink-deep); white-space: nowrap;
+  }
+  .stat-pct.low { color: var(--pink-deep); }
+  .stat-pct.mid { color: var(--lavender-deep); }
+  .stat-pct.high { color: var(--ok-color); }
+
+  .stat-line { font-size: 12px; color: var(--text-soft); font-weight: 600; display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat-line strong { color: var(--text); }
+  .stat-bar { height: 5px; background: var(--card-bg); border-radius: 3px; overflow: hidden; }
+  .stat-bar-fill { height: 100%; background: linear-gradient(90deg, var(--pink), var(--pink-deep)); border-radius: 3px; transition: width 0.5s; }
+
+  .stat-empty { text-align: center; padding: 30px 15px; color: var(--text-soft); font-size: 14px; }
+  .stat-empty .emoji { font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.7; }
+
+  .backup-footer {
+    margin-top: 22px;
+    display: flex; justify-content: center;
+    gap: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--card-border);
+  }
+  .backup-link {
+    background: none; border: none;
+    font-family: inherit; font-size: 11px; font-weight: 600;
+    color: var(--text-soft);
+    cursor: pointer; transition: all 0.2s;
+    padding: 4px 6px; border-radius: 8px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .backup-link:hover { color: var(--pink-deep); background: var(--pink-soft); }
+  .backup-link:active { transform: scale(0.95); }
+
+  /* Templates */
+  .tabs-tpl {
+    display: flex; gap: 6px; margin-bottom: 18px;
+    background: var(--pink-soft); padding: 5px; border-radius: 18px;
+  }
+  .tabs-tpl button {
+    flex: 1; padding: 10px 6px; border-radius: 14px; border: none;
+    background: transparent; color: var(--pink-deep);
+    font-family: inherit; font-weight: 700; font-size: 12px;
+    cursor: pointer; transition: all 0.25s;
+  }
+  .tabs-tpl button.active {
+    background: var(--card-bg); color: var(--pink-deep);
+    box-shadow: 0 4px 12px rgba(255,126,179,0.25);
+  }
+
+  .tpl-card {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  }
+  .tpl-card:hover { border-color: var(--lavender-deep); box-shadow: 0 4px 14px rgba(183,148,224,0.2); }
+  .tpl-clickable { cursor: pointer; flex: 1; min-width: 0; }
+  .tpl-clickable:active { transform: scale(0.99); }
+  .tpl-info { flex: 1; min-width: 0; }
+  .tpl-name { font-weight: 700; font-size: 15px; color: var(--text); margin-bottom: 3px; }
+  .tpl-count { font-size: 11px; color: var(--text-soft); font-weight: 600; }
+  .tpl-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .tpl-mini-btn {
+    width: 32px; height: 32px; border-radius: 50%; border: none;
+    background: var(--pink-soft); color: var(--pink-deep);
+    font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .tpl-mini-btn:active { transform: scale(0.9); }
+
+  .tpl-hint {
+    text-align: center; font-size: 12px; color: var(--text-soft);
+    margin-top: 12px; font-weight: 600;
+  }
+
+  .tpl-footer { margin-top: 18px; display: flex; flex-direction: column; gap: 8px; }
+  .tpl-action-btn {
+    width: 100%; padding: 13px; border-radius: 16px;
+    border: 2px dashed var(--pink); background: transparent;
+    color: var(--pink-deep); font-family: inherit;
+    font-weight: 700; font-size: 13px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tpl-action-btn:hover { background: var(--pink-soft); border-style: solid; }
+  .tpl-action-btn:active { transform: scale(0.98); }
+
+  .tpl-checklist { max-height: 50vh; overflow-y: auto; margin: 6px 0 14px; }
+  .tpl-check-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border-radius: 14px;
+    background: var(--pink-soft); margin-bottom: 6px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .tpl-check-item:active { transform: scale(0.99); }
+  .tpl-checkbox {
+    width: 24px; height: 24px; min-width: 24px;
+    border-radius: 8px; border: 2px solid var(--pink);
+    background: var(--card-bg); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: transparent;
+    transition: all 0.2s;
+  }
+  .tpl-checkbox.checked {
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    border-color: var(--pink-deep); color: #fff;
+  }
+  .tpl-check-name { font-weight: 700; font-size: 14px; color: var(--text); flex: 1; word-break: break-word; }
+  .tpl-check-pts { font-size: 11px; color: var(--pink-deep); font-weight: 700; white-space: nowrap; }
+
+  .tpl-ritual-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px; border-radius: 16px;
+    background: var(--pink-soft); margin-bottom: 8px;
+  }
+  .tpl-ritual-row .habit-info { flex: 1; min-width: 0; }
+</style>
+</head>
+<body>
+
+<div class="welcome hidden" id="welcomeScreen">
+  <div class="welcome-content">
+    <div class="welcome-step active" id="step1">
+      <div class="welcome-title">Здравствуй, принцесса</div>
+      <div class="welcome-line">Ты на правильном пути.</div>
+      <div class="welcome-question">Как твоё имя?</div>
+      <input type="text" class="name-input" id="welcomeNameInput" placeholder="Введи имя..." maxlength="20" autocomplete="off">
+      <div class="welcome-question">Когда у тебя день рождения?</div>
+      <input type="date" class="name-input" id="welcomeBdayInput" autocomplete="off">
+      <button class="welcome-btn" id="welcomeBtn1" onclick="goToThemeStep()" disabled>Дальше <span class="btn-emoji">💕</span></button>
+      <div class="welcome-import">
+        <button class="welcome-import-btn" onclick="triggerWelcomeImport()">
+          <span>📂</span><span>Загрузить сохранённые данные</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="welcome-step" id="step2">
+      <div class="welcome-title">Выбери свою тему</div>
+      <div class="welcome-line">Как ты хочешь себя чувствовать?</div>
+      <div class="theme-grid" id="themeGrid"></div>
+      <button class="welcome-btn" onclick="saveName()">Продолжить <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="welcomeImportFile" accept=".json,application/json" style="display:none" onchange="handleWelcomeImport(event)">
+
+<div class="app">
+  <div class="greeting-row">
+    <div class="greeting" id="greetingWrap">
+      <div class="greeting-text" id="greetingText" onclick="editName()">Имя <span id="greetingEmoji">💕</span></div>
+      <div class="greeting-hint">нажми, чтобы изменить</div>
+    </div>
+    <button class="palette-btn" onclick="openThemeModal()" title="Тема">🎨</button>
+  </div>
+
+  <div class="balance-card">
+    <div class="balance-label">Твои баллы</div>
+    <div class="balance-value" id="balanceValue">
+      <span class="pts-num">0</span>
+      <span class="pts-emoji" id="balanceEmoji">💖</span>
+    </div>
+  </div>
+
+  <div id="backupReminder"></div>
+
+  <div class="tab-content active" id="tab-today">
+    <div class="plan-title">Вот твой план на сегодня</div>
+    <div id="todayBdayNote"></div>
+    <div id="todayList"></div>
+    <button class="add-btn" onclick="openHabitModal()">+ Добавить новый ритуал</button>
+  </div>
+
+  <div class="tab-content" id="tab-rituals">
+    <div class="plan-title-row">
+      <div class="plan-title">Твои ритуалы ✨</div>
+      <button class="stat-btn" onclick="openStats()" title="Статистика">📊</button>
+    </div>
+    <div id="ritualsList"></div>
+    <button class="templates-btn" onclick="openTemplatesModal()"><span>📋</span><span>Шаблоны</span></button>
+    <button class="add-btn" onclick="openHabitModal()">+ Добавить новый ритуал</button>
+  </div>
+
+  <div class="tab-content" id="tab-spend">
+    <div id="rewardList"></div>
+    <button class="add-btn" onclick="openRewardModal()">+ Добавить награду</button>
+    <div class="section-title" id="historyTitle" style="display:none;">📜 История покупок</div>
+    <div id="historyList"></div>
+  </div>
+
+  <div class="tab-content" id="tab-calendar">
+    <div class="calendar">
+      <div class="cal-header">
+        <button onclick="changeMonth(-1)" style="width:32px;height:32px;border-radius:50%;border:none;background:var(--pink-soft);color:var(--pink-deep);font-size:16px;cursor:pointer;">‹</button>
+        <div class="cal-month" id="calMonth"></div>
+        <button onclick="changeMonth(1)" style="width:32px;height:32px;border-radius:50%;border:none;background:var(--pink-soft);color:var(--pink-deep);font-size:16px;cursor:pointer;">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="section-title" id="calDayTitle"></div>
+    <div id="calDayList"></div>
+    <div id="calAddBtn"></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab active" data-tab="today" onclick="switchTab('today')"><span class="icon" id="tabIconToday">🏠</span>Сегодня</button>
+    <button class="tab" data-tab="rituals" onclick="switchTab('rituals')"><span class="icon" id="tabIconRituals">🎀</span>Ритуалы</button>
+    <button class="tab" data-tab="spend" onclick="switchTab('spend')"><span class="icon" id="tabIconSpend">🎁</span>Потратить</button>
+    <button class="tab" data-tab="calendar" onclick="switchTab('calendar')"><span class="icon">📅</span>Календарь</button>
+  </div>
+</div>
+
+<!-- Name+Bday modal -->
+<div class="modal-overlay" id="nameModal">
+  <div class="modal">
+    <div class="modal-title">Твои данные 🎀</div>
+    <div class="field">
+      <label>Имя</label>
+      <input type="text" id="nameInput" maxlength="20" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Дата рождения</label>
+      <input type="date" id="bdayInput">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('nameModal')">Отмена</button>
+      <button class="btn btn-primary" onclick="saveNameModal()">Сохранить <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Habit modal -->
+<div class="modal-overlay" id="habitModal">
+  <div class="modal">
+    <div class="modal-title" id="habitModalTitle">Новый ритуал 🎀</div>
+    <input type="hidden" id="habitId">
+    <div class="field">
+      <label>Название</label>
+      <input type="text" id="habitName" placeholder="Почистить зубы утром" maxlength="60">
+    </div>
+    <div class="field">
+      <label>Тип ритуала</label>
+      <select id="habitType" onchange="onTypeChange()">
+        <option value="check">Обычный (галочка / счётчик)</option>
+        <option value="numeric">Числовой (не более / не менее)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Метка времени (необязательно)</label>
+      <div class="chips" id="timeLabelChips"></div>
+      <input type="text" id="habitCustomTime" placeholder="Своё время (например, 14:00)" maxlength="20" style="display:none;margin-top:8px;">
+    </div>
+    <div class="field">
+      <label>Баллы за выполнение</label>
+      <input type="number" id="habitPoints" placeholder="10" min="1" value="10">
+    </div>
+    <div id="numericFields" style="display:none;">
+      <div class="field">
+        <label>Условие</label>
+        <select id="habitNumericOp">
+          <option value="max">Не более</option>
+          <option value="min">Не менее</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Целевое число</label>
+        <input type="number" id="habitNumericTarget" value="1800" min="0">
+      </div>
+      <div class="field">
+        <label>Единица (необязательно)</label>
+        <input type="text" id="habitNumericUnit" placeholder="ккал, шагов..." maxlength="10">
+      </div>
+    </div>
+    <div id="regularFields">
+      <div class="field">
+        <label>Периодичность</label>
+        <select id="habitFreq" onchange="onFreqChange()">
+          <option value="daily">1 раз в день</option>
+          <option value="multi">Несколько раз в день</option>
+          <option value="weekly">Каждую неделю</option>
+          <option value="monthly">Каждый месяц</option>
+          <option value="once">Не повторять (один раз)</option>
+        </select>
+      </div>
+      <div class="field" id="multiField" style="display:none;">
+        <label>Сколько раз в день</label>
+        <input type="number" id="habitMulti" value="2" min="2" max="20" oninput="onMultiInput()">
+        <div class="chips" id="multiPresets" style="margin-top:10px;"></div>
+      </div>
+      <div class="field" id="weeklyField" style="display:none;">
+        <label>Дни недели</label>
+        <div class="chips" id="weekdaysChips"></div>
+      </div>
+      <div class="field" id="monthlyField" style="display:none;">
+        <label>Число месяца</label>
+        <input type="number" id="habitMonthlyDay" min="1" max="31" value="1">
+      </div>
+      <div class="field" id="onceField" style="display:none;">
+        <label>Дата</label>
+        <input type="date" id="habitOnceDate">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="habitDeleteBtn" onclick="deleteHabit()" style="display:none;">🗑</button>
+      <button class="btn btn-secondary" onclick="closeModal('habitModal')">Отмена</button>
+      <button class="btn btn-primary" onclick="saveHabit()">Сохранить <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Reward modal -->
+<div class="modal-overlay" id="rewardModal">
+  <div class="modal">
+    <div class="modal-title" id="rewardModalTitle">Новая награда 🎁</div>
+    <input type="hidden" id="rewardId">
+    <div class="field">
+      <label>Название</label>
+      <input type="text" id="rewardName" placeholder="Купить новую помаду" maxlength="60">
+    </div>
+    <div class="field">
+      <label>Цена в баллах</label>
+      <input type="number" id="rewardPrice" placeholder="200" min="1" value="100">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="rewardDeleteBtn" onclick="deleteReward()" style="display:none;">🗑</button>
+      <button class="btn btn-secondary" onclick="closeModal('rewardModal')">Отмена</button>
+      <button class="btn btn-primary" onclick="saveReward()">Сохранить <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Stats modal -->
+<div class="modal-overlay" id="statsModal">
+  <div class="modal">
+    <div class="modal-title">Статистика 📊</div>
+    <div class="stat-period" id="statPeriod">
+      <button data-period="all" class="active" onclick="setStatPeriod('all')">Всё время</button>
+      <button data-period="month" onclick="setStatPeriod('month')">Месяц</button>
+      <button data-period="week" onclick="setStatPeriod('week')">Неделя</button>
+    </div>
+    <div id="statsList"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('statsModal')">Закрыть <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Theme modal -->
+<div class="modal-overlay" id="themeModal">
+  <div class="modal">
+    <div class="modal-title">Выбери свою тему 🎨</div>
+    <div class="theme-grid" id="themeGridModal"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('themeModal')">Готово <span class="btn-emoji">💕</span></button>
+    </div>
+    <div class="backup-footer">
+      <button class="backup-link" onclick="exportData()">
+        <span>💾</span><span>Сохранить данные</span>
+      </button>
+      <button class="backup-link" onclick="importData()">
+        <span>📂</span><span>Загрузить данные</span>
+      </button>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="handleImportFile(event)">
+  </div>
+</div>
+
+<!-- Templates main modal -->
+<div class="modal-overlay" id="templatesModal">
+  <div class="modal">
+    <div class="modal-title">Шаблоны</div>
+    <div class="tabs-tpl" id="tplTabs">
+      <button data-tpltab="preset" class="active" onclick="setTplTab('preset')">Готовые</button>
+      <button data-tpltab="custom" onclick="setTplTab('custom')">Мои</button>
+    </div>
+    <div id="tplList"></div>
+    <div class="tpl-footer">
+      <button class="tpl-action-btn" onclick="saveCurrentAsTemplate()">+ Сохранить текущие ритуалы как шаблон</button>
+      <button class="tpl-action-btn" onclick="createTemplateFromScratch()">+ Создать шаблон с нуля</button>
+    </div>
+    <div class="modal-actions" style="margin-top:14px;">
+      <button class="btn btn-secondary" onclick="closeModal('templatesModal')">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- Template preview -->
+<div class="modal-overlay" id="tplPreviewModal">
+  <div class="modal">
+    <div class="modal-title" id="tplPreviewTitle">Добавить ритуалы</div>
+    <div class="tpl-checklist" id="tplChecklist"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('tplPreviewModal')">Отмена</button>
+      <button class="btn btn-primary" onclick="addSelectedFromTemplate()">Добавить <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Template name modal -->
+<div class="modal-overlay" id="tplNameModal">
+  <div class="modal">
+    <div class="modal-title" id="tplNameTitle">Название шаблона</div>
+    <div class="field">
+      <label>Название</label>
+      <input type="text" id="tplNameInput" placeholder="Например, Моя утренняя рутина" maxlength="60">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('tplNameModal')">Отмена</button>
+      <button class="btn btn-primary" onclick="confirmTplName()">Сохранить <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Template editor modal -->
+<div class="modal-overlay" id="tplEditModal">
+  <div class="modal">
+    <div class="modal-title" id="tplEditTitle">Шаблон</div>
+    <div id="tplEditList" style="max-height:50vh;overflow-y:auto;"></div>
+    <button class="tpl-action-btn" onclick="addRitualToCurrentTemplate()" style="margin-top:14px;">+ Добавить ритуал</button>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeTplEditor()">Отмена</button>
+      <button class="btn btn-primary" onclick="saveTplEditor()">Сохранить <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- 🎂 День рождения -->
+<div class="gift-overlay" id="bdayModal">
+  <div class="gift-modal">
+    <div class="gift-emoji">🎂</div>
+    <div class="gift-title">С днём рождения, принцесса!</div>
+    <div class="gift-text">У меня есть подарок для тебя</div>
+    <button class="gift-btn" id="bdayBtn" onclick="claimBirthdayGift()">1000 <span id="bdayEmoji">💖</span></button>
+  </div>
+</div>
+
+<!-- 🎁 Подарок за регистрацию -->
+<div class="gift-overlay" id="welcomeGiftModal">
+  <div class="gift-modal">
+    <div class="gift-emoji">🎁</div>
+    <div class="gift-title">Добро пожаловать!</div>
+    <div class="gift-text">Вот твой первый подарок</div>
+    <button class="gift-btn" id="welcomeGiftBtn" onclick="claimWelcomeGift()">100 <span id="welcomeGiftEmoji">💖</span></button>
+  </div>
+</div>
+
+<!-- 💫 Подарок за возвращение -->
+<div class="gift-overlay" id="returnGiftModal">
+  <div class="gift-modal">
+    <div class="gift-emoji">💫</div>
+    <div class="gift-title">С возвращением!</div>
+    <div class="gift-text" style="margin-bottom:22px;">&nbsp;</div>
+    <button class="gift-btn" id="returnGiftBtn" onclick="claimReturnGift()">100 <span id="returnGiftEmoji">💖</span></button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ========== PRESET TEMPLATES ========== */
+const PRESET_TEMPLATES = [
+  {
+    id: 'preset_morning',
+    name: 'Утренний набор',
+    rituals: [
+      { name: 'Почистить зубы утром', points: 1, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Утро' },
+      { name: 'Умыться и уход за кожей', points: 3, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Утро' },
+      { name: 'Выпить стакан воды', points: 1, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Утро' },
+      { name: 'Заправить постель', points: 2, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Утро' },
+      { name: 'Позавтракать', points: 2, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Утро' }
+    ]
+  },
+  {
+    id: 'preset_evening',
+    name: 'Вечерний набор',
+    rituals: [
+      { name: 'Уход за кожей вечером', points: 3, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Вечер' },
+      { name: 'Почистить зубы вечером', points: 1, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Вечер' },
+      { name: 'Принять душ', points: 2, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Вечер' },
+      { name: 'Убрать телефон за час до сна', points: 5, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Вечер' },
+      { name: 'Лечь спать до 23:00', points: 10, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Ночь' }
+    ]
+  }
+];
+
+/* ========== THEMES ========== */
+const THEMES = [
+  { id: 'pink',     emoji: '🌸', name: 'Princess Pink',     colors: ['#ffb6d5','#ff7eb3','#d8c4f0','#ffe4ef'] },
+  { id: 'midnight', emoji: '🌙', name: 'Midnight Princess', colors: ['#1a0f2e','#a98aff','#8b6fd8','#ffd97d'] },
+  { id: 'ocean',    emoji: '🌊', name: 'Ocean Pearl',       colors: ['#8ed4d4','#4fb8b8','#9bc4e2','#dcf5f5'] },
+  { id: 'summer',   emoji: '🍑', name: 'Summer Breeze',     colors: ['#ffb89a','#ff8f6b','#ffd0b3','#ffe6d8'] },
+  { id: 'sage',     emoji: '🌿', name: 'Sage Garden',       colors: ['#a8c9a4','#7ba374','#b8d4b3','#e4f0e0'] },
+  { id: 'berry',    emoji: '🍇', name: 'Berry Cosmos',      colors: ['#d68cb8','#b85e9b','#a888c8','#f5dcf0'] }
+];
+
+let pendingTheme = 'pink';
+
+function detectSystemTheme() {
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'midnight';
+    }
+  } catch(e) {}
+  return 'pink';
+}
+
+function applyTheme(id) {
+  document.documentElement.setAttribute('data-theme', id);
+  refreshThemeEmoji();
+}
+
+function getThemeEmoji() {
+  const styles = getComputedStyle(document.documentElement);
+  const get = (name) => styles.getPropertyValue(name).trim().replace(/^"|"$/g, '');
+  return {
+    name: get('--emoji-name') || '💕',
+    points: get('--emoji-points') || '💖',
+    tabToday: get('--emoji-tab-today') || '🏠',
+    tabRituals: get('--emoji-tab-rituals') || '🎀',
+    tabSpend: get('--emoji-tab-spend') || '🎁',
+    empty: get('--emoji-empty') || '🌸',
+    button: get('--emoji-button') || '💕'
+  };
+}
+
+function refreshThemeEmoji() {
+  const e = getThemeEmoji();
+  const gE = document.getElementById('greetingEmoji');
+  if (gE) gE.textContent = e.name;
+  const bE = document.getElementById('balanceEmoji');
+  if (bE) bE.textContent = e.points;
+  const tT = document.getElementById('tabIconToday');
+  if (tT) tT.textContent = e.tabToday;
+  const tR = document.getElementById('tabIconRituals');
+  if (tR) tR.textContent = e.tabRituals;
+  const tS = document.getElementById('tabIconSpend');
+  if (tS) tS.textContent = e.tabSpend;
+  const bD = document.getElementById('bdayEmoji');
+  if (bD) bD.textContent = e.points;
+  const wG = document.getElementById('welcomeGiftEmoji');
+  if (wG) wG.textContent = e.points;
+  const rG = document.getElementById('returnGiftEmoji');
+  if (rG) rG.textContent = e.points;
+  document.querySelectorAll('.btn-emoji').forEach(el => {
+    el.textContent = e.button;
+  });
+}
+
+function renderThemeGrids() {
+  const html = THEMES.map(t => `
+    <div class="theme-card${pendingTheme === t.id ? ' selected' : ''}" data-theme-id="${t.id}" onclick="chooseTheme('${t.id}')">
+      <div class="theme-emoji">${t.emoji}</div>
+      <div class="theme-name">${t.name}</div>
+      <div class="theme-palette">
+        ${t.colors.map(c => `<div class="theme-dot" style="background:${c};"></div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('themeGrid').innerHTML = html;
+  document.getElementById('themeGridModal').innerHTML = html;
+}
+
+function chooseTheme(id) {
+  pendingTheme = id;
+  applyTheme(id);
+  document.querySelectorAll('.theme-card').forEach(el => {
+    el.classList.toggle('selected', el.dataset.themeId === id);
+  });
+  if (state.name) {
+    renderGreeting();
+    updateBalance();
+    renderToday();
+    renderRituals();
+    renderSpend();
+    renderCalendar();
+    renderBackupReminder();
+  }
+}
+
+function openThemeModal() {
+  pendingTheme = state.theme || 'pink';
+  renderThemeGrids();
+  document.getElementById('themeModal').classList.add('active');
+}
+
+/* ========== STATE ========== */
+const STORAGE_KEY = 'princess_treatment_v14';
+
+let state = {
+  name: '', birthday: '', balance: 0, theme: 'pink',
+  habits: [], rewards: [], history: [], completions: {},
+  orders: {}, lastBirthdayGift: '',
+  createdAt: '',
+  lastVisit: '',
+  welcomeGiftReceived: false,
+  lastBackup: '', lastReminderDate: '', neverRemindBackup: false,
+  templates: []
+};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = Object.assign(state, JSON.parse(raw));
+  } catch(e) { console.warn('load error', e); }
+  // Миграция: старые numeric с freq='numeric' → freq='daily'
+  if (state.habits && state.habits.length) {
+    state.habits.forEach(h => {
+      if (h.type === 'numeric' && h.freq === 'numeric') {
+        h.freq = 'daily';
+      }
+    });
+  }
+}
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+/* ========== UTILS ========== */
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const todayKey = () => dateKey(new Date());
+function dateKey(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+function addBalance(delta) { state.balance = Math.max(0, state.balance + delta); }
+function subBalance(delta) { state.balance = Math.max(0, state.balance - delta); }
+function daysBetween(d1, d2) {
+  const a = new Date(d1); a.setHours(0,0,0,0);
+  const b = new Date(d2); b.setHours(0,0,0,0);
+  return Math.round((b - a) / (1000*60*60*24));
+}
+
+/* ========== SCHEDULING ========== */
+const WEEKDAYS = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const TIMES = ['Утро', 'День', 'Вечер', 'Ночь'];
+
+function isHabitScheduled(habit, date) {
+  const d = new Date(date); d.setHours(0,0,0,0);
+  const key = dateKey(d);
+  switch(habit.freq) {
+    case 'daily': return true;
+    case 'multi': return true;
+    case 'weekly': {
+      const wd = (d.getDay() + 6) % 7;
+      return (habit.weekdays || []).includes(wd);
+    }
+    case 'monthly': return d.getDate() === (habit.monthlyDay || 1);
+    case 'once': return habit.onceDate === key;
+    default: return false;
+  }
+}
+
+function freqToText(h) {
+  const isNum = h.type === 'numeric';
+  let baseText = '';
+  switch(h.freq) {
+    case 'daily': baseText = 'Каждый день'; break;
+    case 'multi': {
+      const parts = (h.multiParts && h.multiParts.length) ?
+        ` (${h.multiParts.map(i => TIMES[i]).join(', ')})` : '';
+      baseText = `Каждый день ×${h.multi || 2}${parts}`;
+      break;
+    }
+    case 'weekly': {
+      const days = (h.weekdays || []).slice().sort((a,b)=>a-b).map(i => WEEKDAYS[i]).join(', ');
+      baseText = days || 'По дням недели';
+      break;
+    }
+    case 'monthly': baseText = `${h.monthlyDay || 1}-го числа`; break;
+    case 'once': {
+      if (!h.onceDate) baseText = 'Один раз';
+      else {
+        const d = new Date(h.onceDate);
+        baseText = 'Один раз: ' + d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+      }
+      break;
+    }
+    default: baseText = '';
+  }
+  if (isNum) {
+    const op = h.numericOp === 'min' ? 'не менее' : 'не более';
+    const unit = h.numericUnit ? ' ' + h.numericUnit : '';
+    if (h.freq === 'daily') return `Каждый день, ${op} ${h.numericTarget}${unit}`;
+    return `${baseText}, ${op} ${h.numericTarget}${unit}`;
+  }
+  return baseText;
+}
+
+/* ========== BALANCE / GREETING ========== */
+function updateBalance() {
+  const e = getThemeEmoji();
+  document.getElementById('balanceValue').innerHTML = 
+    `<span class="pts-num">${state.balance}</span> <span class="pts-emoji" id="balanceEmoji">${e.points}</span>`;
+}
+function renderGreeting() {
+  const e = getThemeEmoji();
+  const el = document.getElementById('greetingText');
+  if (el) el.innerHTML = `${escapeHtml(state.name || 'Принцесса')} <span id="greetingEmoji">${e.name}</span>`;
+}
+
+/* ========== WELCOME ========== */
+function showWelcome() {
+  document.getElementById('welcomeScreen').classList.remove('hidden');
+  document.getElementById('step1').classList.add('active');
+  document.getElementById('step2').classList.remove('active');
+  const nameInput = document.getElementById('welcomeNameInput');
+  const bdayInput = document.getElementById('welcomeBdayInput');
+  const btn = document.getElementById('welcomeBtn1');
+  const updateBtnState = () => {
+    btn.disabled = nameInput.value.trim().length === 0 || !bdayInput.value;
+  };
+  nameInput.addEventListener('input', updateBtnState);
+  bdayInput.addEventListener('input', updateBtnState);
+  const tryEnter = (e) => { if (e.key === 'Enter' && !btn.disabled) goToThemeStep(); };
+  nameInput.addEventListener('keydown', tryEnter);
+  bdayInput.addEventListener('keydown', tryEnter);
+  updateBtnState();
+  setTimeout(() => nameInput.focus(), 400);
+  pendingTheme = detectSystemTheme();
+  applyTheme(pendingTheme);
+  renderThemeGrids();
+}
+
+function goToThemeStep() {
+  const v = document.getElementById('welcomeNameInput').value.trim();
+  const b = document.getElementById('welcomeBdayInput').value;
+  if (!v || !b) return;
+  document.getElementById('step1').classList.remove('active');
+  document.getElementById('step2').classList.add('active');
+}
+
+function triggerWelcomeImport() {
+  document.getElementById('welcomeImportFile').click();
+}
+
+function handleWelcomeImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data || typeof data !== 'object' || !('balance' in data) || !('name' in data)) {
+        showToast('Не тот файл 💕');
+        e.target.value = '';
+        return;
+      }
+      state = Object.assign({
+        name: '', birthday: '', balance: 0, theme: 'pink',
+        habits: [], rewards: [], history: [], completions: {},
+        orders: {}, lastBirthdayGift: '',
+        createdAt: '', lastVisit: '',
+        welcomeGiftReceived: true,
+        lastBackup: '', lastReminderDate: '', neverRemindBackup: false,
+        templates: []
+      }, data);
+      // Миграция
+      if (state.habits) {
+        state.habits.forEach(h => {
+          if (h.type === 'numeric' && h.freq === 'numeric') h.freq = 'daily';
+        });
+      }
+      state.welcomeGiftReceived = true;
+      save();
+      applyTheme(state.theme || 'pink');
+      pendingTheme = state.theme || 'pink';
+      document.getElementById('welcomeScreen').classList.add('hidden');
+      renderGreeting();
+      updateBalance();
+      initCalendar();
+      renderToday();
+      renderRituals();
+      renderSpend();
+      renderCalendar();
+      renderBackupReminder();
+      showToast(`Данные восстановлены ${getThemeEmoji().points}`);
+      state.lastVisit = dateKey(new Date());
+      save();
+    } catch(err) {
+      console.warn('import error', err);
+      showToast('Ошибка загрузки 💕');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function saveName() {
+  const v = document.getElementById('welcomeNameInput').value.trim();
+  const b = document.getElementById('welcomeBdayInput').value;
+  if (!v || !b) return;
+  state.name = v; state.birthday = b; state.theme = pendingTheme;
+  if (!state.createdAt) state.createdAt = dateKey(new Date());
+  state.lastVisit = dateKey(new Date());
+  state.welcomeGiftReceived = false;
+  if (state.habits.length === 0) {
+    state.habits = [
+      { id: uid(), name: 'Почистить зубы', points: 1, type: 'check', freq: 'multi', multi: 2, multiParts: [0, 2], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: '' },
+      { id: uid(), name: 'Выпить стакан воды', points: 1, type: 'check', freq: 'multi', multi: 4, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: '' },
+      { id: uid(), name: 'Уход за кожей вечером', points: 3, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: '', timeLabel: 'Вечер' }
+    ];
+  }
+  if (state.rewards.length === 0) {
+    state.rewards = [
+      { id: uid(), name: 'Bubble Tea', price: 150 },
+      { id: uid(), name: 'Маникюр', price: 500 }
+    ];
+  }
+  save();
+  applyTheme(pendingTheme);
+  document.getElementById('welcomeScreen').classList.add('hidden');
+  renderGreeting(); updateBalance(); initCalendar();
+  renderToday(); renderRituals(); renderSpend(); renderCalendar();
+  showToast(`Добро пожаловать, ${v} 👑`);
+  setTimeout(() => {
+    document.getElementById('welcomeGiftModal').classList.add('active');
+  }, 400);
+}
+
+/* ========== GREETING EDIT (Name + Bday) ========== */
+function editName() {
+  document.getElementById('nameInput').value = state.name || '';
+  document.getElementById('bdayInput').value = state.birthday || '';
+  document.getElementById('nameModal').classList.add('active');
+  setTimeout(() => document.getElementById('nameInput').focus(), 300);
+}
+
+function saveNameModal() {
+  const v = document.getElementById('nameInput').value.trim();
+  const b = document.getElementById('bdayInput').value;
+  if (!v) { showToast('Введи имя 💕'); return; }
+  if (!b) { showToast('Выбери дату рождения 💕'); return; }
+  state.name = v;
+  state.birthday = b;
+  save();
+  closeModal('nameModal');
+  renderGreeting();
+  renderToday();
+  renderCalendar();
+  showToast('Обновлено 💕');
+}
+
+/* ========== TAB SWITCHING ========== */
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.tab').forEach(el => {
+    el.classList.toggle('active', el.dataset.tab === name);
+  });
+  if (name === 'today') renderToday();
+  if (name === 'rituals') renderRituals();
+  if (name === 'spend') renderSpend();
+  if (name === 'calendar') renderCalendar();
+}
+
+/* ========== ORDER ========== */
+function getOrder(dayKey, keys) {
+  const saved = state.orders[dayKey] || [];
+  const filtered = saved.filter(k => keys.includes(k));
+  const missing = keys.filter(k => !filtered.includes(k));
+  const result = filtered.concat(missing);
+  state.orders[dayKey] = result;
+  return result;
+}
+
+/* ========== TODAY ========== */
+function renderToday() {
+  const today = new Date();
+  const key = dateKey(today);
+  const list = document.getElementById('todayList');
+  const bdayNote = document.getElementById('todayBdayNote');
+  const e = getThemeEmoji();
+
+  if (state.birthday) {
+    const bd = new Date(state.birthday);
+    const sameDay = today.getDate() === bd.getDate() && today.getMonth() === bd.getMonth();
+    bdayNote.innerHTML = sameDay ? `<div class="bday-note">🎂 Сегодня твой день рождения! 🎂</div>` : '';
+  } else bdayNote.innerHTML = '';
+
+  const scheduled = state.habits.filter(h => isHabitScheduled(h, today));
+  const cards = [];
+
+  scheduled.forEach(h => {
+    if (h.type === 'numeric') {
+      cards.push({ key: `num-${h.id}`, habitId: h.id, timeIndex: null, habit: h });
+    } else if (h.freq === 'multi') {
+      const max = h.multi || 2;
+      const parts = h.multiParts && h.multiParts.length ? h.multiParts : null;
+      for (let i = 0; i < max; i++) {
+        const timeIdx = parts ? parts[i] : null;
+        cards.push({ key: `multi-${h.id}-${i}`, habitId: h.id, timeIndex: timeIdx, slotIndex: i, habit: h });
+      }
+    } else {
+      cards.push({ key: `simple-${h.id}`, habitId: h.id, timeIndex: null, habit: h });
+    }
+  });
+
+  if (cards.length === 0) {
+    list.innerHTML = `<div class="empty"><span class="emoji">${e.empty}</span>Пока ничего нет.</div>`;
+    state.orders[key] = [];
+    return;
+  }
+  const order = getOrder(key, cards.map(c => c.key));
+  const orderedCards = order.map(k => cards.find(c => c.key === k)).filter(Boolean);
+  save();
+  list.innerHTML = orderedCards.map(card => renderTodayCard(card, key, e)).join('');
+  enableSwipe(list, key);
+  enableDrag();
+}
+
+function renderTodayCard(card, dayKey, e) {
+  const { habit: h, timeIndex } = card;
+
+  if (h.type === 'numeric') {
+    const comp = (state.completions[dayKey] || {})[`num-${h.id}`];
+    const op = h.numericOp === 'min' ? 'не менее' : 'не более';
+    const unit = h.numericUnit ? ` ${h.numericUnit}` : '';
+    const cond = `${op} ${h.numericTarget}${unit}`;
+    let statusBadge = '';
+    let inputClass = '';
+    let isFailed = false;
+    if (comp && comp.failed) {
+      statusBadge = `<span class="badge err">❌ −${h.points}</span>`;
+      inputClass = 'err';
+      isFailed = true;
+    } else if (comp && comp.value !== undefined) {
+      if (comp.ok) { statusBadge = `<span class="badge ok">✅ +${h.points} ${e.points}</span>`; inputClass = 'ok'; }
+      else { statusBadge = `<span class="badge err">❌ −${h.points}</span>`; inputClass = 'err'; }
+    }
+    const val = (comp && comp.value !== undefined) ? comp.value : '';
+    const timeBadge = h.timeLabel ? `<span class="badge time">${escapeHtml(h.timeLabel)}</span>` : '';
+    const cardClasses = `card${isFailed ? ' failed' : ''}`;
+    const failedToggle = comp && comp.failed;
+    return `
+      <div class="swipe-wrapper" data-key="${card.key}">
+        <button class="swipe-delete-btn" onclick="removeHabitFromToday('${h.id}', null)">Удалить</button>
+        <div class="${cardClasses}" data-key="${card.key}">
+          <div class="drag-handle" data-drag-handle="true">☰</div>
+          <button class="fail-btn${failedToggle ? ' active' : ''}" onclick="failNumeric('${h.id}','${dayKey}')" title="${failedToggle ? 'Отменить' : 'Провал'}">${failedToggle ? '↩️' : '✕'}</button>
+          <div class="habit-info">
+            <div class="habit-name">${escapeHtml(h.name)}</div>
+            <div class="habit-meta">
+              ${timeBadge}
+              <span class="badge">+${h.points} ${e.points}</span>
+              <span class="badge freq">${cond}</span>
+              ${statusBadge}
+            </div>
+          </div>
+          <input type="number" class="num-input ${inputClass}" id="ninp-${h.id}" value="${val}" placeholder="число"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();saveNumeric('${h.id}','${dayKey}');}"
+            oninput="liveNumericCheck('${h.id}','${dayKey}')">
+          <button class="num-save" onclick="saveNumeric('${h.id}','${dayKey}')">✓</button>
+          <div class="swipe-overlay"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (h.freq === 'multi') {
+    const slot = card.slotIndex;
+    const compKey = `multi-${h.id}-${slot}`;
+    const comp = (state.completions[dayKey] || {})[compKey];
+    const isDone = comp === 'done';
+    const isFail = comp === 'fail';
+    const timeLabel = timeIndex !== null ? TIMES[timeIndex] : `#${slot+1}`;
+    const cardClasses = `card${isFail ? ' failed' : ''}`;
+    return `
+      <div class="swipe-wrapper" data-key="${card.key}">
+        <button class="swipe-delete-btn" onclick="removeHabitFromToday('${h.id}', ${slot})">Удалить</button>
+        <div class="${cardClasses}" data-key="${card.key}">
+          <div class="drag-handle" data-drag-handle="true">☰</div>
+          <button class="fail-btn${isFail ? ' active' : ''}" onclick="failMulti('${h.id}',${slot},'${dayKey}')" title="${isFail ? 'Отменить' : 'Пропустить'}">${isFail ? '↩️' : '✕'}</button>
+          <div class="habit-info">
+            <div class="habit-name">${escapeHtml(h.name)}</div>
+            <div class="habit-meta">
+              <span class="badge time">${timeLabel}</span>
+              <span class="badge">+${h.points} ${e.points}</span>
+              ${isFail ? `<span class="badge minus">−${h.points}</span>` : ''}
+            </div>
+          </div>
+          <div class="check ${isDone?'done':''}" onclick="toggleMulti('${h.id}',${slot},'${dayKey}')">✓</div>
+          <div class="swipe-overlay"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  const compKey = `simple-${h.id}`;
+  const comp = (state.completions[dayKey] || {})[compKey];
+  const isDone = comp === 'done';
+  const isFail = comp === 'fail';
+  const timeBadge = h.timeLabel ? `<span class="badge time">${escapeHtml(h.timeLabel)}</span>` : '';
+  const cardClasses = `card${isFail ? ' failed' : ''}`;
+  return `
+    <div class="swipe-wrapper" data-key="${card.key}">
+      <button class="swipe-delete-btn" onclick="removeHabitFromToday('${h.id}', null)">Удалить</button>
+      <div class="${cardClasses}" data-key="${card.key}">
+        <div class="drag-handle" data-drag-handle="true">☰</div>
+        <button class="fail-btn${isFail ? ' active' : ''}" onclick="failSimple('${h.id}','${dayKey}')" title="${isFail ? 'Отменить' : 'Пропустить'}">${isFail ? '↩️' : '✕'}</button>
+        <div class="habit-info">
+          <div class="habit-name">${escapeHtml(h.name)}</div>
+          <div class="habit-meta">
+            ${timeBadge}
+            <span class="badge">+${h.points} ${e.points}</span>
+            ${isFail ? `<span class="badge minus">пропущено −${h.points}</span>` : ''}
+          </div>
+        </div>
+        <div class="check ${isDone?'done':''}" onclick="toggleSimple('${h.id}','${dayKey}')">✓</div>
+        <div class="swipe-overlay"></div>
+      </div>
+    </div>
+  `;
+}
+
+/* ========== REMOVE FROM TODAY ========== */
+function removeHabitFromToday(habitId, slot) {
+  const h = state.habits.find(x => x.id === habitId);
+  if (!h) return;
+  if (h.freq === 'multi' && slot !== null && slot !== undefined && (h.multi || 2) > 1) {
+    const newMax = (h.multi || 2) - 1;
+    if (newMax >= 1) {
+      h.multi = newMax;
+      if (h.multiParts && h.multiParts.length) {
+        h.multiParts = h.multiParts.filter((_, i) => i !== slot);
+      }
+      Object.keys(state.completions).forEach(dayKey => {
+        const comp = state.completions[dayKey];
+        Object.keys(comp).forEach(k => {
+          if (k.startsWith(`multi-${habitId}-`)) {
+            const kSlot = parseInt(k.slice(-1));
+            if (kSlot === slot) delete comp[k];
+          }
+        });
+      });
+      save();
+      showToast('Слот удалён 🗑');
+      renderToday();
+      renderRituals();
+      renderCalendar();
+      return;
+    }
+  }
+  if (!confirm('Удалить этот ритуал полностью? Он исчезнет из всех дней.')) return;
+  deleteHabitCompletely(habitId);
+}
+
+function deleteHabitCompletely(habitId) {
+  state.habits = state.habits.filter(h => h.id !== habitId);
+  Object.keys(state.completions).forEach(dayKey => {
+    const comp = state.completions[dayKey];
+    Object.keys(comp).forEach(k => {
+      if (k.includes(habitId)) delete comp[k];
+    });
+  });
+  save();
+  showToast('Ритуал удалён 🗑');
+  renderToday();
+  renderRituals();
+  renderCalendar();
+}
+
+/* ========== TOGGLES ========== */
+function toggleSimple(id, dayKey) {
+  const h = state.habits.find(x => x.id === id);
+  if (!h) return;
+  if (!state.completions[dayKey]) state.completions[dayKey] = {};
+  const comp = state.completions[dayKey];
+  const key = `simple-${id}`;
+  const cur = comp[key];
+  if (cur === 'done') { delete comp[key]; subBalance(h.points); }
+  else {
+    if (cur === 'fail') addBalance(h.points);
+    comp[key] = 'done'; addBalance(h.points);
+  }
+  save(); updateBalance(); renderToday();
+  if (comp[key] === 'done') showToast(`+${h.points} ${getThemeEmoji().points}`);
+}
+function failSimple(id, dayKey) {
+  const h = state.habits.find(x => x.id === id);
+  if (!h) return;
+  if (!state.completions[dayKey]) state.completions[dayKey] = {};
+  const comp = state.completions[dayKey];
+  const key = `simple-${id}`;
+  const cur = comp[key];
+  if (cur === 'fail') { delete comp[key]; addBalance(h.points); showToast('Отменено 💕'); }
+  else {
+    if (cur === 'done') subBalance(h.points);
+    comp[key] = 'fail'; subBalance(h.points); showToast(`−${h.points} ${getThemeEmoji().points}`);
+  }
+  save(); updateBalance(); renderToday();
+}
+function toggleMulti(id, slot, dayKey) {
+  const h = state.habits.find(x => x.id === id);
+  if (!h) return;
+  if (!state.completions[dayKey]) state.completions[dayKey] = {};
+  const comp = state.completions[dayKey];
+  const key = `multi-${id}-${slot}`;
+  const cur = comp[key];
+  if (cur === 'done') { delete comp[key]; subBalance(h.points); }
+  else {
+    if (cur === 'fail') addBalance(h.points);
+    comp[key] = 'done'; addBalance(h.points);
+  }
+  save(); updateBalance(); renderToday();
+  if (comp[key] === 'done') showToast(`+${h.points} ${getThemeEmoji().points}`);
+}
+function failMulti(id, slot, dayKey) {
+  const h = state.habits.find(x => x.id === id);
+  if (!h) return;
+  if (!state.completions[dayKey]) state.completions[dayKey] = {};
+  const comp = state.completions[dayKey];
+  const key = `multi-${id}-${slot}`;
+  const cur = comp[key];
+  if (cur === 'fail') { delete comp[key]; addBalance(h.points); showToast('Отменено 💕'); }
+  else {
+    if (cur === 'done') subBalance(h.points);
+    comp[key] = 'fail'; subBalance(h.points); showToast(`−${h.points} ${getThemeEmoji().points}`);
+  }
+  save(); updateBalance(); renderToday();
+}
+
+/* ========== NUMERIC ========== */
+function liveNumericCheck(id, dayKey) {
+  const h = state.habits.find(x => x.id === id);
+  if (!h) return;
+  const input = document.getElementById(`ninp-${id}`);
+  if (!input) return;
+  const v = parseFloat(input.value);
+  if (isNaN(v)) { input.classList.remove('ok','err'); return; }
+  const ok = h.numericOp === 'min' ? v >= h.numericTarget : v <= h.numericTarget;
+  input.classList.toggle('ok', ok);
+  input.classList.toggle('err', !ok);
+}
+function saveNumeric(id, dayKey) {
+  const h = state.habits.find(x => x.id === id);
+  if (!h) return;
+  const input = document.getElementById(`ninp-${id}`);
+  if (!input) return;
+  const v = parseFloat(input.value);
+  if (isNaN(v)) { showToast('Введи число 💕'); return; }
+  if (!state.completions[dayKey]) state.completions[dayKey] = {};
+  const comp = state.completions[dayKey];
+  const key = `num-${id}`;
+  const prev = comp[key];
+
+  if (prev) {
+    if (prev.ok) subBalance(h.points);
+    else if (prev.failed) addBalance(h.points);
+    else if (prev.value !== undefined && !prev.ok) addBalance(h.points);
+  }
+
+  const ok = h.numericOp === 'min' ? v >= h.numericTarget : v <= h.numericTarget;
+  if (ok) {
+    comp[key] = { value: v, ok: true };
+    addBalance(h.points);
+    showToast(`+${h.points} ${getThemeEmoji().points}`);
+  } else {
+    comp[key] = { value: v, ok: false };
+    subBalance(h.points);
+    showToast(`−${h.points} ${getThemeEmoji().points} Условие не выполнено`);
+  }
+  save(); updateBalance(); renderToday();
+}
+function failNumeric(id, dayKey) {
+  const h = state.habits.find(x => x.id === id);
+  if (!h) return;
+  if (!state.completions[dayKey]) state.completions[dayKey] = {};
+  const comp = state.completions[dayKey];
+  const key = `num-${id}`;
+  const prev = comp[key];
+
+  if (prev && prev.failed) {
+    addBalance(h.points);
+    delete comp[key];
+    showToast('Отменено 💕');
+  } else {
+    if (prev) {
+      if (prev.ok) subBalance(h.points);
+      else if (prev.value !== undefined && !prev.ok) addBalance(h.points);
+    }
+    comp[key] = { failed: true };
+    subBalance(h.points);
+    showToast(`−${h.points} ${getThemeEmoji().points} Провал`);
+  }
+  save(); updateBalance(); renderToday();
+}
+
+/* ========== SWIPE ========== */
+function enableSwipe(container, dayKey) {
+  const wrappers = Array.from(container.querySelectorAll('.swipe-wrapper'));
+
+  wrappers.forEach(wrapper => {
+    const card = wrapper.querySelector('.card');
+    const deleteBtn = wrapper.querySelector('.swipe-delete-btn');
+    const overlay = wrapper.querySelector('.swipe-overlay');
+    if (!card) return;
+
+    let startX = 0, startY = 0;
+    let currentX = 0;
+    let isSwipe = false, isScroll = false;
+    let activePointerId = null;
+    let isNumeric = card.querySelector('.num-input') !== null;
+    let cardWidth = wrapper.offsetWidth || 300;
+
+    const cleanup = () => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      document.removeEventListener('pointercancel', onUp);
+      activePointerId = null;
+    };
+
+    function onMove(ev) {
+      if (activePointerId !== null && ev.pointerId !== activePointerId) return;
+      const dx = ev.clientX - startX;
+      const dy = ev.clientY - startY;
+      const adx = Math.abs(dx);
+      const ady = Math.abs(dy);
+
+      if (!isSwipe && !isScroll) {
+        if (ady > adx && ady > 8) {
+          isScroll = true;
+          cleanup();
+          return;
+        }
+        if (adx > 8 && adx > ady) {
+          if (isNumeric && dx > 0) {
+            isScroll = true;
+            cleanup();
+            return;
+          }
+          isSwipe = true;
+        }
+      }
+      if (isSwipe) {
+        ev.preventDefault();
+        currentX = dx;
+        applySwipe(dx);
+      }
+    }
+
+    function onUp() {
+      if (isSwipe) {
+        endSwipe();
+      } else {
+        resetSwipe();
+      }
+      cleanup();
+    }
+
+    card.addEventListener('pointerdown', e => {
+      if (e.target.closest('[data-drag-handle]')) return;
+      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('.check') || e.target.closest('.fail-btn')) return;
+
+      startX = e.clientX; startY = e.clientY;
+      currentX = 0;
+      isSwipe = false; isScroll = false;
+      activePointerId = e.pointerId;
+      cardWidth = wrapper.offsetWidth || 300;
+
+      document.addEventListener('pointermove', onMove, { passive: false });
+      document.addEventListener('pointerup', onUp);
+      document.addEventListener('pointercancel', onUp);
+    });
+
+    function applySwipe(dx) {
+      const maxSwipe = cardWidth * 0.7;
+      let limited = dx;
+      if (dx < -maxSwipe) limited = -maxSwipe;
+      if (dx > maxSwipe) limited = maxSwipe;
+
+      card.style.transform = `translateX(${limited}px)`;
+      card.style.transition = 'none';
+
+      if (dx > 0) {
+        const t = Math.min(1, dx / (cardWidth * 0.5));
+        overlay.style.background = `rgba(60, 165, 92, ${t * 0.4})`;
+      } else if (dx < 0) {
+        const t = Math.min(1, Math.abs(dx) / (cardWidth * 0.5));
+        overlay.style.background = `rgba(214, 102, 102, ${t * 0.4})`;
+        if (Math.abs(dx) > 40) {
+          deleteBtn.classList.add('visible');
+        } else {
+          deleteBtn.classList.remove('visible');
+        }
+      }
+    }
+
+    function endSwipe() {
+      card.style.transition = 'transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1)';
+      const threshold = cardWidth * 0.5;
+      const dx = currentX;
+
+      if (dx > 60) {
+        card.style.transform = '';
+        overlay.style.background = '';
+        triggerCompleteFromSwipe(card, dayKey);
+      } else if (dx < -threshold) {
+        deleteBtn.classList.remove('visible');
+        overlay.style.background = '';
+        card.classList.add('removing');
+        const habitId = getHabitIdFromCard(card);
+        setTimeout(() => {
+          if (habitId) {
+            if (!confirm('Удалить этот ритуал полностью? Он исчезнет из всех дней.')) {
+              card.classList.remove('removing');
+              card.style.transform = '';
+              return;
+            }
+            deleteHabitCompletely(habitId);
+          }
+        }, 320);
+      } else if (dx < -40) {
+        card.style.transform = `translateX(-100px)`;
+        deleteBtn.classList.add('visible');
+      } else {
+        card.style.transform = '';
+        overlay.style.background = '';
+        deleteBtn.classList.remove('visible');
+      }
+      currentX = 0;
+      isSwipe = false;
+    }
+
+    function resetSwipe() {
+      if (card.style.transform && card.style.transform !== 'translateX(0px)') {
+        card.style.transition = 'transform 0.25s';
+        card.style.transform = '';
+        overlay.style.background = '';
+        deleteBtn.classList.remove('visible');
+      }
+    }
+  });
+}
+
+/* ========== DRAG (только за ручку) ========== */
+function enableDrag() {
+  const handles = document.querySelectorAll('[data-drag-handle]');
+
+  handles.forEach(handle => {
+    if (handle.dataset.dragInit === '1') return;
+    handle.dataset.dragInit = '1';
+
+    handle.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const wrapper = handle.closest('.swipe-wrapper');
+      if (!wrapper) return;
+      const card = wrapper.querySelector('.card');
+      const container = wrapper.parentNode;
+
+      const startY = e.clientY;
+      const startX = e.clientX;
+      const rect = wrapper.getBoundingClientRect();
+      const pointerId = e.pointerId;
+
+      let dragStarted = false;
+      let placeholder = null;
+
+      const startDrag = () => {
+        dragStarted = true;
+        card.classList.add('dragging');
+
+        placeholder = document.createElement('div');
+        placeholder.className = 'drag-placeholder';
+        placeholder.style.height = rect.height + 'px';
+        container.insertBefore(placeholder, wrapper);
+
+        wrapper.style.position = 'fixed';
+        wrapper.style.left = rect.left + 'px';
+        wrapper.style.top = rect.top + 'px';
+        wrapper.style.width = rect.width + 'px';
+        wrapper.style.zIndex = '1000';
+        wrapper.style.pointerEvents = 'none';
+        wrapper.style.marginBottom = '0';
+
+        if (navigator.vibrate) { try { navigator.vibrate(20); } catch(err) {} }
+      };
+
+      const moveDrag = (clientY) => {
+        if (!dragStarted) return;
+        const newTop = clientY - (startY - rect.top);
+        wrapper.style.top = newTop + 'px';
+
+        const siblings = Array.from(container.children).filter(c =>
+          c !== placeholder && c !== wrapper && c.classList.contains('swipe-wrapper')
+        );
+        let nextSib = null;
+        for (const sib of siblings) {
+          const r = sib.getBoundingClientRect();
+          if (clientY < r.top + r.height / 2) { nextSib = sib; break; }
+        }
+        if (nextSib) container.insertBefore(placeholder, nextSib);
+        else container.appendChild(placeholder);
+      };
+
+      const endDrag = () => {
+        if (!dragStarted) return;
+        card.classList.remove('dragging');
+        wrapper.style.position = ''; wrapper.style.left = ''; wrapper.style.top = '';
+        wrapper.style.width = ''; wrapper.style.zIndex = '';
+        wrapper.style.pointerEvents = ''; wrapper.style.marginBottom = '';
+        card.style.transition = '';
+        card.style.transform = '';
+
+        container.insertBefore(wrapper, placeholder);
+        placeholder.remove();
+
+        const newOrder = Array.from(container.querySelectorAll('.swipe-wrapper')).map(w => w.dataset.key);
+        const todayK = todayKey();
+        state.orders[todayK] = newOrder;
+        save();
+
+        card.classList.add('enter');
+        setTimeout(() => card.classList.remove('enter'), 400);
+      };
+
+      const onMove = (ev) => {
+        if (ev.pointerId !== pointerId) return;
+        const dx = ev.clientX - startX;
+        const dy = ev.clientY - startY;
+        const dist = Math.hypot(dx, dy);
+
+        if (!dragStarted) {
+          if (dist > 8) {
+            startDrag();
+          }
+        }
+        if (dragStarted) {
+          ev.preventDefault();
+          moveDrag(ev.clientY);
+        }
+      };
+
+      const onUp = () => {
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        document.removeEventListener('pointercancel', onUp);
+        if (dragStarted) {
+          endDrag();
+        }
+      };
+
+      document.addEventListener('pointermove', onMove, { passive: false });
+      document.addEventListener('pointerup', onUp);
+      document.addEventListener('pointercancel', onUp);
+    });
+  });
+}
+
+function getHabitIdFromCard(card) {
+  const key = card.dataset.key;
+  if (!key) return null;
+  if (key.startsWith('simple-')) return key.slice(7);
+  if (key.startsWith('num-')) return key.slice(4);
+  if (key.startsWith('multi-')) {
+    const rest = key.slice(6);
+    const lastDash = rest.lastIndexOf('-');
+    return rest.slice(0, lastDash);
+  }
+  return null;
+}
+
+function triggerCompleteFromSwipe(card, dayKey) {
+  const key = card.dataset.key;
+  if (!key) return;
+  if (key.startsWith('simple-')) {
+    const id = key.slice(7);
+    const comp = (state.completions[dayKey] || {})[`simple-${id}`];
+    if (comp !== 'done') toggleSimple(id, dayKey);
+  } else if (key.startsWith('multi-')) {
+    const rest = key.slice(6);
+    const lastDash = rest.lastIndexOf('-');
+    const id = rest.slice(0, lastDash);
+    const slot = parseInt(rest.slice(lastDash + 1));
+    const comp = (state.completions[dayKey] || {})[`multi-${id}-${slot}`];
+    if (comp !== 'done') toggleMulti(id, slot, dayKey);
+  }
+}
+
+/* ========== RITUALS ========== */
+function renderRituals() {
+  const list = document.getElementById('ritualsList');
+  const e = getThemeEmoji();
+  if (state.habits.length === 0) {
+    list.innerHTML = `<div class="empty"><span class="emoji">${e.empty}</span>Пока ничего нет.</div>`;
+    return;
+  }
+  const today = new Date();
+  const key = dateKey(today);
+  list.innerHTML = state.habits.map(h => {
+    let doneBadge = '';
+    if (h.type === 'numeric') {
+      const comp = (state.completions[key] || {})[`num-${h.id}`];
+      if (comp && comp.failed) {
+        doneBadge = `<span class="done-badge" style="background:var(--err-bg);color:var(--err-color);">❌ провал</span>`;
+      } else if (comp && comp.value !== undefined) {
+        doneBadge = comp.ok ? `<span class="done-badge">✅ ${comp.value}</span>` : `<span class="done-badge" style="background:var(--err-bg);color:var(--err-color);">❌ ${comp.value}</span>`;
+      }
+    } else if (h.freq === 'multi') {
+      const max = h.multi || 2;
+      let done = 0;
+      for (let i = 0; i < max; i++) if ((state.completions[key] || {})[`multi-${h.id}-${i}`] === 'done') done++;
+      if (done > 0) doneBadge = `<span class="done-badge">✅ ${done}/${max}</span>`;
+    } else {
+      if ((state.completions[key] || {})[`simple-${h.id}`] === 'done') doneBadge = `<span class="done-badge">✅ выполнено</span>`;
+    }
+    const timeBadge = (h.timeLabel && h.freq !== 'multi') ? `<span class="badge time">${escapeHtml(h.timeLabel)}</span>` : '';
+    return `
+      <div class="card">
+        <div class="habit-info" onclick="openHabitModal('${h.id}')">
+          <div class="habit-name">${escapeHtml(h.name)} ${doneBadge}</div>
+          <div class="habit-meta">
+            ${timeBadge}
+            <span class="badge">+${h.points} ${e.points}</span>
+            <span class="badge freq">${freqToText(h)}</span>
+          </div>
+        </div>
+        <button class="edit-btn" onclick="openHabitModal('${h.id}')">✏️</button>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ========== SPEND ========== */
+function renderSpend() {
+  const list = document.getElementById('rewardList');
+  const e = getThemeEmoji();
+  if (state.rewards.length === 0) {
+    list.innerHTML = `<div class="empty"><span class="emoji">${e.empty}</span>Твой список наград пуст.</div>`;
+  } else {
+    list.innerHTML = state.rewards.map(r => {
+      const canBuy = state.balance >= r.price;
+      const pct = Math.min(100, Math.round(state.balance / r.price * 100));
+      return `
+        <div class="card" style="flex-direction:column;align-items:stretch;gap:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+            <div class="habit-info" onclick="openRewardModal('${r.id}')">
+              <div class="habit-name">${escapeHtml(r.name)}</div>
+              <div class="habit-meta"><span class="reward-price">${r.price} ${e.points}</span></div>
+            </div>
+            <button class="buy-btn" ${canBuy?'':'disabled'} onclick="buyReward('${r.id}')">
+              ${canBuy ? 'Купить' : 'Ещё ' + (r.price - state.balance) + ' ' + e.points}
+            </button>
+          </div>
+          ${!canBuy ? `<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+  const hTitle = document.getElementById('historyTitle');
+  const hList = document.getElementById('historyList');
+  if (state.history.length === 0) { hTitle.style.display = 'none'; hList.innerHTML = ''; }
+  else {
+    hTitle.style.display = 'flex';
+    hList.innerHTML = state.history.slice().reverse().map(h => `
+      <div class="history-item">
+        <div>
+          <div class="name">${escapeHtml(h.name)}</div>
+          <div class="date">${formatDate(h.date)}</div>
+        </div>
+        <div class="cost">−${h.price} ${e.points}</div>
+      </div>
+    `).join('');
+  }
+}
+function buyReward(id) {
+  const r = state.rewards.find(x => x.id === id);
+  if (!r || state.balance < r.price) return;
+  if (!confirm(`Купить "${r.name}" за ${r.price} баллов?`)) return;
+  subBalance(r.price);
+  state.history.push({ id: uid(), name: r.name, price: r.price, date: new Date().toISOString() });
+  save(); updateBalance(); renderSpend();
+  showToast(`Поздравляю! Ты заслужила ${getThemeEmoji().points}`);
+}
+
+/* ========== CALENDAR ========== */
+let calYear, calMonth, selectedDate;
+function initCalendar() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+  selectedDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+function isBirthday(date) {
+  if (!state.birthday) return false;
+  const bd = new Date(state.birthday);
+  return date.getDate() === bd.getDate() && date.getMonth() === bd.getMonth();
+}
+function renderCalendar() {
+  const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  document.getElementById('calMonth').textContent = `${monthNames[calMonth]} ${calYear}`;
+  const grid = document.getElementById('calGrid');
+  const today = new Date(); today.setHours(0,0,0,0);
+  let html = WEEKDAYS.map(w => `<div class="cal-weekday">${w}</div>`).join('');
+  const first = new Date(calYear, calMonth, 1);
+  const startWd = (first.getDay() + 6) % 7;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  for (let i = 0; i < startWd; i++) html += `<div class="cal-day empty-day"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(calYear, calMonth, d); date.setHours(0,0,0,0);
+    let cls = 'cal-day';
+    if (date < today) cls += ' past';
+    if (date.getTime() === today.getTime()) cls += ' today';
+    if (selectedDate && date.getTime() === selectedDate.getTime()) cls += ' selected';
+    const isBday = isBirthday(date);
+    if (isBday) cls += ' birthday';
+    const hasHabits = state.habits.some(h => isHabitScheduled(h, date));
+    const dot = hasHabits ? '<span class="dot"></span>' : '';
+    const cake = isBday ? '<span class="cake">🎂</span>' : '';
+    html += `<div class="${cls}" onclick="selectDay(${calYear},${calMonth},${d})">${d}${dot}${cake}</div>`;
+  }
+  grid.innerHTML = html;
+  renderCalDayList();
+}
+function selectDay(y, m, d) { selectedDate = new Date(y, m, d); renderCalendar(); }
+function renderCalDayList() {
+  if (!selectedDate) return;
+  const title = document.getElementById('calDayTitle');
+  const list = document.getElementById('calDayList');
+  const addBtnContainer = document.getElementById('calAddBtn');
+  const e = getThemeEmoji();
+  const todayMid = new Date(); todayMid.setHours(0,0,0,0);
+  const sameAsToday = selectedDate.getTime() === todayMid.getTime();
+  const dateStr = sameAsToday ? 'Сегодня' : selectedDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+  const scheduled = state.habits.filter(h => isHabitScheduled(h, selectedDate));
+  const isFutureBday = isBirthday(selectedDate) && selectedDate > todayMid && !sameAsToday;
+  title.textContent = `🎀 ${dateStr}`;
+  let noteHtml = '';
+  if (isFutureBday) noteHtml = `<div class="bday-note">🎁 Тебя будет ждать подарок</div>`;
+  if (scheduled.length === 0 && !isFutureBday) {
+    list.innerHTML = noteHtml + `<div class="empty" style="padding:16px;">Нет ритуалов на этот день</div>`;
+  } else {
+    const key = dateKey(selectedDate);
+    const itemsHtml = scheduled.map(h => {
+      let status = '⬜';
+      if (h.type === 'numeric') {
+        const comp = (state.completions[key] || {})[`num-${h.id}`];
+        if (comp && comp.failed) status = '❌ провал';
+        else if (comp && comp.value !== undefined) status = comp.ok ? `✅ ${comp.value}` : `❌ ${comp.value}`;
+      } else if (h.freq === 'multi') {
+        const max = h.multi || 2;
+        let done = 0;
+        for (let i = 0; i < max; i++) if ((state.completions[key] || {})[`multi-${h.id}-${i}`] === 'done') done++;
+        status = done > 0 ? `✅ ${done}/${max}` : '⬜';
+      } else {
+        const c = (state.completions[key] || {})[`simple-${h.id}`];
+        if (c === 'done') status = '✅';
+        else if (c === 'fail') status = '❌';
+      }
+      return `
+        <div class="card" style="padding:12px 16px;">
+          <div style="font-size:18px;min-width:40px;text-align:center;">${status}</div>
+          <div class="habit-info">
+            <div class="habit-name">${escapeHtml(h.name)}</div>
+            <div class="habit-meta"><span class="badge">${h.points} ${e.points}</span></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    list.innerHTML = noteHtml + itemsHtml;
+  }
+  // Кнопка добавления — только для сегодня и будущих
+  if (selectedDate >= todayMid) {
+    const dateStr2 = dateKey(selectedDate);
+    addBtnContainer.innerHTML = `<button class="add-btn" onclick="openHabitModalForDate('${dateStr2}')">+ Добавить ритуал на этот день</button>`;
+  } else {
+    addBtnContainer.innerHTML = '';
+  }
+}
+
+function openHabitModalForDate(dateStr) {
+  // Открываем модалку создания ритуала и предзаполняем дату для once
+  openHabitModal();
+  // После открытия — установим дату в поле и переключим на once
+  setTimeout(() => {
+    const freqSel = document.getElementById('habitFreq');
+    if (freqSel) {
+      freqSel.value = 'once';
+      onFreqChange();
+    }
+    const dateInput = document.getElementById('habitOnceDate');
+    if (dateInput) dateInput.value = dateStr;
+  }, 350);
+}
+
+/* ========== HABIT MODAL ========== */
+const weekdaysSelected = new Set();
+let multiPartsSelected = [];
+let currentTimeLabel = '';
+let habitEditMode = 'main';
+let tplEditingIndex = -1;
+
+function buildWeekdayChips() {
+  const container = document.getElementById('weekdaysChips');
+  container.innerHTML = WEEKDAYS.map((w, i) =>
+    `<button class="chip" data-wd="${i}" onclick="toggleWeekday(${i}, this)">${w}</button>`
+  ).join('');
+}
+function toggleWeekday(i, el) {
+  if (weekdaysSelected.has(i)) weekdaysSelected.delete(i);
+  else weekdaysSelected.add(i);
+  el.classList.toggle('active');
+}
+
+function buildTimeLabelChips() {
+  const container = document.getElementById('timeLabelChips');
+  const opts = ['Утро', 'День', 'Вечер', 'Ночь', 'Своё'];
+  const presets = ['Утро', 'День', 'Вечер', 'Ночь'];
+  let html = opts.map(o => {
+    let active = '';
+    if (o === 'Своё') {
+      if (currentTimeLabel === '__custom__') active = ' active';
+      else if (currentTimeLabel && !presets.includes(currentTimeLabel)) active = ' active';
+    } else {
+      if (currentTimeLabel === o) active = ' active';
+    }
+    return `<button class="chip time${active}" data-time="${o}" onclick="selectTimeLabel('${o}')">${o}</button>`;
+  }).join('');
+  html += `<button class="chip" onclick="clearTimeLabel()" style="font-size:11px;">Без метки</button>`;
+  container.innerHTML = html;
+  const custom = document.getElementById('habitCustomTime');
+  if (currentTimeLabel === '__custom__') {
+    custom.style.display = 'block';
+    custom.value = '';
+  } else if (currentTimeLabel && !presets.includes(currentTimeLabel)) {
+    custom.style.display = 'block';
+    custom.value = currentTimeLabel;
+  } else {
+    custom.style.display = 'none';
+    custom.value = '';
+  }
+}
+function selectTimeLabel(label) {
+  if (label === 'Своё') {
+    currentTimeLabel = '__custom__';
+    document.getElementById('habitCustomTime').style.display = 'block';
+    document.getElementById('habitCustomTime').value = '';
+    setTimeout(() => document.getElementById('habitCustomTime').focus(), 100);
+  } else {
+    currentTimeLabel = label;
+    document.getElementById('habitCustomTime').style.display = 'none';
+  }
+  buildTimeLabelChips();
+}
+function clearTimeLabel() {
+  currentTimeLabel = '';
+  document.getElementById('habitCustomTime').style.display = 'none';
+  document.getElementById('habitCustomTime').value = '';
+  buildTimeLabelChips();
+}
+
+function onTypeChange() {
+  const t = document.getElementById('habitType').value;
+  document.getElementById('numericFields').style.display = t === 'numeric' ? 'block' : 'none';
+  document.getElementById('regularFields').style.display = 'block';
+  // Для numeric скрываем опцию "Несколько раз в день"
+  const freqSel = document.getElementById('habitFreq');
+  const multiOpt = freqSel.querySelector('option[value="multi"]');
+  if (t === 'numeric') {
+    if (multiOpt) multiOpt.style.display = 'none';
+    if (freqSel.value === 'multi') freqSel.value = 'daily';
+  } else {
+    if (multiOpt) multiOpt.style.display = '';
+  }
+  onFreqChange();
+}
+function onFreqChange() {
+  const f = document.getElementById('habitFreq').value;
+  const t = document.getElementById('habitType').value;
+  document.getElementById('multiField').style.display = (f === 'multi' && t !== 'numeric') ? 'block' : 'none';
+  document.getElementById('weeklyField').style.display = f === 'weekly' ? 'block' : 'none';
+  document.getElementById('monthlyField').style.display = f === 'monthly' ? 'block' : 'none';
+  document.getElementById('onceField').style.display = f === 'once' ? 'block' : 'none';
+  if (f === 'multi' && t !== 'numeric') onMultiInput();
+}
+function onMultiInput() {
+  const n = parseInt(document.getElementById('habitMulti').value) || 2;
+  const container = document.getElementById('multiPresets');
+  if (n < 2 || n > 4) {
+    container.innerHTML = `<div style="font-size:12px;color:var(--text-soft);">Разделение по времени доступно для 2, 3 или 4 раз</div>`;
+    multiPartsSelected = [];
+    return;
+  }
+  const presetsMap = {
+    2: [['Утром и вечером', [0, 2]]],
+    3: [['Утром, днём и вечером', [0, 1, 2]]],
+    4: [['Утром, днём, вечером и ночью', [0, 1, 2, 3]]]
+  };
+  const opts = presetsMap[n] || [];
+  let html = opts.map(([label, parts]) => {
+    const active = arraysEqual(parts, multiPartsSelected) ? ' active time' : '';
+    return `<button class="chip time${active}" onclick="toggleMultiPreset([${parts.join(',')}])">${label}</button>`;
+  }).join('');
+  html += `<button class="chip" onclick="clearMultiPreset()" style="font-size:11px;">Без разбивки</button>`;
+  container.innerHTML = html;
+}
+function arraysEqual(a, b) {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+function toggleMultiPreset(parts) {
+  if (arraysEqual(parts, multiPartsSelected)) multiPartsSelected = [];
+  else multiPartsSelected = parts.slice();
+  onMultiInput();
+}
+function clearMultiPreset() { multiPartsSelected = []; onMultiInput(); }
+
+function openHabitModal(id) {
+  habitEditMode = 'main';
+  tplEditingIndex = -1;
+  const modal = document.getElementById('habitModal');
+  const title = document.getElementById('habitModalTitle');
+  const delBtn = document.getElementById('habitDeleteBtn');
+  buildWeekdayChips();
+  weekdaysSelected.clear();
+  multiPartsSelected = [];
+  currentTimeLabel = '';
+
+  if (id) {
+    const h = state.habits.find(x => x.id === id);
+    if (!h) return;
+    title.textContent = 'Редактировать ритуал 🎀';
+    document.getElementById('habitId').value = h.id;
+    document.getElementById('habitName').value = h.name;
+    document.getElementById('habitPoints').value = h.points;
+    document.getElementById('habitType').value = h.type || 'check';
+    document.getElementById('habitNumericOp').value = h.numericOp || 'max';
+    document.getElementById('habitNumericTarget').value = h.numericTarget || 1800;
+    document.getElementById('habitNumericUnit').value = h.numericUnit || '';
+    document.getElementById('habitFreq').value = h.freq || 'daily';
+    document.getElementById('habitMulti').value = h.multi || 2;
+    document.getElementById('habitMonthlyDay').value = h.monthlyDay || 1;
+    document.getElementById('habitOnceDate').value = h.onceDate || '';
+    currentTimeLabel = h.timeLabel || '';
+    (h.weekdays || []).forEach(wd => {
+      weekdaysSelected.add(wd);
+      const chip = document.querySelector(`#weekdaysChips .chip[data-wd="${wd}"]`);
+      if (chip) chip.classList.add('active');
+    });
+    multiPartsSelected = h.multiParts ? h.multiParts.slice() : [];
+    delBtn.style.display = 'block';
+  } else {
+    title.textContent = 'Новый ритуал 🎀';
+    document.getElementById('habitId').value = '';
+    document.getElementById('habitName').value = '';
+    document.getElementById('habitPoints').value = 10;
+    document.getElementById('habitType').value = 'check';
+    document.getElementById('habitNumericOp').value = 'max';
+    document.getElementById('habitNumericTarget').value = 1800;
+    document.getElementById('habitNumericUnit').value = '';
+    document.getElementById('habitFreq').value = 'daily';
+    document.getElementById('habitMulti').value = 2;
+    document.getElementById('habitMonthlyDay').value = 1;
+    document.getElementById('habitOnceDate').value = dateKey(new Date());
+    delBtn.style.display = 'none';
+  }
+  buildTimeLabelChips();
+  onTypeChange();
+  onFreqChange();
+  modal.classList.add('active');
+  setTimeout(() => document.getElementById('habitName').focus(), 300);
+}
+
+function openHabitModalForTpl(tplRitual, index) {
+  habitEditMode = { tplEditor: true };
+  tplEditingIndex = index;
+  const modal = document.getElementById('habitModal');
+  const title = document.getElementById('habitModalTitle');
+  const delBtn = document.getElementById('habitDeleteBtn');
+  buildWeekdayChips();
+  weekdaysSelected.clear();
+  multiPartsSelected = [];
+  currentTimeLabel = '';
+
+  title.textContent = index >= 0 ? 'Редактировать в шаблоне 🎀' : 'Новый ритуал в шаблон 🎀';
+  document.getElementById('habitId').value = '';
+  document.getElementById('habitName').value = tplRitual.name || '';
+  document.getElementById('habitPoints').value = tplRitual.points || 10;
+  document.getElementById('habitType').value = tplRitual.type || 'check';
+  document.getElementById('habitNumericOp').value = tplRitual.numericOp || 'max';
+  document.getElementById('habitNumericTarget').value = tplRitual.numericTarget || 1800;
+  document.getElementById('habitNumericUnit').value = tplRitual.numericUnit || '';
+  document.getElementById('habitFreq').value = tplRitual.freq || 'daily';
+  document.getElementById('habitMulti').value = tplRitual.multi || 2;
+  document.getElementById('habitMonthlyDay').value = tplRitual.monthlyDay || 1;
+  document.getElementById('habitOnceDate').value = tplRitual.onceDate || dateKey(new Date());
+  currentTimeLabel = tplRitual.timeLabel || '';
+  (tplRitual.weekdays || []).forEach(wd => {
+    weekdaysSelected.add(wd);
+    const chip = document.querySelector(`#weekdaysChips .chip[data-wd="${wd}"]`);
+    if (chip) chip.classList.add('active');
+  });
+  multiPartsSelected = tplRitual.multiParts ? tplRitual.multiParts.slice() : [];
+  delBtn.style.display = 'none';
+  buildTimeLabelChips();
+  onTypeChange();
+  onFreqChange();
+  modal.classList.add('active');
+  setTimeout(() => document.getElementById('habitName').focus(), 300);
+}
+
+function buildHabitFromForm() {
+  const name = document.getElementById('habitName').value.trim();
+  const points = parseInt(document.getElementById('habitPoints').value) || 1;
+  const type = document.getElementById('habitType').value;
+  if (!name) { showToast('Введи название 💕'); return null; }
+
+  let timeLabel = '';
+  if (currentTimeLabel === '__custom__') {
+    timeLabel = document.getElementById('habitCustomTime').value.trim();
+  } else if (currentTimeLabel) {
+    timeLabel = currentTimeLabel;
+  }
+
+  const habit = { id: uid(), name, points: Math.max(1, points), type, timeLabel };
+  const freq = document.getElementById('habitFreq').value;
+  // Для numeric недоступен multi
+  if (type === 'numeric' && freq === 'multi') {
+    // принудительно daily
+    habit.freq = 'daily';
+  } else {
+    habit.freq = freq;
+  }
+  habit.multi = parseInt(document.getElementById('habitMulti').value) || 2;
+  habit.weekdays = freq === 'weekly' ? Array.from(weekdaysSelected) : [];
+  habit.monthlyDay = parseInt(document.getElementById('habitMonthlyDay').value) || 1;
+  habit.onceDate = document.getElementById('habitOnceDate').value;
+  habit.multiParts = (freq === 'multi' && type !== 'numeric' && multiPartsSelected.length) ? multiPartsSelected.slice() : [];
+
+  if (type === 'numeric') {
+    habit.numericOp = document.getElementById('habitNumericOp').value;
+    habit.numericTarget = parseFloat(document.getElementById('habitNumericTarget').value) || 0;
+    habit.numericUnit = document.getElementById('habitNumericUnit').value.trim();
+  }
+
+  if (habit.freq === 'weekly' && habit.weekdays.length === 0) { showToast('Выбери хотя бы один день 💕'); return null; }
+  if (habit.freq === 'once' && !habit.onceDate) { showToast('Выбери дату 💕'); return null; }
+  return habit;
+}
+
+function saveHabit() {
+  const habit = buildHabitFromForm();
+  if (!habit) return;
+
+  if (habitEditMode && habitEditMode.tplEditor && tplEditorState) {
+    if (tplEditingIndex >= 0) {
+      const old = tplEditorState.rituals[tplEditingIndex];
+      habit.id = old.id || uid();
+      tplEditorState.rituals[tplEditingIndex] = habit;
+    } else {
+      tplEditorState.rituals.push(habit);
+    }
+    closeModal('habitModal');
+    renderTplEditorList();
+    showToast('Сохранено 💕');
+    return;
+  }
+
+  const id = document.getElementById('habitId').value;
+  if (id) {
+    habit.id = id;
+    const idx = state.habits.findIndex(x => x.id === id);
+    if (idx >= 0) state.habits[idx] = habit;
+  } else state.habits.push(habit);
+  save(); closeModal('habitModal');
+  renderToday(); renderRituals(); renderCalendar();
+  showToast(id ? 'Обновлено 💕' : 'Ритуал добавлен 🎀');
+}
+
+function deleteHabit() {
+  if (habitEditMode !== 'main') { closeModal('habitModal'); return; }
+  const id = document.getElementById('habitId').value;
+  if (!id) return;
+  if (!confirm('Удалить этот ритуал?')) return;
+  state.habits = state.habits.filter(h => h.id !== id);
+  save(); closeModal('habitModal');
+  renderToday(); renderRituals(); renderCalendar();
+  showToast('Удалено 🗑');
+}
+
+/* ========== REWARD MODAL ========== */
+function openRewardModal(id) {
+  const title = document.getElementById('rewardModalTitle');
+  const delBtn = document.getElementById('rewardDeleteBtn');
+  if (id) {
+    const r = state.rewards.find(x => x.id === id);
+    if (!r) return;
+    title.textContent = 'Редактировать 🎁';
+    document.getElementById('rewardId').value = r.id;
+    document.getElementById('rewardName').value = r.name;
+    document.getElementById('rewardPrice').value = r.price;
+    delBtn.style.display = 'block';
+  } else {
+    title.textContent = 'Новая награда 🎁';
+    document.getElementById('rewardId').value = '';
+    document.getElementById('rewardName').value = '';
+    document.getElementById('rewardPrice').value = 100;
+    delBtn.style.display = 'none';
+  }
+  document.getElementById('rewardModal').classList.add('active');
+  setTimeout(() => document.getElementById('rewardName').focus(), 300);
+}
+function saveReward() {
+  const name = document.getElementById('rewardName').value.trim();
+  const price = parseInt(document.getElementById('rewardPrice').value) || 1;
+  const id = document.getElementById('rewardId').value;
+  if (!name) { showToast('Введи название 💕'); return; }
+  const reward = { id: id || uid(), name, price: Math.max(1, price) };
+  if (id) {
+    const idx = state.rewards.findIndex(x => x.id === id);
+    if (idx >= 0) state.rewards[idx] = reward;
+  } else state.rewards.push(reward);
+  save(); closeModal('rewardModal'); renderSpend();
+  showToast(id ? 'Обновлено 💕' : 'Награда добавлена 🎁');
+}
+function deleteReward() {
+  const id = document.getElementById('rewardId').value;
+  if (!id) return;
+  if (!confirm('Удалить эту награду?')) return;
+  state.rewards = state.rewards.filter(r => r.id !== id);
+  save(); closeModal('rewardModal'); renderSpend();
+  showToast('Удалено 🗑');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const hm = document.getElementById('habitModal');
+  const rm = document.getElementById('rewardModal');
+  const nm = document.getElementById('tplNameModal');
+  const nam = document.getElementById('nameModal');
+  if (hm.classList.contains('active') && e.target.tagName === 'INPUT' && e.target.type !== 'date' && e.target.id !== 'habitNumericTarget' && e.target.id !== 'habitCustomTime') {
+    e.preventDefault(); saveHabit();
+  }
+  if (rm.classList.contains('active') && e.target.tagName === 'INPUT' && e.target.type !== 'date') {
+    e.preventDefault(); saveReward();
+  }
+  if (nm.classList.contains('active') && e.target.id === 'tplNameInput') {
+    e.preventDefault(); confirmTplName();
+  }
+  if (nam.classList.contains('active') && (e.target.id === 'nameInput' || e.target.id === 'bdayInput')) {
+    e.preventDefault(); saveNameModal();
+  }
+});
+
+/* ========== STATISTICS ========== */
+let statPeriod = 'all';
+function openStats() {
+  document.getElementById('statsModal').classList.add('active');
+  setStatPeriod(statPeriod);
+}
+function setStatPeriod(p) {
+  statPeriod = p;
+  document.querySelectorAll('#statPeriod button').forEach(b => {
+    b.classList.toggle('active', b.dataset.period === p);
+  });
+  renderStats();
+}
+function getPeriodRange(period) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  let from = null;
+  if (period === 'week') { from = new Date(today); from.setDate(from.getDate() - 6); }
+  else if (period === 'month') { from = new Date(today); from.setDate(from.getDate() - 29); }
+  return { from, to: today };
+}
+function renderStats() {
+  const list = document.getElementById('statsList');
+  const e = getThemeEmoji();
+  if (state.habits.length === 0) {
+    list.innerHTML = `<div class="stat-empty"><span class="emoji">${e.empty}</span>Пока нечего показывать</div>`;
+    return;
+  }
+  const { from, to } = getPeriodRange(statPeriod);
+  const stats = state.habits.map(h => computeStat(h, from, to));
+  stats.sort((a, b) => b.pct - a.pct);
+  list.innerHTML = stats.map(s => {
+    const pctClass = s.pct >= 70 ? 'high' : (s.pct >= 40 ? 'mid' : 'low');
+    let linesHtml = '';
+    if (s.type === 'simple') {
+      linesHtml = `<div class="stat-line"><span>✅ <strong>${s.doneDays}</strong> из <strong>${s.scheduledDays}</strong> дней</span></div>`;
+    } else if (s.type === 'multi') {
+      linesHtml = `<div class="stat-line">
+        <span>🎯 Слоты: <strong>${s.doneSlots}</strong>/${s.scheduledSlots} (${s.slotPct}%)</span>
+        <span>📅 Полные дни: <strong>${s.fullDays}</strong>/${s.scheduledDays} (${s.dayPct}%)</span>
+      </div>`;
+    } else if (s.type === 'numeric') {
+      linesHtml = `<div class="stat-line"><span>✅ <strong>${s.doneDays}</strong> из <strong>${s.scheduledDays}</strong> дней</span></div>`;
+    }
+    return `
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-name">${escapeHtml(s.habit.name)}</div>
+          <div class="stat-pct ${pctClass}">${s.pct}%</div>
+        </div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:${s.pct}%"></div></div>
+        ${linesHtml}
+      </div>
+    `;
+  }).join('');
+}
+function computeStat(h, from, to) {
+  let startDate = from ? new Date(from) : null;
+  if (!startDate) {
+    const allKeys = Object.keys(state.completions);
+    if (allKeys.length === 0) startDate = new Date(to);
+    else startDate = new Date(allKeys.sort()[0]);
+  }
+  const days = [];
+  const cur = new Date(startDate); cur.setHours(0,0,0,0);
+  const end = new Date(to); end.setHours(0,0,0,0);
+  while (cur <= end) { days.push(new Date(cur)); cur.setDate(cur.getDate() + 1); }
+  let scheduledDays = 0, doneDays = 0, scheduledSlots = 0, doneSlots = 0, fullDays = 0;
+  days.forEach(day => {
+    if (!isHabitScheduled(h, day)) return;
+    const key = dateKey(day);
+    const comp = state.completions[key] || {};
+    if (h.type === 'numeric') {
+      scheduledDays++;
+      const c = comp[`num-${h.id}`];
+      if (c && c.ok) doneDays++;
+    } else if (h.freq === 'multi') {
+      const max = h.multi || 2;
+      scheduledDays++;
+      scheduledSlots += max;
+      let localDone = 0;
+      for (let i = 0; i < max; i++) if (comp[`multi-${h.id}-${i}`] === 'done') localDone++;
+      doneSlots += localDone;
+      if (localDone === max) fullDays++;
+    } else {
+      scheduledDays++;
+      if (comp[`simple-${h.id}`] === 'done') doneDays++;
+    }
+  });
+  let pct = 0;
+  if (h.type === 'numeric' || h.freq !== 'multi') {
+    pct = scheduledDays > 0 ? Math.round(doneDays / scheduledDays * 100) : 0;
+  } else {
+    pct = scheduledSlots > 0 ? Math.round(doneSlots / scheduledSlots * 100) : 0;
+  }
+  return {
+    habit: h,
+    type: h.type === 'numeric' ? 'numeric' : (h.freq === 'multi' ? 'multi' : 'simple'),
+    scheduledDays, doneDays, scheduledSlots, doneSlots,
+    slotPct: scheduledSlots > 0 ? Math.round(doneSlots / scheduledSlots * 100) : 0,
+    dayPct: scheduledDays > 0 ? Math.round(fullDays / scheduledDays * 100) : 0,
+    fullDays, pct
+  };
+}
+
+/* ========== TEMPLATES ========== */
+let tplTab = 'preset';
+let tplPreviewSource = null;
+let tplNameCallback = null;
+let tplEditorState = null;
+
+function openTemplatesModal() {
+  tplTab = 'preset';
+  document.querySelectorAll('#tplTabs button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tpltab === 'preset');
+  });
+  renderTemplatesList();
+  document.getElementById('templatesModal').classList.add('active');
+}
+function setTplTab(tab) {
+  tplTab = tab;
+  document.querySelectorAll('#tplTabs button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tpltab === tab);
+  });
+  renderTemplatesList();
+}
+function renderTemplatesList() {
+  const list = document.getElementById('tplList');
+  if (tplTab === 'preset') {
+    list.innerHTML = PRESET_TEMPLATES.map(t => `
+      <div class="tpl-card">
+        <div class="tpl-clickable" onclick="openTplPreview('preset', '${t.id}')">
+          <div class="tpl-name">${escapeHtml(t.name)}</div>
+          <div class="tpl-count">${t.rituals.length} ритуалов</div>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    if (state.templates.length === 0) {
+      list.innerHTML = `<div class="tpl-hint">Пока нет своих шаблонов</div>`;
+    } else {
+      list.innerHTML = state.templates.map(t => `
+        <div class="tpl-card">
+          <div class="tpl-clickable" onclick="openTplPreview('custom', '${t.id}')">
+            <div class="tpl-name">${escapeHtml(t.name)}</div>
+            <div class="tpl-count">${t.rituals.length} ритуалов</div>
+          </div>
+          <div class="tpl-actions">
+            <button class="tpl-mini-btn" onclick="renameTemplate('${t.id}')" title="Переименовать">✏️</button>
+            <button class="tpl-mini-btn" onclick="editTemplate('${t.id}')" title="Редактировать">📝</button>
+            <button class="tpl-mini-btn" onclick="deleteTemplate('${t.id}')" title="Удалить">🗑</button>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+function openTplPreview(source, id) {
+  let rituals = [];
+  let title = 'Добавить ритуалы';
+  if (source === 'preset') {
+    const t = PRESET_TEMPLATES.find(x => x.id === id);
+    if (!t) return;
+    rituals = t.rituals;
+    title = t.name;
+  } else if (source === 'custom') {
+    const t = state.templates.find(x => x.id === id);
+    if (!t) return;
+    rituals = t.rituals;
+    title = t.name;
+  }
+  tplPreviewSource = { rituals: rituals.map(r => ({ ...r, _checked: true })) };
+  document.getElementById('tplPreviewTitle').textContent = title;
+  renderTplChecklist();
+  document.getElementById('tplPreviewModal').classList.add('active');
+}
+function renderTplChecklist() {
+  const list = document.getElementById('tplChecklist');
+  list.innerHTML = tplPreviewSource.rituals.map((r, i) => `
+    <div class="tpl-check-item" onclick="toggleTplCheck(${i})">
+      <div class="tpl-checkbox ${r._checked ? 'checked' : ''}">✓</div>
+      <div class="tpl-check-name">${escapeHtml(r.name)}</div>
+      <div class="tpl-check-pts">+${r.points}</div>
+    </div>
+  `).join('');
+}
+function toggleTplCheck(i) {
+  tplPreviewSource.rituals[i]._checked = !tplPreviewSource.rituals[i]._checked;
+  renderTplChecklist();
+}
+function addSelectedFromTemplate() {
+  const selected = tplPreviewSource.rituals.filter(r => r._checked);
+  if (selected.length === 0) { showToast('Ничего не выбрано 💕'); return; }
+  selected.forEach(r => {
+    const habit = {
+      id: uid(),
+      name: r.name,
+      points: r.points,
+      type: r.type || 'check',
+      freq: r.freq || 'daily',
+      multi: r.multi || 1,
+      multiParts: r.multiParts ? r.multiParts.slice() : [],
+      weekdays: r.weekdays ? r.weekdays.slice() : [],
+      monthlyDay: r.monthlyDay || 1,
+      onceDate: r.onceDate || '',
+      timeLabel: r.timeLabel || ''
+    };
+    if (r.type === 'numeric') {
+      habit.numericOp = r.numericOp || 'max';
+      habit.numericTarget = r.numericTarget || 0;
+      habit.numericUnit = r.numericUnit || '';
+    }
+    state.habits.push(habit);
+  });
+  save();
+  closeModal('tplPreviewModal');
+  renderToday(); renderRituals(); renderCalendar();
+  showToast(`Добавлено ${selected.length} 💕`);
+}
+
+function openTplNameModal(title, callback, initialValue) {
+  document.getElementById('tplNameTitle').textContent = title;
+  document.getElementById('tplNameInput').value = initialValue || '';
+  tplNameCallback = callback;
+  document.getElementById('tplNameModal').classList.add('active');
+  setTimeout(() => document.getElementById('tplNameInput').focus(), 300);
+}
+function confirmTplName() {
+  const v = document.getElementById('tplNameInput').value.trim();
+  if (!v) { showToast('Введи название 💕'); return; }
+  const cb = tplNameCallback;
+  tplNameCallback = null;
+  closeModal('tplNameModal');
+  if (cb) cb(v);
+}
+
+function saveCurrentAsTemplate() {
+  if (state.habits.length === 0) { showToast('Нет ритуалов для сохранения 💕'); return; }
+  openTplNameModal('Название шаблона', (name) => {
+    state.templates.push({
+      id: uid(),
+      name,
+      rituals: state.habits.map(h => ({ ...h, id: uid() }))
+    });
+    save();
+    setTplTab('custom');
+    showToast('Шаблон сохранён 💕');
+  });
+}
+
+function createTemplateFromScratch() {
+  openTplNameModal('Название нового шаблона', (name) => {
+    tplEditorState = { mode: 'new', tplId: null, name, rituals: [] };
+    closeModal('templatesModal');
+    openTplEditor();
+  });
+}
+
+function editTemplate(id) {
+  const tpl = state.templates.find(t => t.id === id);
+  if (!tpl) return;
+  tplEditorState = { mode: 'edit', tplId: id, name: tpl.name, rituals: tpl.rituals.map(r => ({ ...r })) };
+  closeModal('templatesModal');
+  openTplEditor();
+}
+function renameTemplate(id) {
+  const tpl = state.templates.find(t => t.id === id);
+  if (!tpl) return;
+  openTplNameModal('Переименовать шаблон', (newName) => {
+    tpl.name = newName;
+    save();
+    renderTemplatesList();
+    showToast('Переименовано 💕');
+  }, tpl.name);
+}
+function deleteTemplate(id) {
+  if (!confirm('Удалить этот шаблон?')) return;
+  state.templates = state.templates.filter(t => t.id !== id);
+  save();
+  renderTemplatesList();
+  showToast('Шаблон удалён 🗑');
+}
+
+function openTplEditor() {
+  if (!tplEditorState) return;
+  document.getElementById('tplEditTitle').textContent = tplEditorState.mode === 'new'
+    ? 'Новый шаблон: ' + tplEditorState.name
+    : 'Шаблон: ' + tplEditorState.name;
+  renderTplEditorList();
+  document.getElementById('tplEditModal').classList.add('active');
+}
+function renderTplEditorList() {
+  const list = document.getElementById('tplEditList');
+  if (!tplEditorState || tplEditorState.rituals.length === 0) {
+    list.innerHTML = `<div class="tpl-hint">Добавь хотя бы один ритуал</div>`;
+    return;
+  }
+  list.innerHTML = tplEditorState.rituals.map((r, i) => `
+    <div class="tpl-ritual-row">
+      <div class="habit-info">
+        <div class="habit-name">${escapeHtml(r.name)}</div>
+        <div class="habit-meta">
+          <span class="badge">+${r.points}</span>
+          <span class="badge freq">${freqToText(r)}</span>
+        </div>
+      </div>
+      <button class="tpl-mini-btn" onclick="editTplRitual(${i})">✏️</button>
+      <button class="tpl-mini-btn" onclick="removeTplRitual(${i})">🗑</button>
+    </div>
+  `).join('');
+}
+function editTplRitual(i) {
+  if (!tplEditorState) return;
+  const r = tplEditorState.rituals[i];
+  openHabitModalForTpl(r, i);
+}
+function removeTplRitual(i) {
+  if (!tplEditorState) return;
+  if (!confirm('Удалить ритуал из шаблона?')) return;
+  tplEditorState.rituals.splice(i, 1);
+  renderTplEditorList();
+}
+function addRitualToCurrentTemplate() {
+  if (!tplEditorState) return;
+  openHabitModalForTpl({ name: '', points: 10, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: dateKey(new Date()), timeLabel: '' }, -1);
+}
+function closeTplEditor() {
+  tplEditorState = null;
+  closeModal('tplEditModal');
+  openTemplatesModal();
+}
+function saveTplEditor() {
+  if (!tplEditorState) return;
+  if (tplEditorState.rituals.length === 0) { showToast('Добавь хотя бы один ритуал 💕'); return; }
+  if (tplEditorState.mode === 'new') {
+    state.templates.push({
+      id: uid(),
+      name: tplEditorState.name,
+      rituals: tplEditorState.rituals.map(r => ({ ...r, id: uid() }))
+    });
+  } else {
+    const tpl = state.templates.find(t => t.id === tplEditorState.tplId);
+    if (tpl) {
+      tpl.name = tplEditorState.name;
+      tpl.rituals = tplEditorState.rituals.map(r => ({ ...r, id: r.id || uid() }));
+    }
+  }
+  save();
+  tplEditorState = null;
+  closeModal('tplEditModal');
+  openTemplatesModal();
+  setTplTab('custom');
+  showToast('Шаблон сохранён 💕');
+}
+
+/* ========== GIFTS ========== */
+function claimBirthdayGift() {
+  const btn = document.getElementById('bdayBtn');
+  if (btn.disabled) return;
+  btn.disabled = true;
+  addBalance(1000);
+  state.lastBirthdayGift = String(new Date().getFullYear());
+  save(); updateBalance();
+  showToast(`+1000 ${getThemeEmoji().points} С днём рождения!`);
+  setTimeout(() => {
+    document.getElementById('bdayModal').classList.remove('active');
+    btn.disabled = false;
+  }, 800);
+}
+function claimWelcomeGift() {
+  const btn = document.getElementById('welcomeGiftBtn');
+  if (btn.disabled) return;
+  btn.disabled = true;
+  addBalance(100);
+  state.welcomeGiftReceived = true;
+  save(); updateBalance();
+  showToast(`+100 ${getThemeEmoji().points} Добро пожаловать!`);
+  setTimeout(() => {
+    document.getElementById('welcomeGiftModal').classList.remove('active');
+    btn.disabled = false;
+  }, 800);
+}
+function claimReturnGift() {
+  const btn = document.getElementById('returnGiftBtn');
+  if (btn.disabled) return;
+  btn.disabled = true;
+  addBalance(100);
+  save(); updateBalance();
+  showToast(`+100 ${getThemeEmoji().points} С возвращением!`);
+  setTimeout(() => {
+    document.getElementById('returnGiftModal').classList.remove('active');
+    btn.disabled = false;
+  }, 800);
+}
+
+/* ========== BACKUP ========== */
+function exportData() {
+  try {
+    const data = JSON.stringify(state, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'princess_backup.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    state.lastBackup = dateKey(new Date());
+    save(); renderBackupReminder();
+    showToast('Данные сохранены 💾');
+  } catch(e) {
+    console.warn('export error', e);
+    showToast('Не удалось сохранить 💕');
+  }
+}
+function importData() { document.getElementById('importFile').click(); }
+function handleImportFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data || typeof data !== 'object' || !('balance' in data)) {
+        showToast('Не тот файл 💕'); return;
+      }
+      if (!confirm('Это заменит все текущие данные. Продолжить?')) { e.target.value = ''; return; }
+      state = Object.assign({
+        name: '', birthday: '', balance: 0, theme: 'pink',
+        habits: [], rewards: [], history: [], completions: {},
+        orders: {}, lastBirthdayGift: '',
+        createdAt: '', lastVisit: '',
+        welcomeGiftReceived: false,
+        lastBackup: '', lastReminderDate: '', neverRemindBackup: false,
+        templates: []
+      }, data);
+      // Миграция
+      if (state.habits) {
+        state.habits.forEach(h => {
+          if (h.type === 'numeric' && h.freq === 'numeric') h.freq = 'daily';
+        });
+      }
+      save();
+      applyTheme(state.theme || 'pink');
+      pendingTheme = state.theme || 'pink';
+      renderGreeting(); updateBalance(); initCalendar();
+      renderToday(); renderRituals(); renderSpend(); renderCalendar();
+      renderBackupReminder();
+      closeModal('themeModal');
+      showToast(`Данные восстановлены ${getThemeEmoji().points}`);
+    } catch(err) {
+      console.warn('import error', err);
+      showToast('Ошибка загрузки 💕');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+/* ========== BACKUP REMINDER ========== */
+function shouldShowBackupReminder() {
+  if (state.neverRemindBackup) return false;
+  if (!state.name) return false;
+  const today = new Date(); today.setHours(0,0,0,0);
+  if (state.createdAt) {
+    const sinceCreate = daysBetween(state.createdAt, today);
+    if (sinceCreate < 30) return false;
+  } else return false;
+  if (state.lastReminderDate) {
+    const remindAt = new Date(state.lastReminderDate); remindAt.setHours(0,0,0,0);
+    if (remindAt > today) return false;
+  }
+  if (state.lastBackup) {
+    const since = daysBetween(state.lastBackup, today);
+    if (since < 30) return false;
+  }
+  return true;
+}
+function renderBackupReminder() {
+  const container = document.getElementById('backupReminder');
+  if (!container) return;
+  if (!shouldShowBackupReminder()) { container.innerHTML = ''; return; }
+  container.innerHTML = `
+    <div class="backup-note">
+      <div class="backup-note-title">🎀 Давно не сохраняла свои данные. Сделать копию?</div>
+      <div class="backup-note-buttons">
+        <button class="backup-btn save" onclick="exportData()">💾 Сохранить данные</button>
+      </div>
+      <div class="backup-note-buttons" style="margin-top:6px;">
+        <button class="backup-btn mini" onclick="postponeBackup(1)">Завтра</button>
+        <button class="backup-btn mini" onclick="postponeBackup(7)">Через неделю</button>
+        <button class="backup-btn mini" onclick="postponeBackupMonth()">Через месяц</button>
+        <button class="backup-btn mini" onclick="neverRemindBackup()">Больше не напоминать</button>
+      </div>
+    </div>
+  `;
+}
+function postponeBackup(days) {
+  const d = new Date(); d.setDate(d.getDate() + days);
+  state.lastReminderDate = dateKey(d); save(); renderBackupReminder();
+  showToast('Хорошо, напомню позже 💕');
+}
+function postponeBackupMonth() {
+  const d = new Date(); d.setMonth(d.getMonth() + 1);
+  state.lastReminderDate = dateKey(d); save(); renderBackupReminder();
+  showToast('Хорошо, напомню через месяц 💕');
+}
+function neverRemindBackup() {
+  state.neverRemindBackup = true; save(); renderBackupReminder();
+  showToast('Больше не буду напоминать 💕');
+}
+
+/* ========== STARTUP CHECKS ========== */
+function runStartupChecks() {
+  if (checkBirthday()) return;
+  if (checkReturn()) return;
+  renderBackupReminder();
+}
+function checkBirthday() {
+  if (!state.birthday) return false;
+  const today = new Date();
+  const bd = new Date(state.birthday);
+  const sameDay = today.getDate() === bd.getDate() && today.getMonth() === bd.getMonth();
+  if (!sameDay) return false;
+  const thisYear = String(today.getFullYear());
+  if (state.lastBirthdayGift === thisYear) return false;
+  document.getElementById('bdayModal').classList.add('active');
+  return true;
+}
+function checkReturn() {
+  if (!state.name) return false;
+  if (!state.lastVisit) return false;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const sinceVisit = daysBetween(state.lastVisit, today);
+  if (sinceVisit < 30) return false;
+  document.getElementById('returnGiftModal').classList.add('active');
+  return true;
+}
+function updateLastVisit() {
+  state.lastVisit = dateKey(new Date());
+  save();
+}
+
+/* ========== INIT ========== */
+load();
+applyTheme(state.theme || 'pink');
+pendingTheme = state.theme || 'pink';
+
+if (!state.name || !state.birthday) {
+  showWelcome();
+} else {
+  renderGreeting(); updateBalance(); initCalendar();
+  renderToday(); renderRituals(); renderSpend(); renderCalendar();
+  setTimeout(() => {
+    runStartupChecks();
+    updateLastVisit();
+  }, 400);
+}
+
+const themeModalObserver = new MutationObserver(() => {
+  const modal = document.getElementById('themeModal');
+  if (!modal.classList.contains('active') && state.name) {
+    if (state.theme !== pendingTheme) {
+      state.theme = pendingTheme;
+      save();
+      showToast('Тема обновлена 🎨');
+    }
+  }
+});
+themeModalObserver.observe(document.getElementById('themeModal'), { attributes: true, attributeFilter: ['class'] });
+</script>
+<script>
+// ============ SERVICE WORKER (встроенный, для офлайн-режима PWA) ============
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  const swCode = `
+    const CACHE_NAME = 'princess-v1';
+    const ASSETS = ['./', './index.html', './manifest.json', './icon.svg'];
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)).catch(()=>{}));
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(keys => Promise.all(
+        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+      )));
+      self.clients.claim();
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(
+        caches.match(e.request).then(r => r || fetch(e.request).then(resp => {
+          if (resp && resp.status === 200 && e.request.method === 'GET') {
+            const clone = resp.clone();
+            caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+          }
+          return resp;
+        }).catch(() => caches.match('./index.html')))
+      );
+    });
+  `;
+  try {
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl).catch(() => {});
+  } catch(e) {
+    console.warn('SW register error', e);
+  }
+}
+</script>
+</body>
+</html>
