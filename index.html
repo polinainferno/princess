@@ -402,9 +402,19 @@
     font-size: 10px; font-weight: 600;
     transition: all 0.25s; border-radius: 16px;
   }
-  .tab .icon { font-size: 21px; display: block; margin-bottom: 2px; filter: grayscale(0.6); transition: all 0.25s; }
+   .tab .icon {
+    font-size: 21px; display: flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; margin: 0 auto 2px;
+    border-radius: 50%;
+    filter: grayscale(0.6);
+    transition: all 0.25s;
+  }
   .tab.active { color: var(--pink-deep); }
-  .tab.active .icon { filter: none; transform: scale(1.15); }
+  .tab.active .icon {
+    filter: none; transform: scale(1.1);
+    background: var(--pink-soft);
+    box-shadow: 0 0 0 4px var(--pink-soft);
+  }
 
   .tab-content { display: none; animation: fadeIn 0.35s ease; }
   .tab-content.active { display: block; }
@@ -446,14 +456,14 @@
   .swipe-delete-btn {
     position: absolute;
     right: 0; top: 0; bottom: 0;
-    width: 100px;
+    width: 130px;
     background: var(--err-color);
     color: #fff;
     border: none;
     border-radius: 22px;
     font-family: inherit;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -685,6 +695,30 @@
   .cal-day .dot { position: absolute; bottom: 3px; width: 5px; height: 5px; border-radius: 50%; background: var(--lavender-deep); }
   .cal-day.today .dot { background: #fff; }
   .cal-day .cake { position: absolute; top: -2px; right: -2px; font-size: 10px; }
+  
+  .cal-today-btn {
+    display: block;
+    margin: 12px auto 0;
+    padding: 8px 18px;
+    border-radius: 14px;
+    border: 2px solid var(--pink);
+    background: var(--card-bg);
+    color: var(--pink-deep);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cal-today-btn:hover { background: var(--pink-soft); }
+  .cal-today-btn:active { transform: scale(0.96); }
+  .cal-today-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    border-style: dashed;
+  }
+  .cal-today-btn:disabled:active { transform: none; }
+  .cal-today-btn:disabled:hover { background: var(--card-bg); }
 
   .modal-overlay {
     position: fixed; inset: 0;
@@ -736,6 +770,56 @@
   .chip:active { transform: scale(0.95); }
   .chip.time.active { background: linear-gradient(135deg, #ffd88a, #e6b93c); border-color: #e6b93c; color: #fff; }
 
+  
+  .suggestions-list {
+    margin-top: 6px;
+    background: var(--card-bg);
+    border: 2px solid var(--pink-soft);
+    border-radius: 16px;
+    overflow: hidden;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .suggestion-item {
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid var(--pink-soft);
+  }
+  .suggestion-item:last-child { border-bottom: none; }
+  .suggestion-item:hover { background: var(--pink-soft); }
+  .suggestion-item:active { transform: scale(0.99); }
+  .suggestion-item .check-mark {
+    color: var(--ok-color);
+    font-size: 16px;
+    font-weight: 900;
+    opacity: 0.7;
+  }
+  .suggestion-empty {
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--text-soft);
+    font-style: italic;
+    text-align: center;
+  }
+  .modal-info-message {
+    background: var(--pink-soft);
+    color: var(--pink-deep);
+    padding: 14px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
   .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
   .btn { flex: 1; padding: 15px; border-radius: 18px; border: none; font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; }
   .btn-primary { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: #fff; box-shadow: 0 6px 18px rgba(255,126,179,0.4); }
@@ -1031,6 +1115,7 @@
         <button onclick="changeMonth(1)" style="width:32px;height:32px;border-radius:50%;border:none;background:var(--pink-soft);color:var(--pink-deep);font-size:16px;cursor:pointer;">›</button>
       </div>
       <div class="cal-grid" id="calGrid"></div>
+      <button class="cal-today-btn" id="calTodayBtn" onclick="goToTodayInCalendar()">📍 Сегодня</button>
     </div>
     <div class="section-title" id="calDayTitle"></div>
     <div id="calDayList"></div>
@@ -1071,9 +1156,10 @@
   <div class="modal">
     <div class="modal-title" id="habitModalTitle">Новый ритуал 🎀</div>
     <input type="hidden" id="habitId">
-    <div class="field">
+       <div class="field">
       <label>Название</label>
-      <input type="text" id="habitName" placeholder="Почистить зубы утром" maxlength="60">
+      <input type="text" id="habitName" placeholder="Почистить зубы утром" maxlength="60" autocomplete="off">
+      <div id="habitSuggestions" class="suggestions-list" style="display:none;"></div>
     </div>
     <div class="field">
       <label>Тип ритуала</label>
@@ -1431,9 +1517,10 @@ let state = {
   lastVisit: '',
   welcomeGiftReceived: false,
   lastBackup: '', lastReminderDate: '', neverRemindBackup: false,
-  templates: []
+  templates: [],
+  excluded: {}
 };
-
+  
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -1447,7 +1534,12 @@ function load() {
       }
     });
   }
+  // Миграция: если нет excluded — создаём пустой объект
+  if (!state.excluded || typeof state.excluded !== 'object') {
+    state.excluded = {};
+  }
 }
+  
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
 /* ========== UTILS ========== */
@@ -1603,13 +1695,20 @@ function handleWelcomeImport(e) {
         createdAt: '', lastVisit: '',
         welcomeGiftReceived: true,
         lastBackup: '', lastReminderDate: '', neverRemindBackup: false,
-        templates: []
+        templates: [],
+        excluded: {}
       }, data);
       // Миграция
       if (state.habits) {
         state.habits.forEach(h => {
           if (h.type === 'numeric' && h.freq === 'numeric') h.freq = 'daily';
         });
+      }
+      if (!state.excluded || typeof state.excluded !== 'object') {
+        state.excluded = {};
+      }
+      if (!state.excluded || typeof state.excluded !== 'object') {
+        state.excluded = {};
       }
       state.welcomeGiftReceived = true;
       save();
@@ -1702,6 +1801,8 @@ function switchTab(name) {
   if (name === 'rituals') renderRituals();
   if (name === 'spend') renderSpend();
   if (name === 'calendar') renderCalendar();
+  // Сброс скролла при переходе на вкладку
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 /* ========== ORDER ========== */
@@ -1715,6 +1816,76 @@ function getOrder(dayKey, keys) {
 }
 
 /* ========== TODAY ========== */
+  /* ========== SORTING FOR TODAY ========== */
+// Приоритеты групп: Утро → Без метки → День → Вечер → Ночь → Числовые
+function getTimeGroupPriority(timeLabel, isNumeric) {
+  if (isNumeric) return 6;
+  if (timeLabel === 'Утро') return 1;
+  if (!timeLabel) return 2;
+  if (timeLabel === 'День') return 3;
+  if (timeLabel === 'Вечер') return 4;
+  if (timeLabel === 'Ночь') return 5;
+  // Кастомная метка (например, "14:00") — в группу "Без метки" (2)
+  return 2;
+}
+
+// Внутри группы: активные (0) идут первыми, выполненные/проваленные (1) — в конце
+function getStatusPriority(card, dayKey) {
+  const h = card.habit;
+  const comp = state.completions[dayKey] || {};
+
+  if (h.type === 'numeric') {
+    const c = comp[`num-${h.id}`];
+    if (c && (c.ok || c.failed || c.value !== undefined)) return 1;
+    return 0;
+  }
+  if (h.freq === 'multi') {
+    const key = `multi-${h.id}-${card.slotIndex}`;
+    const c = comp[key];
+    if (c === 'done' || c === 'fail') return 1;
+    return 0;
+  }
+  const key = `simple-${h.id}`;
+  const c = comp[key];
+  if (c === 'done' || c === 'fail') return 1;
+  return 0;
+}
+
+// Сортировка карточек с учётом ручного порядка
+function sortTodayCards(cards, dayKey) {
+  // Проверяем, есть ли ручной порядок для этого дня
+  const savedOrder = state.orders[dayKey] || [];
+  const currentKeys = cards.map(c => c.key);
+  const hasManualOrder = savedOrder.length > 0 && savedOrder.some(k => currentKeys.includes(k));
+
+  if (hasManualOrder) {
+    // Используем сохранённый порядок
+    const orderMap = {};
+    savedOrder.forEach((k, i) => { orderMap[k] = i; });
+    return cards.slice().sort((a, b) => {
+      const ia = orderMap[a.key] !== undefined ? orderMap[a.key] : 99999;
+      const ib = orderMap[b.key] !== undefined ? orderMap[b.key] : 99999;
+      return ia - ib;
+    });
+  }
+
+  // Автосортировка
+  return cards.slice().sort((a, b) => {
+    const ha = a.habit, hb = b.habit;
+
+    const pa = getTimeGroupPriority(ha.type === 'numeric' ? '' : (ha.timeLabel || (ha.freq === 'multi' && a.timeIndex !== null ? TIMES[a.timeIndex] : '')), ha.type === 'numeric');
+    const pb = getTimeGroupPriority(hb.type === 'numeric' ? '' : (hb.timeLabel || (hb.freq === 'multi' && b.timeIndex !== null ? TIMES[b.timeIndex] : '')), hb.type === 'numeric');
+
+    if (pa !== pb) return pa - pb;
+
+    // Внутри группы: активные сверху, выполненные/проваленные снизу
+    const sa = getStatusPriority(a, dayKey);
+    const sb = getStatusPriority(b, dayKey);
+    if (sa !== sb) return sa - sb;
+
+    return 0;
+  });
+}
 function renderToday() {
   const today = new Date();
   const key = dateKey(today);
@@ -1729,9 +1900,11 @@ function renderToday() {
   } else bdayNote.innerHTML = '';
 
   const scheduled = state.habits.filter(h => isHabitScheduled(h, today));
+  const excluded = state.excluded[key] || [];
   const cards = [];
 
   scheduled.forEach(h => {
+    if (excluded.includes(h.id)) return; // скрыт на сегодня
     if (h.type === 'numeric') {
       cards.push({ key: `num-${h.id}`, habitId: h.id, timeIndex: null, habit: h });
     } else if (h.freq === 'multi') {
@@ -1748,13 +1921,10 @@ function renderToday() {
 
   if (cards.length === 0) {
     list.innerHTML = `<div class="empty"><span class="emoji">${e.empty}</span>Пока ничего нет.</div>`;
-    state.orders[key] = [];
     return;
   }
-  const order = getOrder(key, cards.map(c => c.key));
-  const orderedCards = order.map(k => cards.find(c => c.key === k)).filter(Boolean);
-  save();
-  list.innerHTML = orderedCards.map(card => renderTodayCard(card, key, e)).join('');
+  const sortedCards = sortTodayCards(cards, key);
+  list.innerHTML = sortedCards.map(card => renderTodayCard(card, key, e)).join('');
   enableSwipe(list, key);
   enableDrag();
 }
@@ -1784,10 +1954,10 @@ function renderTodayCard(card, dayKey, e) {
     const failedToggle = comp && comp.failed;
     return `
       <div class="swipe-wrapper" data-key="${card.key}">
-        <button class="swipe-delete-btn" onclick="removeHabitFromToday('${h.id}', null)">Удалить</button>
-        <div class="${cardClasses}" data-key="${card.key}">
+        <button class="swipe-delete-btn" onclick="hideHabitFromToday('${h.id}')">Скрыть на сегодня</button>
+        <div class="${cardClasses}" data-key="${card.key}" data-edit-id="${h.id}">
           <div class="drag-handle" data-drag-handle="true">☰</div>
-          <button class="fail-btn${failedToggle ? ' active' : ''}" onclick="failNumeric('${h.id}','${dayKey}')" title="${failedToggle ? 'Отменить' : 'Провал'}">${failedToggle ? '↩️' : '✕'}</button>
+          <button class="fail-btn${failedToggle ? ' active' : ''}" onclick="event.stopPropagation(); failNumeric('${h.id}','${dayKey}')" title="${failedToggle ? 'Отменить' : 'Провал'}">${failedToggle ? '↩️' : '✕'}</button>
           <div class="habit-info">
             <div class="habit-name">${escapeHtml(h.name)}</div>
             <div class="habit-meta">
@@ -1798,9 +1968,10 @@ function renderTodayCard(card, dayKey, e) {
             </div>
           </div>
           <input type="number" class="num-input ${inputClass}" id="ninp-${h.id}" value="${val}" placeholder="число"
+            onclick="event.stopPropagation();"
             onkeydown="if(event.key==='Enter'){event.preventDefault();saveNumeric('${h.id}','${dayKey}');}"
             oninput="liveNumericCheck('${h.id}','${dayKey}')">
-          <button class="num-save" onclick="saveNumeric('${h.id}','${dayKey}')">✓</button>
+          <button class="num-save" onclick="event.stopPropagation(); saveNumeric('${h.id}','${dayKey}')">✓</button>
           <div class="swipe-overlay"></div>
         </div>
       </div>
@@ -1817,10 +1988,10 @@ function renderTodayCard(card, dayKey, e) {
     const cardClasses = `card${isFail ? ' failed' : ''}`;
     return `
       <div class="swipe-wrapper" data-key="${card.key}">
-        <button class="swipe-delete-btn" onclick="removeHabitFromToday('${h.id}', ${slot})">Удалить</button>
-        <div class="${cardClasses}" data-key="${card.key}">
+        <button class="swipe-delete-btn" onclick="hideHabitFromToday('${h.id}')">Скрыть на сегодня</button>
+        <div class="${cardClasses}" data-key="${card.key}" data-edit-id="${h.id}">
           <div class="drag-handle" data-drag-handle="true">☰</div>
-          <button class="fail-btn${isFail ? ' active' : ''}" onclick="failMulti('${h.id}',${slot},'${dayKey}')" title="${isFail ? 'Отменить' : 'Пропустить'}">${isFail ? '↩️' : '✕'}</button>
+          <button class="fail-btn${isFail ? ' active' : ''}" onclick="event.stopPropagation(); failMulti('${h.id}',${slot},'${dayKey}')" title="${isFail ? 'Отменить' : 'Пропустить'}">${isFail ? '↩️' : '✕'}</button>
           <div class="habit-info">
             <div class="habit-name">${escapeHtml(h.name)}</div>
             <div class="habit-meta">
@@ -1829,7 +2000,7 @@ function renderTodayCard(card, dayKey, e) {
               ${isFail ? `<span class="badge minus">−${h.points}</span>` : ''}
             </div>
           </div>
-          <div class="check ${isDone?'done':''}" onclick="toggleMulti('${h.id}',${slot},'${dayKey}')">✓</div>
+          <div class="check ${isDone?'done':''}" onclick="event.stopPropagation(); toggleMulti('${h.id}',${slot},'${dayKey}')">✓</div>
           <div class="swipe-overlay"></div>
         </div>
       </div>
@@ -1844,10 +2015,10 @@ function renderTodayCard(card, dayKey, e) {
   const cardClasses = `card${isFail ? ' failed' : ''}`;
   return `
     <div class="swipe-wrapper" data-key="${card.key}">
-      <button class="swipe-delete-btn" onclick="removeHabitFromToday('${h.id}', null)">Удалить</button>
-      <div class="${cardClasses}" data-key="${card.key}">
+      <button class="swipe-delete-btn" onclick="hideHabitFromToday('${h.id}')">Скрыть на сегодня</button>
+      <div class="${cardClasses}" data-key="${card.key}" data-edit-id="${h.id}">
         <div class="drag-handle" data-drag-handle="true">☰</div>
-        <button class="fail-btn${isFail ? ' active' : ''}" onclick="failSimple('${h.id}','${dayKey}')" title="${isFail ? 'Отменить' : 'Пропустить'}">${isFail ? '↩️' : '✕'}</button>
+        <button class="fail-btn${isFail ? ' active' : ''}" onclick="event.stopPropagation(); failSimple('${h.id}','${dayKey}')" title="${isFail ? 'Отменить' : 'Пропустить'}">${isFail ? '↩️' : '✕'}</button>
         <div class="habit-info">
           <div class="habit-name">${escapeHtml(h.name)}</div>
           <div class="habit-meta">
@@ -1856,43 +2027,24 @@ function renderTodayCard(card, dayKey, e) {
             ${isFail ? `<span class="badge minus">пропущено −${h.points}</span>` : ''}
           </div>
         </div>
-        <div class="check ${isDone?'done':''}" onclick="toggleSimple('${h.id}','${dayKey}')">✓</div>
+        <div class="check ${isDone?'done':''}" onclick="event.stopPropagation(); toggleSimple('${h.id}','${dayKey}')">✓</div>
         <div class="swipe-overlay"></div>
       </div>
     </div>
   `;
 }
 
-/* ========== REMOVE FROM TODAY ========== */
-function removeHabitFromToday(habitId, slot) {
-  const h = state.habits.find(x => x.id === habitId);
-  if (!h) return;
-  if (h.freq === 'multi' && slot !== null && slot !== undefined && (h.multi || 2) > 1) {
-    const newMax = (h.multi || 2) - 1;
-    if (newMax >= 1) {
-      h.multi = newMax;
-      if (h.multiParts && h.multiParts.length) {
-        h.multiParts = h.multiParts.filter((_, i) => i !== slot);
-      }
-      Object.keys(state.completions).forEach(dayKey => {
-        const comp = state.completions[dayKey];
-        Object.keys(comp).forEach(k => {
-          if (k.startsWith(`multi-${habitId}-`)) {
-            const kSlot = parseInt(k.slice(-1));
-            if (kSlot === slot) delete comp[k];
-          }
-        });
-      });
-      save();
-      showToast('Слот удалён 🗑');
-      renderToday();
-      renderRituals();
-      renderCalendar();
-      return;
-    }
+/* ========== HIDE FROM TODAY ========== */
+function hideHabitFromToday(habitId) {
+  const today = new Date();
+  const key = dateKey(today);
+  if (!state.excluded[key]) state.excluded[key] = [];
+  if (!state.excluded[key].includes(habitId)) {
+    state.excluded[key].push(habitId);
   }
-  if (!confirm('Удалить этот ритуал полностью? Он исчезнет из всех дней.')) return;
-  deleteHabitCompletely(habitId);
+  save();
+  showToast('Скрыто на сегодня 💕');
+  renderToday();
 }
 
 function deleteHabitCompletely(habitId) {
@@ -2036,7 +2188,7 @@ function failNumeric(id, dayKey) {
   save(); updateBalance(); renderToday();
 }
 
-/* ========== SWIPE ========== */
+/* ========== SWIPE + TAP ========== */
 function enableSwipe(container, dayKey) {
   const wrappers = Array.from(container.querySelectorAll('.swipe-wrapper'));
 
@@ -2052,6 +2204,8 @@ function enableSwipe(container, dayKey) {
     let activePointerId = null;
     let isNumeric = card.querySelector('.num-input') !== null;
     let cardWidth = wrapper.offsetWidth || 300;
+    let movedDistance = 0;
+    let tapTarget = null;
 
     const cleanup = () => {
       document.removeEventListener('pointermove', onMove);
@@ -2066,6 +2220,7 @@ function enableSwipe(container, dayKey) {
       const dy = ev.clientY - startY;
       const adx = Math.abs(dx);
       const ady = Math.abs(dy);
+      movedDistance = Math.max(movedDistance, Math.hypot(dx, dy));
 
       if (!isSwipe && !isScroll) {
         if (ady > adx && ady > 8) {
@@ -2094,6 +2249,13 @@ function enableSwipe(container, dayKey) {
         endSwipe();
       } else {
         resetSwipe();
+        // Тап по карточке → открыть редактирование
+        if (movedDistance < 8 && tapTarget) {
+          const editId = tapTarget.getAttribute('data-edit-id');
+          if (editId) {
+            openHabitModal(editId);
+          }
+        }
       }
       cleanup();
     }
@@ -2104,9 +2266,11 @@ function enableSwipe(container, dayKey) {
 
       startX = e.clientX; startY = e.clientY;
       currentX = 0;
+      movedDistance = 0;
       isSwipe = false; isScroll = false;
       activePointerId = e.pointerId;
       cardWidth = wrapper.offsetWidth || 300;
+      tapTarget = card;
 
       document.addEventListener('pointermove', onMove, { passive: false });
       document.addEventListener('pointerup', onUp);
@@ -2146,22 +2310,18 @@ function enableSwipe(container, dayKey) {
         overlay.style.background = '';
         triggerCompleteFromSwipe(card, dayKey);
       } else if (dx < -threshold) {
+        // Свайп влево до конца — сразу скрыть на сегодня
         deleteBtn.classList.remove('visible');
         overlay.style.background = '';
         card.classList.add('removing');
         const habitId = getHabitIdFromCard(card);
         setTimeout(() => {
           if (habitId) {
-            if (!confirm('Удалить этот ритуал полностью? Он исчезнет из всех дней.')) {
-              card.classList.remove('removing');
-              card.style.transform = '';
-              return;
-            }
-            deleteHabitCompletely(habitId);
+            hideHabitFromToday(habitId);
           }
         }, 320);
       } else if (dx < -40) {
-        card.style.transform = `translateX(-100px)`;
+        card.style.transform = `translateX(-130px)`;
         deleteBtn.classList.add('visible');
       } else {
         card.style.transform = '';
@@ -2170,6 +2330,7 @@ function enableSwipe(container, dayKey) {
       }
       currentX = 0;
       isSwipe = false;
+      movedDistance = 0;
     }
 
     function resetSwipe() {
@@ -2182,7 +2343,7 @@ function enableSwipe(container, dayKey) {
     }
   });
 }
-
+  
 /* ========== DRAG (только за ручку) ========== */
 function enableDrag() {
   const handles = document.querySelectorAll('[data-drag-handle]');
@@ -2468,7 +2629,35 @@ function renderCalendar() {
     html += `<div class="${cls}" onclick="selectDay(${calYear},${calMonth},${d})">${d}${dot}${cake}</div>`;
   }
   grid.innerHTML = html;
+  updateCalTodayBtn();
   renderCalDayList();
+}
+
+function updateCalTodayBtn() {
+  const btn = document.getElementById('calTodayBtn');
+  if (!btn) return;
+  const now = new Date();
+  const todayY = now.getFullYear();
+  const todayM = now.getMonth();
+  const todayD = now.getDate();
+  const todayMid = new Date(todayY, todayM, todayD).getTime();
+
+  const isCurrentMonth = (calYear === todayY && calMonth === todayM);
+  const isTodaySelected = selectedDate && selectedDate.getTime() === todayMid;
+
+  if (isCurrentMonth && isTodaySelected) {
+    btn.disabled = true;
+  } else {
+    btn.disabled = false;
+  }
+}
+
+function goToTodayInCalendar() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+  selectedDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  renderCalendar();
 }
 function selectDay(y, m, d) { selectedDate = new Date(y, m, d); renderCalendar(); }
 function renderCalDayList() {
@@ -2547,6 +2736,115 @@ let multiPartsSelected = [];
 let currentTimeLabel = '';
 let habitEditMode = 'main';
 let tplEditingIndex = -1;
+let suggestionsEnabled = false; // включаем подсказки только в «Сегодня»
+
+// ========== SUGGESTIONS ==========
+// Показ/скрытие подсказок при вводе названия
+function updateSuggestions() {
+  const container = document.getElementById('habitSuggestions');
+  const input = document.getElementById('habitName');
+  if (!container || !input) return;
+
+  // Подсказки только для режима «Сегодня» (создание из вкладки Today)
+  if (!suggestionsEnabled) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+
+  const query = (input.value || '').trim().toLowerCase();
+  if (!query) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+
+  const today = new Date();
+  const dayKey = dateKey(today);
+  const excluded = state.excluded[dayKey] || [];
+  const scheduled = state.habits.filter(h => isHabitScheduled(h, today));
+
+  // Проверяем, добавлен ли ритуал на сегодня (не скрыт и в расписании)
+  const isAddedToday = (h) => {
+    if (excluded.includes(h.id)) return false;
+    return scheduled.some(s => s.id === h.id);
+  };
+
+  // Ищем: по всему тексту, без учёта регистра
+  const matches = [];
+  state.habits.forEach(h => {
+    const nameLower = h.name.toLowerCase();
+    const idx = nameLower.indexOf(query);
+    if (idx === -1) return;
+    matches.push({ habit: h, pos: idx, added: isAddedToday(h) });
+  });
+
+  // Сортировка: сначала совпадение в начале (pos === 0), потом по позиции, потом по алфавиту
+  matches.sort((a, b) => {
+    const aStart = a.pos === 0 ? 0 : 1;
+    const bStart = b.pos === 0 ? 0 : 1;
+    if (aStart !== bStart) return aStart - bStart;
+    if (a.pos !== b.pos) return a.pos - b.pos;
+    return a.habit.name.localeCompare(b.habit.name);
+  });
+
+  // Максимум 5
+  const top = matches.slice(0, 5);
+
+  if (top.length === 0) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = top.map(m => {
+    const checkHtml = m.added ? `<span class="check-mark">✓</span>` : '';
+    return `
+      <div class="suggestion-item" onclick="pickSuggestion('${m.habit.id}')">
+        <span>${escapeHtml(m.habit.name)}</span>
+        ${checkHtml}
+      </div>
+    `;
+  }).join('');
+  container.style.display = 'block';
+}
+
+// Тап по подсказке
+function pickSuggestion(habitId) {
+  const habit = state.habits.find(h => h.id === habitId);
+  if (!habit) return;
+
+  const today = new Date();
+  const dayKey = dateKey(today);
+  const excluded = state.excluded[dayKey] || [];
+  const scheduled = state.habits.filter(h => isHabitScheduled(h, today));
+  const isAdded = scheduled.some(s => s.id === habit.id) && !excluded.includes(habit.id);
+
+  if (isAdded) {
+    // Уже добавлен на сегодня — ничего не делаем
+    showToast('Уже добавлен на сегодня 💕');
+    return;
+  }
+
+  // Если скрыт — убираем из скрытых
+  if (excluded.includes(habit.id)) {
+    state.excluded[dayKey] = excluded.filter(id => id !== habit.id);
+    save();
+    closeModal('habitModal');
+    renderToday();
+    showToast('Возвращён в расписание 💕');
+    return;
+  }
+
+  // Если существует, но не в расписании на сегодня — просто добавляем.
+  // Но у нас все ритуалы «идут» по расписанию автоматически через isHabitScheduled.
+  // Значит, «не добавлен сегодня» может значить только «скрыт».
+  // Если ритуал есть, но не по расписанию на сегодня (например, weekly по другим дням),
+  // то просто сообщим, что он не запланирован. Проще: добавить в скрытые-исключения некорректно.
+  // Поэтому: если не скрыт и не по расписанию — считаем «уже доступен, но не на сегодня».
+  showToast('Уже есть в списке ритуалов 💕');
+  closeModal('habitModal');
+}
 
 function buildWeekdayChips() {
   const container = document.getElementById('weekdaysChips');
@@ -2674,6 +2972,28 @@ function openHabitModal(id) {
   weekdaysSelected.clear();
   multiPartsSelected = [];
   currentTimeLabel = '';
+
+  // Определяем, включены ли подсказки:
+  // — только при СОЗДАНИИ нового ритуала (id пустое)
+  // — из вкладки «Сегодня»
+  const todayTab = document.getElementById('tab-today');
+  const fromTodayTab = todayTab && todayTab.classList.contains('active');
+  suggestionsEnabled = !id && fromTodayTab;
+
+  // Настраиваем поле ввода подсказок
+  const suggestionsBox = document.getElementById('habitSuggestions');
+  if (suggestionsBox) {
+    suggestionsBox.style.display = 'none';
+    suggestionsBox.innerHTML = '';
+  }
+  const nameInput = document.getElementById('habitName');
+  if (nameInput) {
+    // Убираем старые слушатели через клонирование, чтобы не накапливались
+    const newInput = nameInput.cloneNode(true);
+    nameInput.parentNode.replaceChild(newInput, nameInput);
+    newInput.addEventListener('input', updateSuggestions);
+    newInput.addEventListener('focus', updateSuggestions);
+  }
 
   if (id) {
     const h = state.habits.find(x => x.id === id);
@@ -2816,6 +3136,40 @@ function saveHabit() {
   }
 
   const id = document.getElementById('habitId').value;
+  const today = new Date();
+  const dayKey = dateKey(today);
+
+  // Проверка дубликатов при СОЗДАНИИ
+  if (!id) {
+    const normalizedNew = habit.name.trim().toLowerCase();
+    const existing = state.habits.find(h => h.name.trim().toLowerCase() === normalizedNew);
+
+    if (existing) {
+      // Точное совпадение
+      if (suggestionsEnabled) {
+        // Режим «Сегодня»: добавить существующий (или вернуть из скрытых)
+        const excluded = state.excluded[dayKey] || [];
+        if (excluded.includes(existing.id)) {
+          // был скрыт — возвращаем
+          state.excluded[dayKey] = excluded.filter(x => x !== existing.id);
+          save();
+          closeModal('habitModal');
+          renderToday();
+          showToast('Возвращён в расписание 💕');
+        } else {
+          // уже добавлен или есть в списке
+          showToast('Такой ритуал уже есть 💕');
+          closeModal('habitModal');
+        }
+        return;
+      } else {
+        // Режим «Ритуалы»: показать модалку «Открыть существующий?»
+        showDuplicateDialog(existing.id);
+        return;
+      }
+    }
+  }
+
   if (id) {
     habit.id = id;
     const idx = state.habits.findIndex(x => x.id === id);
@@ -2824,6 +3178,42 @@ function saveHabit() {
   save(); closeModal('habitModal');
   renderToday(); renderRituals(); renderCalendar();
   showToast(id ? 'Обновлено 💕' : 'Ритуал добавлен 🎀');
+}
+
+// ========== DUPLICATE DIALOG (для вкладки «Ритуалы») ==========
+function showDuplicateDialog(existingId) {
+  // Показываем inline-сообщение в модалке
+  const modal = document.getElementById('habitModal');
+  const existing = state.habits.find(h => h.id === existingId);
+  if (!existing) return;
+
+  // Удаляем предыдущие сообщения, если были
+  const old = modal.querySelector('.dup-message');
+  if (old) old.remove();
+
+  const msg = document.createElement('div');
+  msg.className = 'modal-info-message dup-message';
+  msg.innerHTML = `
+    Такой ритуал уже есть.<br>Открыть его для редактирования?<br><br>
+    <button class="btn btn-secondary" style="flex:0 0 auto;padding:10px 20px;font-size:13px;margin-right:8px;" onclick="closeDuplicateDialog()">Отмена</button>
+    <button class="btn btn-primary" style="flex:0 0 auto;padding:10px 20px;font-size:13px;" onclick="openExistingFromDuplicate('${existingId}')">Открыть</button>
+  `;
+
+  const modalContent = modal.querySelector('.modal');
+  modalContent.insertBefore(msg, modalContent.firstChild);
+}
+
+function closeDuplicateDialog() {
+  const msg = document.querySelector('.dup-message');
+  if (msg) msg.remove();
+}
+
+function openExistingFromDuplicate(existingId) {
+  closeDuplicateDialog();
+  closeModal('habitModal');
+  setTimeout(() => {
+    openHabitModal(existingId);
+  }, 250);
 }
 
 function deleteHabit() {
@@ -2880,7 +3270,15 @@ function deleteReward() {
   save(); closeModal('rewardModal'); renderSpend();
   showToast('Удалено 🗑');
 }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  // Очищаем подсказки и сообщение о дубликате
+  const sug = document.getElementById('habitSuggestions');
+  if (sug) { sug.style.display = 'none'; sug.innerHTML = ''; }
+  const dup = document.querySelector('.dup-message');
+  if (dup) dup.remove();
+  suggestionsEnabled = false;
+}
 
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
   overlay.addEventListener('click', e => {
