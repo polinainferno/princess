@@ -1852,39 +1852,64 @@ function getStatusPriority(card, dayKey) {
 }
 
 // Сортировка карточек с учётом ручного порядка
+// Сортировка карточек с учётом ручного порядка и разделением на активные/сделанные
 function sortTodayCards(cards, dayKey) {
-  // Проверяем, есть ли ручной порядок для этого дня
+  // Разделяем на активные и сделанные
+  const activeCards = [];
+  const doneCards = [];
+
+  cards.forEach(c => {
+    if (getStatusPriority(c, dayKey) === 1) {
+      doneCards.push(c);
+    } else {
+      activeCards.push(c);
+    }
+  });
+
+  // Проверяем, есть ли ручной порядок
   const savedOrder = state.orders[dayKey] || [];
   const currentKeys = cards.map(c => c.key);
   const hasManualOrder = savedOrder.length > 0 && savedOrder.some(k => currentKeys.includes(k));
 
+  // Функция сортировки по группам (для авто или для сделанных)
+  const sortByGroup = (arr) => {
+    return arr.slice().sort((a, b) => {
+      const ha = a.habit, hb = b.habit;
+
+      const labelA = ha.type === 'numeric' ? '' : (ha.timeLabel || (ha.freq === 'multi' && a.timeIndex !== null ? TIMES[a.timeIndex] : ''));
+      const labelB = hb.type === 'numeric' ? '' : (hb.timeLabel || (hb.freq === 'multi' && b.timeIndex !== null ? TIMES[b.timeIndex] : ''));
+
+      const pa = getTimeGroupPriority(labelA, ha.type === 'numeric');
+      const pb = getTimeGroupPriority(labelB, hb.type === 'numeric');
+
+      if (pa !== pb) return pa - pb;
+
+      // Внутри одной группы — по алфавиту
+      return ha.name.localeCompare(hb.name);
+    });
+  };
+
+  // Сортируем активные
+  let sortedActive;
   if (hasManualOrder) {
-    // Используем сохранённый порядок
+    // По ручному порядку
     const orderMap = {};
     savedOrder.forEach((k, i) => { orderMap[k] = i; });
-    return cards.slice().sort((a, b) => {
+    sortedActive = activeCards.slice().sort((a, b) => {
       const ia = orderMap[a.key] !== undefined ? orderMap[a.key] : 99999;
       const ib = orderMap[b.key] !== undefined ? orderMap[b.key] : 99999;
       return ia - ib;
     });
+  } else {
+    // По автосортировке
+    sortedActive = sortByGroup(activeCards);
   }
 
-  // Автосортировка
-  return cards.slice().sort((a, b) => {
-    const ha = a.habit, hb = b.habit;
+  // Сделанные — всегда внизу, сортируем по группам
+  const sortedDone = sortByGroup(doneCards);
 
-    const pa = getTimeGroupPriority(ha.type === 'numeric' ? '' : (ha.timeLabel || (ha.freq === 'multi' && a.timeIndex !== null ? TIMES[a.timeIndex] : '')), ha.type === 'numeric');
-    const pb = getTimeGroupPriority(hb.type === 'numeric' ? '' : (hb.timeLabel || (hb.freq === 'multi' && b.timeIndex !== null ? TIMES[b.timeIndex] : '')), hb.type === 'numeric');
-
-    if (pa !== pb) return pa - pb;
-
-    // Внутри группы: активные сверху, выполненные/проваленные снизу
-    const sa = getStatusPriority(a, dayKey);
-    const sb = getStatusPriority(b, dayKey);
-    if (sa !== sb) return sa - sb;
-
-    return 0;
-  });
+  // Возвращаем: активные → сделанные
+  return sortedActive.concat(sortedDone);
 }
 function renderToday() {
   const today = new Date();
