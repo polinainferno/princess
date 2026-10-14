@@ -123,6 +123,37 @@
     --bday-outline: #ffd24d; --bday-text: #c9971c; --bday-bg: #fff5d8;
   }
 
+   /* ============ SPLASH SCREEN ============ */
+  #splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+  #splash.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #splash-text {
+    font-family: 'Pacifico', cursive;
+    font-size: 32px;
+    color: var(--pink-deep);
+    text-shadow: 2px 2px 0 var(--card-bg), 0 0 30px rgba(255,126,179,0.4);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    text-align: center;
+    padding: 0 20px;
+  }
+  #splash-text.visible {
+    opacity: 1;
+  }
+  
   body {
     font-family: 'Quicksand', sans-serif;
     background: linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
@@ -915,6 +946,11 @@
 </style>
 </head>
 <body>
+
+<!-- Splash Screen -->
+<div id="splash">
+  <div id="splash-text">Princess Treatment</div>
+</div>
 
 <div class="welcome hidden" id="welcomeScreen">
   <div class="welcome-content">
@@ -3442,6 +3478,59 @@ const themeModalObserver = new MutationObserver(() => {
   }
 });
 themeModalObserver.observe(document.getElementById('themeModal'), { attributes: true, attributeFilter: ['class'] });
+</script>
+<script>
+// ============ SPLASH SCREEN LOGIC ============
+(function() {
+  const splash = document.getElementById('splash');
+  const splashText = document.getElementById('splash-text');
+  if (!splash || !splashText) return;
+
+  // Определяем тему: сначала сохранённая, потом системная
+  let themeToUse = 'pink';
+  try {
+    const raw = localStorage.getItem('princess_treatment_v14');
+    if (raw) {
+      const saved = JSON.parse(raw);
+      if (saved && saved.theme) {
+        themeToUse = saved.theme;
+      } else {
+        // нет сохранённой темы — системная
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          themeToUse = 'midnight';
+        }
+      }
+    } else {
+      // первый запуск
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        themeToUse = 'midnight';
+      }
+    }
+  } catch(e) {}
+
+  // Применяем тему до показа сплэша
+  document.documentElement.setAttribute('data-theme', themeToUse);
+
+  // Показываем сплэш
+  requestAnimationFrame(() => {
+    splash.classList.add('visible');
+  });
+
+  // Через 500мс показываем текст
+  setTimeout(() => {
+    splashText.classList.add('visible');
+  }, 500);
+
+  // Через 1.5с начинаем исчезать
+  setTimeout(() => {
+    splash.classList.remove('visible');
+    splashText.classList.remove('visible');
+    // Убираем из DOM через 500мс (когда fade закончится)
+    setTimeout(() => {
+      splash.remove();
+    }, 500);
+  }, 1500);
+})();
 </script>
 <script>
 // ============ SERVICE WORKER (встроенный, для офлайн-режима PWA) ============
