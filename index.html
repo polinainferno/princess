@@ -483,7 +483,235 @@
     z-index: 3;
     transition: background 0.1s;
   }
+    /* Composite в календаре (раскрывающийся) */
+  .composite-card-cal {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .composite-cal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    transition: background 0.2s;
+  }
+  .composite-cal-header:hover {
+    background: var(--pink-soft);
+  }
+  .composite-cal-status {
+    font-size: 18px;
+    min-width: 40px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .composite-cal-arrow {
+    font-size: 16px;
+    color: var(--text-soft);
+    font-weight: 700;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    padding: 0 6px;
+  }
+  .composite-cal-subtasks {
+    padding: 4px 16px 12px;
+    border-top: 1px dashed var(--pink-soft);
+    animation: fadeIn 0.2s ease;
+  }
+  .cal-subtask-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 12px;
+  }
+  .cal-subtask-status {
+    min-width: 36px;
+    text-align: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .cal-subtask-name {
+    flex: 1;
+    min-width: 0;
+    color: var(--text);
+    font-weight: 600;
+    word-break: break-word;
+  }
+  .cal-subtask-points {
+    color: var(--pink-deep);
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: 11px;
+  }
 
+    /* Composite в «Ритуалах» */
+  .composite-card-rituals {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 16px 12px;
+    gap: 8px;
+  }
+  .composite-header-rituals {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    padding-right: 44px;
+  }
+  .composite-title-rituals {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+  }
+  .composite-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    word-break: break-word;
+  }
+  .composite-subtasks-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--pink-soft);
+  }
+  .subtask-preview-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12px;
+    padding: 2px 0;
+  }
+  .subtask-preview-name {
+    color: var(--text-soft);
+    font-weight: 600;
+    word-break: break-word;
+    flex: 1;
+    min-width: 0;
+  }
+  .subtask-preview-points {
+    color: var(--pink-deep);
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .composite-edit-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+  }
+
+  /* Composite-карточка в «Сегодня» */
+  .composite-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 14px 12px;
+  }
+  .composite-card .drag-handle {
+    position: absolute;
+    top: 12px;
+    left: 6px;
+    opacity: 0.5;
+  }
+  .composite-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 22px;
+  }
+  .composite-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    padding: 4px 0 8px;
+    border-bottom: 1px dashed var(--pink-soft);
+  }
+  .composite-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .composite-meta {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .composite-subtasks {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .subtask-today-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 6px;
+    border-radius: 12px;
+    transition: all 0.2s;
+  }
+  .subtask-today-row.failed {
+    opacity: 0.6;
+  }
+  .subtask-today-row.failed .subtask-today-name {
+    text-decoration: line-through;
+    text-decoration-color: var(--err-color);
+  }
+  .subtask-today-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .subtask-today-name {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 2px;
+    word-break: break-word;
+  }
+  .subtask-today-meta {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .subtask-today-row .check {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-width: 2px;
+    font-size: 15px;
+  }
+  .subtask-today-row .fail-btn {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    font-size: 12px;
+  }
+  .subtask-today-row .num-input {
+    width: 64px;
+    font-size: 13px;
+  }
+  .subtask-today-row .num-save {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
   /* Drag placeholder */
   .drag-placeholder {
     height: 60px;
@@ -769,8 +997,130 @@
   .chip.active { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: #fff; border-color: var(--pink-deep); }
   .chip:active { transform: scale(0.95); }
   .chip.time.active { background: linear-gradient(135deg, #ffd88a, #e6b93c); border-color: #e6b93c; color: #fff; }
+  /* Составные задачи — список подзадач */
+  .subtask-list {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .subtask-list:empty::before {
+    content: "Пока нет подзадач";
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-soft);
+    font-style: italic;
+    padding: 8px 0;
+  }
+  .subtask-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--pink-soft);
+    border-radius: 12px;
+    font-size: 13px;
+    touch-action: pan-y;
+  }
+  .subtask-handle {
+    font-size: 14px;
+    color: var(--text-soft);
+    opacity: 0.55;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    padding: 0 4px;
+    flex-shrink: 0;
+  }
+  .subtask-handle:active { opacity: 1; }
+  .subtask-info {
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .subtask-name {
+    font-weight: 700;
+    color: var(--text);
+    word-break: break-word;
+    flex: 1;
+    min-width: 0;
+  }
+  .subtask-points {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--pink-deep);
+    background: var(--card-bg);
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .subtask-remove {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--err-color);
+    background: var(--card-bg);
+    color: var(--err-color);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-family: inherit;
+    flex-shrink: 0;
+  }
+  .subtask-remove:active { transform: scale(0.9); }
+  .subtask-remove:hover { background: var(--err-bg); }
 
-  
+  .subtask-input-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    align-items: center;
+  }
+  .subtask-input-row input {
+    flex: 1;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 2px solid var(--pink-soft);
+    background: var(--card-bg);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 600;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .subtask-input-row input:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 4px rgba(255,182,213,0.2);
+  }
+  .subtask-add-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255,126,179,0.4);
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .subtask-add-btn:active { transform: scale(0.9); }
   .suggestions-list {
     margin-top: 6px;
     background: var(--card-bg);
@@ -1307,6 +1657,7 @@
       <select id="habitType" onchange="onTypeChange()">
         <option value="check">Обычный (галочка / счётчик)</option>
         <option value="numeric">Числовой (не более / не менее)</option>
+        <option value="composite">Составной (объединяет другие ритуалы)</option>
       </select>
     </div>
     <div class="field">
@@ -1333,6 +1684,17 @@
       <div class="field">
         <label>Единица (необязательно)</label>
         <input type="text" id="habitNumericUnit" placeholder="ккал, шагов..." maxlength="10">
+      </div>
+    </div>
+        <div id="compositeFields" style="display:none;">
+      <div class="field">
+        <label>Подзадачи</label>
+        <div id="subtaskList" class="subtask-list"></div>
+        <div class="subtask-input-row">
+          <input type="text" id="subtaskInput" placeholder="Название подзадачи..." autocomplete="off" maxlength="60">
+          <button type="button" class="subtask-add-btn" onclick="addSubtaskFromInput()">+</button>
+        </div>
+        <div id="subtaskSuggestions" class="suggestions-list" style="display:none;"></div>
       </div>
     </div>
     <div id="regularFields">
@@ -1375,7 +1737,48 @@
     </div>
   </div>
 </div>
-
+<!-- Subtask modal (создание новой подзадачи) -->
+<div class="modal-overlay" id="subtaskModal">
+  <div class="modal">
+    <div class="modal-title" id="subtaskModalTitle">Новая подзадача 🎀</div>
+    <div class="field">
+      <label>Название</label>
+      <input type="text" id="subtaskName" maxlength="60" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Баллы за выполнение</label>
+      <input type="number" id="subtaskPoints" min="1" value="1">
+    </div>
+    <div class="field">
+      <label>Тип подзадачи</label>
+      <select id="subtaskType" onchange="onSubtaskTypeChange()">
+        <option value="check">Обычный (галочка)</option>
+        <option value="numeric">Числовой (не более / не менее)</option>
+      </select>
+    </div>
+    <div id="subtaskNumericFields" style="display:none;">
+      <div class="field">
+        <label>Условие</label>
+        <select id="subtaskNumericOp">
+          <option value="max">Не более</option>
+          <option value="min">Не менее</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Целевое число</label>
+        <input type="number" id="subtaskNumericTarget" value="1800" min="0">
+      </div>
+      <div class="field">
+        <label>Единица (необязательно)</label>
+        <input type="text" id="subtaskNumericUnit" placeholder="ккал, шагов..." maxlength="10">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeSubtaskModal()">Отмена</button>
+      <button class="btn btn-primary" onclick="saveSubtaskFromModal()">Добавить <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
 <!-- Reward modal -->
 <div class="modal-overlay" id="rewardModal">
   <div class="modal">
@@ -1764,6 +2167,7 @@ function isHabitScheduled(habit, date) {
   // Проверка createdAt: не показывать ритуал раньше даты его создания
   if (habit.createdAt && key < habit.createdAt) return false;
 
+  // Для числовых — они «обычные» по freq
   switch(habit.freq) {
     case 'daily': return true;
     case 'multi': return true;
@@ -1776,12 +2180,20 @@ function isHabitScheduled(habit, date) {
       return days.includes(d.getDate());
     }
     case 'once': return habit.onceDate === key;
+    case 'none': return false; // ритуал без периодичности — только внутри составных
     default: return false;
   }
 }
 
 function freqToText(h) {
   const isNum = h.type === 'numeric';
+  const isComposite = h.type === 'composite';
+
+  // Для ритуала без периодичности (только внутри составных)
+  if (h.freq === 'none') {
+    return 'Без расписания';
+  }
+
   let baseText = '';
   switch(h.freq) {
     case 'daily': baseText = 'Каждый день'; break;
@@ -1815,11 +2227,22 @@ function freqToText(h) {
     }
     default: baseText = '';
   }
+  // Для числового — добавляем условие
   if (isNum) {
     const op = h.numericOp === 'min' ? 'не менее' : 'не более';
     const unit = h.numericUnit ? ' ' + h.numericUnit : '';
     if (h.freq === 'daily') return `Каждый день, ${op} ${h.numericTarget}${unit}`;
     return `${baseText}, ${op} ${h.numericTarget}${unit}`;
+  }
+  // Для составной — добавляем количество подзадач
+  // Для составной — добавляем количество подзадач
+  if (isComposite) {
+    const count = (h.subtaskIds || []).length;
+    let subText;
+    if (count === 1) subText = '1 подзадача';
+    else if (count >= 2 && count <= 4) subText = `${count} подзадачи`;
+    else subText = `${count} подзадач`;
+    return `${baseText} · ${subText}`;
   }
   return baseText;
 }
@@ -2156,7 +2579,10 @@ function renderToday() {
 
   allForToday.forEach(h => {
     if (excluded.includes(h.id)) return; // скрыт на сегодня
-    if (h.type === 'numeric') {
+    if (h.type === 'composite') {
+      // Составная задача — одна карточка со всеми подзадачами
+      cards.push({ key: `composite-${h.id}`, habitId: h.id, timeIndex: null, habit: h });
+    } else if (h.type === 'numeric') {
       cards.push({ key: `num-${h.id}`, habitId: h.id, timeIndex: null, habit: h });
     } else if (h.freq === 'multi') {
       const max = h.multi || 2;
@@ -2169,7 +2595,6 @@ function renderToday() {
       cards.push({ key: `simple-${h.id}`, habitId: h.id, timeIndex: null, habit: h });
     }
   });
-
   if (cards.length === 0) {
     list.innerHTML = `<div class="empty"><span class="emoji">${e.empty}</span>Пока ничего нет.</div>`;
     return;
@@ -2182,6 +2607,107 @@ function renderToday() {
 
 function renderTodayCard(card, dayKey, e) {
   const { habit: h, timeIndex } = card;
+
+  // ========== COMPOSITE ==========
+  if (h.type === 'composite') {
+    const subIds = h.subtaskIds || [];
+    const subtasks = subIds.map(id => state.habits.find(x => x.id === id)).filter(Boolean);
+
+    // Прогресс: сколько подзадач выполнено сегодня
+    let doneCount = 0;
+    subtasks.forEach(sub => {
+      const comp = state.completions[dayKey] || {};
+      if (sub.type === 'numeric') {
+        const c = comp[`num-${sub.id}`];
+        if (c && c.ok) doneCount++;
+      } else {
+        const c = comp[`simple-${sub.id}`];
+        if (c === 'done') doneCount++;
+      }
+    });
+
+    const total = subtasks.length;
+    const allDone = total > 0 && doneCount === total;
+
+    // Рендер подзадач
+    const subtasksHtml = subtasks.map(sub => {
+      const comp = state.completions[dayKey] || {};
+      if (sub.type === 'numeric') {
+        // Числовая подзадача
+        const c = comp[`num-${sub.id}`];
+        const op = sub.numericOp === 'min' ? 'не менее' : 'не более';
+        const unit = sub.numericUnit ? ` ${sub.numericUnit}` : '';
+        const cond = `${op} ${sub.numericTarget}${unit}`;
+        let statusBadge = '';
+        let inputClass = '';
+        let isFailed = false;
+        if (c && c.failed) { statusBadge = `<span class="badge err">❌</span>`; inputClass = 'err'; isFailed = true; }
+        else if (c && c.value !== undefined) {
+          if (c.ok) { statusBadge = `<span class="badge ok">✅</span>`; inputClass = 'ok'; }
+          else { statusBadge = `<span class="badge err">❌</span>`; inputClass = 'err'; }
+        }
+        const val = (c && c.value !== undefined) ? c.value : '';
+        return `
+          <div class="subtask-today-row">
+            <div class="subtask-today-info">
+              <div class="subtask-today-name">${escapeHtml(sub.name)}</div>
+              <div class="subtask-today-meta">
+                <span class="badge">+${sub.points} ${e.points}</span>
+                <span class="badge freq">${cond}</span>
+                ${statusBadge}
+              </div>
+            </div>
+            <input type="number" class="num-input ${inputClass}" id="ninp-${sub.id}" value="${val}" placeholder="число"
+              onclick="event.stopPropagation();"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();saveNumeric('${sub.id}','${dayKey}');}"
+              oninput="liveNumericCheck('${sub.id}','${dayKey}')">
+            <button class="num-save" onclick="event.stopPropagation(); saveNumeric('${sub.id}','${dayKey}')">✓</button>
+          </div>
+        `;
+      } else {
+        // Обычная подзадача — галочка + крестик
+        const c = comp[`simple-${sub.id}`];
+        const isDone = c === 'done';
+        const isFail = c === 'fail';
+        return `
+          <div class="subtask-today-row${isFail ? ' failed' : ''}">
+            <button class="fail-btn${isFail ? ' active' : ''}" onclick="event.stopPropagation(); failSimple('${sub.id}','${dayKey}')" title="${isFail ? 'Отменить' : 'Пропустить'}">${isFail ? '↩️' : '✕'}</button>
+            <div class="subtask-today-info">
+              <div class="subtask-today-name">${escapeHtml(sub.name)}</div>
+              <div class="subtask-today-meta">
+                <span class="badge">+${sub.points} ${e.points}</span>
+              </div>
+            </div>
+            <div class="check ${isDone?'done':''}" onclick="event.stopPropagation(); toggleSimple('${sub.id}','${dayKey}')">✓</div>
+          </div>
+        `;
+      }
+    }).join('');
+
+    const timeBadge = h.timeLabel ? `<span class="badge time">${escapeHtml(h.timeLabel)}</span>` : '';
+    const progressBadge = total > 0 ? `<span class="done-badge">${doneCount}/${total}</span>` : '';
+
+    return `
+      <div class="swipe-wrapper" data-key="${card.key}">
+        <button class="swipe-delete-btn" onclick="hideHabitFromToday('${h.id}')">Скрыть на сегодня</button>
+        <div class="card composite-card draggable" data-key="${card.key}">
+          <div class="drag-handle" data-drag-handle="true">☰</div>
+          <div class="composite-content">
+            <div class="composite-header" data-edit-id="${h.id}">
+              <div class="composite-title">${escapeHtml(h.name)} ${progressBadge}</div>
+              <div class="composite-meta">
+                ${timeBadge}
+              </div>
+            </div>
+            <div class="composite-subtasks">
+              ${subtasksHtml}
+            </div>
+          </div>
+          <div class="swipe-overlay"></div>
+        </div>
+      </div>
+    `;
+  }
 
   if (h.type === 'numeric') {
     const comp = (state.completions[dayKey] || {})[`num-${h.id}`];
@@ -2800,6 +3326,58 @@ function renderRituals() {
   const today = new Date();
   const key = dateKey(today);
   list.innerHTML = state.habits.map(h => {
+    // Для composite — отдельный рендер
+    if (h.type === 'composite') {
+      const subIds = h.subtaskIds || [];
+      const subtasks = subIds.map(id => state.habits.find(x => x.id === id)).filter(Boolean);
+
+      // Прогресс сегодня
+      let doneCount = 0;
+      subtasks.forEach(sub => {
+        const comp = state.completions[key] || {};
+        if (sub.type === 'numeric') {
+          const c = comp[`num-${sub.id}`];
+          if (c && c.ok) doneCount++;
+        } else {
+          const c = comp[`simple-${sub.id}`];
+          if (c === 'done') doneCount++;
+        }
+      });
+      const total = subtasks.length;
+      const progressBadge = (total > 0 && doneCount > 0)
+        ? `<span class="done-badge">✅ ${doneCount}/${total}</span>`
+        : '';
+
+      const timeBadge = h.timeLabel ? `<span class="badge time">${escapeHtml(h.timeLabel)}</span>` : '';
+
+      const subtasksListHtml = subtasks.map(sub => `
+        <div class="subtask-preview-row">
+          <span class="subtask-preview-name">${escapeHtml(sub.name)}</span>
+          <span class="subtask-preview-points">+${sub.points}</span>
+        </div>
+      `).join('');
+
+      return `
+        <div class="card composite-card-rituals">
+          <div class="composite-header-rituals" onclick="openHabitModal('${h.id}')">
+            <div class="composite-title-rituals">
+              <span class="composite-name">${escapeHtml(h.name)}</span>
+              ${progressBadge}
+            </div>
+            <div class="composite-meta">
+              ${timeBadge}
+              <span class="badge freq">${freqToText(h)}</span>
+            </div>
+          </div>
+          <div class="composite-subtasks-preview">
+            ${subtasksListHtml}
+          </div>
+          <button class="edit-btn composite-edit-btn" onclick="event.stopPropagation(); openHabitModal('${h.id}')">✏️</button>
+        </div>
+      `;
+    }
+
+    // Обычные ритуалы (как было)
     let doneBadge = '';
     if (h.type === 'numeric') {
       const comp = (state.completions[key] || {})[`num-${h.id}`];
@@ -2817,13 +3395,14 @@ function renderRituals() {
       if ((state.completions[key] || {})[`simple-${h.id}`] === 'done') doneBadge = `<span class="done-badge">✅ выполнено</span>`;
     }
     const timeBadge = (h.timeLabel && h.freq !== 'multi') ? `<span class="badge time">${escapeHtml(h.timeLabel)}</span>` : '';
+    const pointsBadge = (h.points) ? `<span class="badge">+${h.points} ${e.points}</span>` : '';
     return `
       <div class="card">
         <div class="habit-info" onclick="openHabitModal('${h.id}')">
           <div class="habit-name">${escapeHtml(h.name)} ${doneBadge}</div>
           <div class="habit-meta">
             ${timeBadge}
-            <span class="badge">+${h.points} ${e.points}</span>
+            ${pointsBadge}
             <span class="badge freq">${freqToText(h)}</span>
           </div>
         </div>
@@ -2964,7 +3543,6 @@ function renderCalDayList() {
   if (!selectedDate) return;
   const title = document.getElementById('calDayTitle');
   const list = document.getElementById('calDayList');
-  const addBtnContainer = document.getElementById('calAddBtn');
   const e = getThemeEmoji();
   const todayMid = new Date(); todayMid.setHours(0,0,0,0);
   const sameAsToday = selectedDate.getTime() === todayMid.getTime();
@@ -2976,36 +3554,112 @@ function renderCalDayList() {
   if (isFutureBday) noteHtml = `<div class="bday-note">🎁 Тебя будет ждать подарок</div>`;
   if (scheduled.length === 0 && !isFutureBday) {
     list.innerHTML = noteHtml + `<div class="empty" style="padding:16px;">Нет ритуалов на этот день</div>`;
-  } else {
-    const key = dateKey(selectedDate);
-    const itemsHtml = scheduled.map(h => {
-      let status = '⬜';
-      if (h.type === 'numeric') {
-        const comp = (state.completions[key] || {})[`num-${h.id}`];
-        if (comp && comp.failed) status = '❌ провал';
-        else if (comp && comp.value !== undefined) status = comp.ok ? `✅ ${comp.value}` : `❌ ${comp.value}`;
-      } else if (h.freq === 'multi') {
-        const max = h.multi || 2;
-        let done = 0;
-        for (let i = 0; i < max; i++) if ((state.completions[key] || {})[`multi-${h.id}-${i}`] === 'done') done++;
-        status = done > 0 ? `✅ ${done}/${max}` : '⬜';
-      } else {
-        const c = (state.completions[key] || {})[`simple-${h.id}`];
-        if (c === 'done') status = '✅';
-        else if (c === 'fail') status = '❌';
-      }
+    return;
+  }
+  const key = dateKey(selectedDate);
+
+  const itemsHtml = scheduled.map(h => {
+    // ========== COMPOSITE в календаре ==========
+    if (h.type === 'composite') {
+      const subIds = h.subtaskIds || [];
+      const subtasks = subIds.map(id => state.habits.find(x => x.id === id)).filter(Boolean);
+      let doneCount = 0;
+      subtasks.forEach(sub => {
+        const comp = state.completions[key] || {};
+        if (sub.type === 'numeric') {
+          const c = comp[`num-${sub.id}`];
+          if (c && c.ok) doneCount++;
+        } else {
+          const c = comp[`simple-${sub.id}`];
+          if (c === 'done') doneCount++;
+        }
+      });
+      const total = subtasks.length;
+      const statusText = total > 0 ? `${doneCount}/${total}` : '—';
+
+      // Подзадачи в раскрывающемся списке
+      const subtaskRows = subtasks.map(sub => {
+        const comp = state.completions[key] || {};
+        let subStatus = '⬜';
+        if (sub.type === 'numeric') {
+          const c = comp[`num-${sub.id}`];
+          if (c && c.failed) subStatus = '❌';
+          else if (c && c.ok) subStatus = `✅ ${c.value}`;
+          else if (c && c.value !== undefined) subStatus = `❌ ${c.value}`;
+        } else {
+          const c = comp[`simple-${sub.id}`];
+          if (c === 'done') subStatus = '✅';
+          else if (c === 'fail') subStatus = '❌';
+        }
+        return `
+          <div class="cal-subtask-row">
+            <span class="cal-subtask-status">${subStatus}</span>
+            <span class="cal-subtask-name">${escapeHtml(sub.name)}</span>
+            <span class="cal-subtask-points">${sub.points} ${e.points}</span>
+          </div>
+        `;
+      }).join('');
+
       return `
-        <div class="card" style="padding:12px 16px;">
-          <div style="font-size:18px;min-width:40px;text-align:center;">${status}</div>
-          <div class="habit-info">
-            <div class="habit-name">${escapeHtml(h.name)}</div>
-            <div class="habit-meta"><span class="badge">${h.points} ${e.points}</span></div>
+        <div class="card composite-card-cal" data-cal-composite="${h.id}">
+          <div class="composite-cal-header" onclick="toggleCompositeCal('${h.id}')">
+            <div class="composite-cal-status">📋</div>
+            <div class="habit-info">
+              <div class="habit-name">${escapeHtml(h.name)}</div>
+              <div class="habit-meta"><span class="badge">${statusText} подзадач</span></div>
+            </div>
+            <div class="composite-cal-arrow" id="calArrow-${h.id}">▸</div>
+          </div>
+          <div class="composite-cal-subtasks" id="calSub-${h.id}" style="display:none;">
+            ${subtaskRows}
           </div>
         </div>
       `;
-    }).join('');
-    list.innerHTML = noteHtml + itemsHtml;
-  }
+    }
+
+    // ========== ОБЫЧНЫЕ ==========
+    let status = '⬜';
+    if (h.type === 'numeric') {
+      const comp = (state.completions[key] || {})[`num-${h.id}`];
+      if (comp && comp.failed) status = '❌ провал';
+      else if (comp && comp.value !== undefined) status = comp.ok ? `✅ ${comp.value}` : `❌ ${comp.value}`;
+    } else if (h.freq === 'multi') {
+      const max = h.multi || 2;
+      let done = 0;
+      for (let i = 0; i < max; i++) if ((state.completions[key] || {})[`multi-${h.id}-${i}`] === 'done') done++;
+      status = done > 0 ? `✅ ${done}/${max}` : '⬜';
+    } else if (h.freq === 'none') {
+      // подзадача без расписания — не показывается сама по себе в календаре
+      // но мы уже отфильтровали isHabitScheduled → эта ветка недостижима
+      return '';
+    } else {
+      const c = (state.completions[key] || {})[`simple-${h.id}`];
+      if (c === 'done') status = '✅';
+      else if (c === 'fail') status = '❌';
+    }
+    const pointsBadge = h.points ? `<span class="badge">${h.points} ${e.points}</span>` : '';
+    return `
+      <div class="card" style="padding:12px 16px;">
+        <div style="font-size:18px;min-width:40px;text-align:center;">${status}</div>
+        <div class="habit-info">
+          <div class="habit-name">${escapeHtml(h.name)}</div>
+          <div class="habit-meta">${pointsBadge}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  list.innerHTML = noteHtml + itemsHtml;
+}
+
+// Раскрытие подзадач в календаре
+function toggleCompositeCal(id) {
+  const sub = document.getElementById(`calSub-${id}`);
+  const arrow = document.getElementById(`calArrow-${id}`);
+  if (!sub || !arrow) return;
+  const isOpen = sub.style.display !== 'none';
+  sub.style.display = isOpen ? 'none' : 'block';
+  arrow.textContent = isOpen ? '▸' : '▾';
+}
   // Кнопка добавления — только для сегодня и будущих
   if (selectedDate >= todayMid) {
     const dateStr2 = dateKey(selectedDate);
@@ -3028,6 +3682,333 @@ function openHabitModalForDate(dateStr) {
     const dateInput = document.getElementById('habitOnceDate');
     if (dateInput) dateInput.value = dateStr;
   }, 350);
+}
+/* ========== SUBTASKS (для составных задач) ========== */
+let compositeSubtaskIds = []; // список ID подзадач в текущей редактируемой составной задаче
+
+// Рендер списка подзадач в модалке составной
+function renderSubtaskList() {
+  const list = document.getElementById('subtaskList');
+  if (!list) return;
+
+  if (compositeSubtaskIds.length === 0) {
+    list.innerHTML = '';
+    return;
+  }
+
+  list.innerHTML = compositeSubtaskIds.map(id => {
+    const h = state.habits.find(x => x.id === id);
+    if (!h) return '';
+    return `
+      <div class="subtask-row" data-subtask-id="${id}">
+        <div class="subtask-handle" data-subtask-handle="true">☰</div>
+        <div class="subtask-info" onclick="editSubtask('${id}')">
+          <div class="subtask-name">${escapeHtml(h.name)}</div>
+          <div class="subtask-points">+${h.points}</div>
+        </div>
+        <button type="button" class="subtask-remove" onclick="removeSubtaskFromComposite('${id}')">✕</button>
+      </div>
+    `;
+  }).join('');
+
+  enableSubtaskDrag();
+}
+
+// Убрать подзадачу из составной (не удалять из библиотеки)
+function removeSubtaskFromComposite(id) {
+  compositeSubtaskIds = compositeSubtaskIds.filter(x => x !== id);
+  renderSubtaskList();
+}
+
+// Тап по подзадаче → открыть полную модалку редактирования ритуала
+function editSubtask(id) {
+  // Закрываем модалку составной (сохранив черновик — не теряем данные)
+  document.getElementById('habitModal').classList.remove('active');
+  setTimeout(() => {
+    openHabitModal(id);
+  }, 200);
+}
+
+// Обработка ввода в поле подзадачи — показать подсказки
+function updateSubtaskSuggestions() {
+  const container = document.getElementById('subtaskSuggestions');
+  const input = document.getElementById('subtaskInput');
+  if (!container || !input) return;
+
+  const query = (input.value || '').trim().toLowerCase();
+  if (!query) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+
+  // Ищем по всему тексту, без учёта регистра
+  const matches = [];
+  state.habits.forEach(h => {
+    // Не показываем составные и уже добавленные
+    if (h.type === 'composite') return;
+    if (compositeSubtaskIds.includes(h.id)) return;
+    const nameLower = h.name.toLowerCase();
+    const idx = nameLower.indexOf(query);
+    if (idx === -1) return;
+    matches.push({ habit: h, pos: idx });
+  });
+
+  // Сортировка: сначала совпадение в начале
+  matches.sort((a, b) => {
+    const aStart = a.pos === 0 ? 0 : 1;
+    const bStart = b.pos === 0 ? 0 : 1;
+    if (aStart !== bStart) return aStart - bStart;
+    if (a.pos !== b.pos) return a.pos - b.pos;
+    return a.habit.name.localeCompare(b.habit.name);
+  });
+
+  const top = matches.slice(0, 5);
+
+  if (top.length === 0) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = top.map(m => `
+    <div class="suggestion-item" onclick="pickSubtaskSuggestion('${m.habit.id}')">
+      <span>${escapeHtml(m.habit.name)}</span>
+    </div>
+  `).join('');
+  container.style.display = 'block';
+}
+
+// Тап по подсказке — добавить существующую подзадачу
+function pickSubtaskSuggestion(id) {
+  if (compositeSubtaskIds.includes(id)) {
+    showToast('Уже в списке');
+    return;
+  }
+  compositeSubtaskIds.push(id);
+  renderSubtaskList();
+  // Очищаем поле и подсказки
+  const input = document.getElementById('subtaskInput');
+  if (input) input.value = '';
+  const sug = document.getElementById('subtaskSuggestions');
+  if (sug) { sug.style.display = 'none'; sug.innerHTML = ''; }
+  input && input.focus();
+}
+
+// Кнопка «+» или Enter — попытка добавить новую подзадачу
+function addSubtaskFromInput() {
+  const input = document.getElementById('subtaskInput');
+  if (!input) return;
+  const name = input.value.trim();
+  if (!name) return;
+
+  // Проверяем, есть ли уже такой ритуал (без учёта регистра)
+  const normalized = name.toLowerCase();
+  const existing = state.habits.find(h => 
+    h.type !== 'composite' && h.name.trim().toLowerCase() === normalized
+  );
+
+  if (existing) {
+    // Уже есть — добавляем в составную
+    if (compositeSubtaskIds.includes(existing.id)) {
+      showToast('В списке');
+      return;
+    }
+    compositeSubtaskIds.push(existing.id);
+    renderSubtaskList();
+    input.value = '';
+    const sug = document.getElementById('subtaskSuggestions');
+    if (sug) { sug.style.display = 'none'; sug.innerHTML = ''; }
+    input.focus();
+    return;
+  }
+
+  // Не существует — открываем мини-модалку
+  openSubtaskModal(name);
+}
+// ========== SUBTASK MODAL (создание новой подзадачи) ==========
+function openSubtaskModal(prefillName) {
+  const modal = document.getElementById('subtaskModal');
+  const nameInput = document.getElementById('subtaskName');
+  const pointsInput = document.getElementById('subtaskPoints');
+  const typeSelect = document.getElementById('subtaskType');
+  const numericFields = document.getElementById('subtaskNumericFields');
+
+  nameInput.value = prefillName || '';
+  pointsInput.value = 1;
+  typeSelect.value = 'check';
+  document.getElementById('subtaskNumericOp').value = 'max';
+  document.getElementById('subtaskNumericTarget').value = 1800;
+  document.getElementById('subtaskNumericUnit').value = '';
+  numericFields.style.display = 'none';
+
+  modal.classList.add('active');
+  setTimeout(() => nameInput.focus(), 250);
+}
+
+function closeSubtaskModal() {
+  document.getElementById('subtaskModal').classList.remove('active');
+}
+
+function onSubtaskTypeChange() {
+  const t = document.getElementById('subtaskType').value;
+  document.getElementById('subtaskNumericFields').style.display = t === 'numeric' ? 'block' : 'none';
+}
+
+function saveSubtaskFromModal() {
+  const name = document.getElementById('subtaskName').value.trim();
+  const points = parseInt(document.getElementById('subtaskPoints').value) || 1;
+  const type = document.getElementById('subtaskType').value;
+
+  if (!name) { showToast('Введи название'); return; }
+
+  // Проверяем, нет ли уже такого ритуала (без учёта регистра)
+  const normalized = name.toLowerCase();
+  const existing = state.habits.find(h =>
+    h.type !== 'composite' && h.name.trim().toLowerCase() === normalized
+  );
+
+  if (existing) {
+    // Уже существует — просто добавляем
+    if (compositeSubtaskIds.includes(existing.id)) {
+      showToast('Уже существует');
+      closeSubtaskModal();
+      return;
+    }
+    compositeSubtaskIds.push(existing.id);
+    renderSubtaskList();
+    closeSubtaskModal();
+    // Очищаем поле ввода подзадач
+    const inp = document.getElementById('subtaskInput');
+    if (inp) inp.value = '';
+    const sug = document.getElementById('subtaskSuggestions');
+    if (sug) { sug.style.display = 'none'; sug.innerHTML = ''; }
+    return;
+  }
+
+  // Создаём новый ритуал
+  const newHabit = {
+    id: uid(),
+    name,
+    points: Math.max(1, points),
+    type: type === 'numeric' ? 'numeric' : 'check',
+    freq: 'none', // без периодичности — только внутри составной
+    multi: 1,
+    weekdays: [],
+    monthlyDays: [],
+    onceDate: '',
+    timeLabel: '',
+    createdAt: dateKey(new Date())
+  };
+
+  if (type === 'numeric') {
+    newHabit.numericOp = document.getElementById('subtaskNumericOp').value;
+    newHabit.numericTarget = parseFloat(document.getElementById('subtaskNumericTarget').value) || 0;
+    newHabit.numericUnit = document.getElementById('subtaskNumericUnit').value.trim();
+  }
+
+  state.habits.push(newHabit);
+  save();
+  compositeSubtaskIds.push(newHabit.id);
+  renderSubtaskList();
+  closeSubtaskModal();
+
+  const inp = document.getElementById('subtaskInput');
+  if (inp) inp.value = '';
+  const sug = document.getElementById('subtaskSuggestions');
+  if (sug) { sug.style.display = 'none'; sug.innerHTML = ''; }
+}
+
+// ========== SUBTASK DRAG (перетаскивание порядка внутри списка) ==========
+function enableSubtaskDrag() {
+  const list = document.getElementById('subtaskList');
+  if (!list) return;
+
+  const rows = Array.from(list.querySelectorAll('.subtask-row'));
+
+  rows.forEach(row => {
+    const handle = row.querySelector('[data-subtask-handle]');
+    if (!handle) return;
+    if (handle.dataset.dragBound === '1') return;
+    handle.dataset.dragBound = '1';
+
+    handle.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const startY = e.clientY;
+      const rect = row.getBoundingClientRect();
+      const pointerId = e.pointerId;
+      let dragging = false;
+      let placeholder = null;
+
+      const startDrag = () => {
+        dragging = true;
+        row.classList.add('dragging');
+        placeholder = document.createElement('div');
+        placeholder.style.height = rect.height + 'px';
+        placeholder.style.opacity = '0';
+        list.insertBefore(placeholder, row);
+        row.style.position = 'fixed';
+        row.style.left = rect.left + 'px';
+        row.style.top = rect.top + 'px';
+        row.style.width = rect.width + 'px';
+        row.style.zIndex = '1000';
+        row.style.pointerEvents = 'none';
+        row.style.boxShadow = '0 8px 20px rgba(255,126,179,0.4)';
+        if (navigator.vibrate) { try { navigator.vibrate(15); } catch(err) {} }
+      };
+
+      const moveDrag = (clientY) => {
+        if (!dragging) return;
+        const newTop = clientY - (startY - rect.top);
+        row.style.top = newTop + 'px';
+        const siblings = Array.from(list.children).filter(c =>
+          c !== placeholder && c !== row && c.classList.contains('subtask-row')
+        );
+        let nextSib = null;
+        for (const sib of siblings) {
+          const r = sib.getBoundingClientRect();
+          if (clientY < r.top + r.height / 2) { nextSib = sib; break; }
+        }
+        if (nextSib) list.insertBefore(placeholder, nextSib);
+        else list.appendChild(placeholder);
+      };
+
+      const endDrag = () => {
+        if (!dragging) return;
+        row.classList.remove('dragging');
+        row.style.position = '';
+        row.style.left = ''; row.style.top = ''; row.style.width = '';
+        row.style.zIndex = ''; row.style.pointerEvents = ''; row.style.boxShadow = '';
+        list.insertBefore(row, placeholder);
+        placeholder.remove();
+
+        // Обновляем порядок в compositeSubtaskIds
+        const newOrder = Array.from(list.querySelectorAll('.subtask-row'))
+          .map(r => r.dataset.subtaskId);
+        compositeSubtaskIds = newOrder;
+      };
+
+      const onMove = (ev) => {
+        if (ev.pointerId !== pointerId) return;
+        const dy = ev.clientY - startY;
+        if (!dragging && Math.abs(dy) > 6) startDrag();
+        if (dragging) { ev.preventDefault(); moveDrag(ev.clientY); }
+      };
+
+      const onUp = () => {
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        document.removeEventListener('pointercancel', onUp);
+        if (dragging) endDrag();
+      };
+
+      document.addEventListener('pointermove', onMove, { passive: false });
+      document.addEventListener('pointerup', onUp);
+      document.addEventListener('pointercancel', onUp);
+    });
+  });
 }
 /* ========== HISTORY POINTS ========== */
 // Добавить запись в историю баллов
@@ -3410,15 +4391,47 @@ function clearTimeLabel() {
 function onTypeChange() {
   const t = document.getElementById('habitType').value;
   document.getElementById('numericFields').style.display = t === 'numeric' ? 'block' : 'none';
+  document.getElementById('compositeFields').style.display = t === 'composite' ? 'block' : 'none';
   document.getElementById('regularFields').style.display = 'block';
+
+  // Скрываем поле «Баллы за выполнение» для составной задачи
+  const pointsField = document.getElementById('habitPoints');
+  if (pointsField) {
+    const pointsWrapper = pointsField.closest('.field');
+    if (pointsWrapper) {
+      pointsWrapper.style.display = t === 'composite' ? 'none' : 'block';
+    }
+  }
+
   // Для numeric скрываем опцию "Несколько раз в день"
   const freqSel = document.getElementById('habitFreq');
   const multiOpt = freqSel.querySelector('option[value="multi"]');
-  if (t === 'numeric') {
+  if (t === 'numeric' || t === 'composite') {
     if (multiOpt) multiOpt.style.display = 'none';
     if (freqSel.value === 'multi') freqSel.value = 'daily';
   } else {
     if (multiOpt) multiOpt.style.display = '';
+  }
+
+  // Для composite — привязываем поле подсказок подзадач (один раз)
+  if (t === 'composite') {
+    const subtaskInput = document.getElementById('subtaskInput');
+    if (subtaskInput && !subtaskInput.dataset.bound) {
+      subtaskInput.dataset.bound = '1';
+      subtaskInput.addEventListener('input', updateSubtaskSuggestions);
+      subtaskInput.addEventListener('focus', updateSubtaskSuggestions);
+      subtaskInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addSubtaskFromInput();
+        }
+        if (e.key === 'Escape') {
+          const sug = document.getElementById('subtaskSuggestions');
+          if (sug) { sug.style.display = 'none'; sug.innerHTML = ''; }
+        }
+      });
+    }
+    renderSubtaskList();
   }
   onFreqChange();
 }
@@ -3509,8 +4522,14 @@ function openHabitModal(id) {
     newInput.addEventListener('focus', updateSuggestions);
   }
 
-  // Очищаем выбранные числа месяца
+  // Очищаем выбранные числа месяца и подзадачи
   monthlyDaysSelected.clear();
+  compositeSubtaskIds = [];
+  // Очищаем поле ввода подзадач
+  const subtaskInp = document.getElementById('subtaskInput');
+  if (subtaskInp) subtaskInp.value = '';
+  const subtaskSug = document.getElementById('subtaskSuggestions');
+  if (subtaskSug) { subtaskSug.style.display = 'none'; subtaskSug.innerHTML = ''; }
 
   if (id) {
     const h = state.habits.find(x => x.id === id);
@@ -3518,7 +4537,7 @@ function openHabitModal(id) {
     title.textContent = 'Редактировать ритуал 🎀';
     document.getElementById('habitId').value = h.id;
     document.getElementById('habitName').value = h.name;
-    document.getElementById('habitPoints').value = h.points;
+    document.getElementById('habitPoints').value = h.points || 10;
     document.getElementById('habitType').value = h.type || 'check';
     document.getElementById('habitNumericOp').value = h.numericOp || 'max';
     document.getElementById('habitNumericTarget').value = h.numericTarget || 1800;
@@ -3535,6 +4554,10 @@ function openHabitModal(id) {
     } else {
       const input = document.getElementById('habitMonthlyDays');
       if (input) input.value = '';
+    }
+    // Загружаем подзадачи для composite
+    if (h.type === 'composite') {
+      compositeSubtaskIds = (h.subtaskIds || []).slice();
     }
     currentTimeLabel = h.timeLabel || '';
     (h.weekdays || []).forEach(wd => {
@@ -3620,9 +4643,8 @@ function buildHabitFromForm() {
 
   const habit = { id: uid(), name, points: Math.max(1, points), type, timeLabel };
   const freq = document.getElementById('habitFreq').value;
-  // Для numeric недоступен multi
-  if (type === 'numeric' && freq === 'multi') {
-    // принудительно daily
+  // Для numeric/composite недоступен multi
+  if ((type === 'numeric' || type === 'composite') && freq === 'multi') {
     habit.freq = 'daily';
   } else {
     habit.freq = freq;
@@ -3630,11 +4652,10 @@ function buildHabitFromForm() {
   habit.multi = parseInt(document.getElementById('habitMulti').value) || 2;
   habit.weekdays = freq === 'weekly' ? Array.from(weekdaysSelected) : [];
   habit.onceDate = document.getElementById('habitOnceDate').value;
-  habit.multiParts = (freq === 'multi' && type !== 'numeric' && multiPartsSelected.length) ? multiPartsSelected.slice() : [];
+  habit.multiParts = (freq === 'multi' && type !== 'numeric' && type !== 'composite' && multiPartsSelected.length) ? multiPartsSelected.slice() : [];
 
   // Monthly — парсим числа месяца
   if (habit.freq === 'monthly') {
-    // Сначала синхронизируем из поля ввода (если пользователь что-то печатал)
     const input = document.getElementById('habitMonthlyDays');
     if (input) {
       const parsed = parseMonthlyDays(input.value);
@@ -3643,7 +4664,7 @@ function buildHabitFromForm() {
     }
     const days = Array.from(monthlyDaysSelected).sort((a,b) => a - b);
     if (days.length === 0) {
-      showToast('Выбери хотя бы одно число');
+      showToast('Выбери хотя бы одно число 💕');
       return null;
     }
     habit.monthlyDays = days;
@@ -3653,6 +4674,19 @@ function buildHabitFromForm() {
     habit.numericOp = document.getElementById('habitNumericOp').value;
     habit.numericTarget = parseFloat(document.getElementById('habitNumericTarget').value) || 0;
     habit.numericUnit = document.getElementById('habitNumericUnit').value.trim();
+  }
+
+  // Составная задача — сохраняем подзадачи
+  if (type === 'composite') {
+    if (compositeSubtaskIds.length === 0) {
+      showToast('Добавь хотя бы одну подзадачу');
+      return null;
+    }
+    habit.subtaskIds = compositeSubtaskIds.slice();
+    // Для составной — баллы не используются
+    delete habit.points;
+    delete habit.multi;
+    delete habit.multiParts;
   }
 
   if (habit.freq === 'weekly' && habit.weekdays.length === 0) { showToast('Выбери хотя бы один день'); return null; }
@@ -3682,11 +4716,13 @@ function saveHabit() {
   const today = new Date();
   const dayKey = dateKey(today);
 
-  // Проверка дубликатов при СОЗДАНИИ
-  // Проверка дубликатов при СОЗДАНИИ
-  if (!id) {
+  // Проверка дубликатов при СОЗДАНИИ — ТОЛЬКО для обычных и числовых ритуалов
+  // Для составных задач проверка не нужна (название может повторяться)
+  if (!id && habit.type !== 'composite') {
     const normalizedNew = habit.name.trim().toLowerCase();
-    const existing = state.habits.find(h => h.name.trim().toLowerCase() === normalizedNew);
+    const existing = state.habits.find(h =>
+      h.type !== 'composite' && h.name.trim().toLowerCase() === normalizedNew
+    );
 
     if (existing) {
       // Точное совпадение
@@ -3703,14 +4739,12 @@ function saveHabit() {
           showToast('Уже добавлен на сегодня');
           closeModal('habitModal');
         } else if (excluded.includes(existing.id)) {
-          // был скрыт — возвращаем
           state.excluded[dayKey] = excluded.filter(x => x !== existing.id);
           save();
           closeModal('habitModal');
           renderToday();
           showToast('Возвращён в расписание');
         } else {
-          // не в расписании → добавляем в extra
           if (!state.extra[dayKey]) state.extra[dayKey] = [];
           if (!state.extra[dayKey].includes(existing.id)) {
             state.extra[dayKey].push(existing.id);
@@ -3722,7 +4756,6 @@ function saveHabit() {
         }
         return;
       } else {
-        // Режим «Ритуалы»: показать модалку «Открыть существующий?»
         showDuplicateDialog(existing.id);
         return;
       }
@@ -3742,9 +4775,15 @@ function saveHabit() {
     habit.createdAt = dateKey(new Date());
     state.habits.push(habit);
   }
+
+  // ⚠️ Если создаём новую подзадачу через мини-модалку — добавляем её в compositeSubtaskIds
+  // (это происходит в saveSubtaskFromModal, здесь просто сохраняем)
+
   save(); closeModal('habitModal');
+
+  // Если это составная задача — рендерим её подзадачи тоже
   renderToday(); renderRituals(); renderCalendar();
-  showToast(id ? 'Обновлено' : 'Ритуал добавлен 🎀');
+  showToast(id ? 'Обновлено' : (habit.type === 'composite' ? 'Составная задача добавлена 🎀' : 'Ритуал добавлен 🎀'));
 }
 
 // ========== DUPLICATE DIALOG (для вкладки «Ритуалы») ==========
@@ -3914,6 +4953,11 @@ function renderStats() {
       </div>`;
     } else if (s.type === 'numeric') {
       linesHtml = `<div class="stat-line"><span>✅ <strong>${s.doneDays}</strong> из <strong>${s.scheduledDays}</strong> дней</span></div>`;
+    } else if (s.type === 'composite') {
+      linesHtml = `<div class="stat-line">
+        <span>✅ Подзадачи: <strong>${s.doneSubtasks}</strong>/${s.totalSubtasks}</span>
+        <span>📅 Дней: <strong>${s.scheduledDays}</strong></span>
+      </div>`;
     }
     return `
       <div class="stat-card">
@@ -3938,6 +4982,51 @@ function computeStat(h, from, to) {
   const cur = new Date(startDate); cur.setHours(0,0,0,0);
   const end = new Date(to); end.setHours(0,0,0,0);
   while (cur <= end) { days.push(new Date(cur)); cur.setDate(cur.getDate() + 1); }
+
+  // ========== COMPOSITE ==========
+  if (h.type === 'composite') {
+    const subIds = h.subtaskIds || [];
+    const subtasks = subIds.map(id => state.habits.find(x => x.id === id)).filter(Boolean);
+    const totalSubtasks = subtasks.length;
+
+    let scheduledDays = 0;      // дней, когда задача запланирована
+    let doneSubtasks = 0;       // подзадач выполнено
+    let totalSubtaskSlots = 0;  // всего подзадач × дни
+
+    days.forEach(day => {
+      if (!isHabitScheduled(h, day)) return;
+      scheduledDays++;
+      totalSubtaskSlots += totalSubtasks;
+      const key = dateKey(day);
+      const comp = state.completions[key] || {};
+
+      subtasks.forEach(sub => {
+        if (sub.type === 'numeric') {
+          const c = comp[`num-${sub.id}`];
+          if (c && c.ok) doneSubtasks++;
+        } else {
+          const c = comp[`simple-${sub.id}`];
+          if (c === 'done') doneSubtasks++;
+        }
+      });
+    });
+
+    const pct = totalSubtaskSlots > 0
+      ? Math.round(doneSubtasks / totalSubtaskSlots * 100)
+      : 0;
+
+    return {
+      habit: h,
+      type: 'composite',
+      scheduledDays,
+      doneSubtasks,
+      totalSubtasks: totalSubtaskSlots,
+      subtaskCount: totalSubtasks,
+      pct
+    };
+  }
+
+  // ========== ОБЫЧНЫЕ / ЧИСЛОВЫЕ / MULTI ==========
   let scheduledDays = 0, doneDays = 0, scheduledSlots = 0, doneSlots = 0, fullDays = 0;
   days.forEach(day => {
     if (!isHabitScheduled(h, day)) return;
