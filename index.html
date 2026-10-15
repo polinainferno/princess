@@ -1002,7 +1002,65 @@
   .stat-line strong { color: var(--text); }
   .stat-bar { height: 5px; background: var(--card-bg); border-radius: 3px; overflow: hidden; }
   .stat-bar-fill { height: 100%; background: linear-gradient(90deg, var(--pink), var(--pink-deep)); border-radius: 3px; transition: width 0.5s; }
+  /* History points (история баллов) */
+  .hp-month {
+    font-family: 'Pacifico', cursive;
+    font-size: 17px;
+    color: var(--pink-deep);
+    margin: 18px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px dashed var(--pink-soft);
+  }
+  .hp-month:first-child { margin-top: 0; }
 
+  .hp-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 4px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--pink-soft);
+  }
+  .hp-item:last-child { border-bottom: none; }
+
+  .hp-item-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+  .hp-date {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-soft);
+    min-width: 42px;
+    flex-shrink: 0;
+  }
+  .hp-label {
+    font-weight: 600;
+    color: var(--text);
+    word-break: break-word;
+    flex: 1;
+    min-width: 0;
+  }
+  .hp-points {
+    font-weight: 700;
+    font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .hp-points.plus { color: var(--ok-color); }
+  .hp-points.minus { color: var(--err-color); }
+
+  .hp-empty {
+    text-align: center;
+    padding: 30px 15px;
+    color: var(--text-soft);
+    font-size: 14px;
+  }
+  .hp-empty .emoji { font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.7; }
   .stat-empty { text-align: center; padding: 30px 15px; color: var(--text-soft); font-size: 14px; }
   .stat-empty .emoji { font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.7; }
 
@@ -1156,7 +1214,7 @@
     <button class="palette-btn" onclick="openThemeModal()" title="Тема">🎨</button>
   </div>
 
-  <div class="balance-card">
+  <div class="balance-card" onclick="openHistoryPoints()" style="cursor: pointer;">
     <div class="balance-label">Твои баллы</div>
     <div class="balance-value" id="balanceValue">
       <span class="pts-num">0</span>
@@ -1338,7 +1396,16 @@
     </div>
   </div>
 </div>
-
+<!-- History points modal -->
+<div class="modal-overlay" id="historyPointsModal">
+  <div class="modal">
+    <div class="modal-title">История баллов</div>
+    <div id="historyPointsList" style="max-height: 60vh; overflow-y: auto;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('historyPointsModal')">Закрыть <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
 <!-- Stats modal -->
 <div class="modal-overlay" id="statsModal">
   <div class="modal">
@@ -1606,7 +1673,8 @@ let state = {
   lastBackup: '', lastReminderDate: '', neverRemindBackup: false,
   templates: [],
   excluded: {},
-  extra: {}
+  extra: {},
+  historyPoints: []
 };
   
 function load() {
@@ -1645,6 +1713,10 @@ function load() {
       }
       // createdАt: старым ритуалам не ставим — они «существовали всегда»
     });
+  }
+  // Миграция: если нет historyPoints — создаём пустой массив
+  if (!Array.isArray(state.historyPoints)) {
+    state.historyPoints = [];
   }
 }
   
@@ -1811,16 +1883,17 @@ function handleWelcomeImport(e) {
         e.target.value = '';
         return;
       }
-      state = Object.assign({
+       state = Object.assign({
         name: '', birthday: '', balance: 0, theme: 'pink',
         habits: [], rewards: [], history: [], completions: {},
         orders: {}, lastBirthdayGift: '',
         createdAt: '', lastVisit: '',
-        welcomeGiftReceived: true,
+        welcomeGiftReceived: false,
         lastBackup: '', lastReminderDate: '', neverRemindBackup: false,
         templates: [],
         excluded: {},
-        extra: {}
+        extra: {},
+        historyPoints: []
       }, data);
       // Миграция
       if (state.habits) {
@@ -1831,7 +1904,7 @@ function handleWelcomeImport(e) {
       if (!state.excluded || typeof state.excluded !== 'object') {
         state.excluded = {};
       }
-      if (!state.extra || typeof state.extra !== 'object') {
+       if (!state.extra || typeof state.extra !== 'object') {
         state.extra = {};
       }
       // Миграция: monthlyDay → monthlyDays
@@ -1848,6 +1921,10 @@ function handleWelcomeImport(e) {
             delete h.monthlyDay;
           }
         });
+      }
+      // Миграция: historyPoints
+      if (!Array.isArray(state.historyPoints)) {
+        state.historyPoints = [];
       }
       state.welcomeGiftReceived = true;
       save();
@@ -2258,10 +2335,16 @@ function toggleSimple(id, dayKey) {
   const comp = state.completions[dayKey];
   const key = `simple-${id}`;
   const cur = comp[key];
-  if (cur === 'done') { delete comp[key]; subBalance(h.points); }
+  if (cur === 'done') {
+    delete comp[key];
+    subBalance(h.points);
+    addHistoryPoint('earn', h.name + ' (снято)', -h.points);
+  }
   else {
     if (cur === 'fail') addBalance(h.points);
-    comp[key] = 'done'; addBalance(h.points);
+    comp[key] = 'done';
+    addBalance(h.points);
+    addHistoryPoint('earn', h.name, +h.points);
   }
   save(); updateBalance(); renderToday();
   if (comp[key] === 'done') showToast(`+${h.points} ${getThemeEmoji().points}`);
@@ -2273,10 +2356,18 @@ function failSimple(id, dayKey) {
   const comp = state.completions[dayKey];
   const key = `simple-${id}`;
   const cur = comp[key];
-  if (cur === 'fail') { delete comp[key]; addBalance(h.points); showToast('Отменено'); }
+  if (cur === 'fail') {
+    delete comp[key];
+    addBalance(h.points);
+    addHistoryPoint('earn', h.name + ' (отмена провала)', +h.points);
+    showToast('Отменено');
+  }
   else {
     if (cur === 'done') subBalance(h.points);
-    comp[key] = 'fail'; subBalance(h.points); showToast(`−${h.points} ${getThemeEmoji().points}`);
+    comp[key] = 'fail';
+    subBalance(h.points);
+    addHistoryPoint('earn', h.name + ' (провалено)', -h.points);
+    showToast(`−${h.points} ${getThemeEmoji().points}`);
   }
   save(); updateBalance(); renderToday();
 }
@@ -2287,10 +2378,16 @@ function toggleMulti(id, slot, dayKey) {
   const comp = state.completions[dayKey];
   const key = `multi-${id}-${slot}`;
   const cur = comp[key];
-  if (cur === 'done') { delete comp[key]; subBalance(h.points); }
+  if (cur === 'done') {
+    delete comp[key];
+    subBalance(h.points);
+    addHistoryPoint('earn', h.name + ' (снято)', -h.points);
+  }
   else {
     if (cur === 'fail') addBalance(h.points);
-    comp[key] = 'done'; addBalance(h.points);
+    comp[key] = 'done';
+    addBalance(h.points);
+    addHistoryPoint('earn', h.name, +h.points);
   }
   save(); updateBalance(); renderToday();
   if (comp[key] === 'done') showToast(`+${h.points} ${getThemeEmoji().points}`);
@@ -2302,10 +2399,18 @@ function failMulti(id, slot, dayKey) {
   const comp = state.completions[dayKey];
   const key = `multi-${id}-${slot}`;
   const cur = comp[key];
-  if (cur === 'fail') { delete comp[key]; addBalance(h.points); showToast('Отменено'); }
+  if (cur === 'fail') {
+    delete comp[key];
+    addBalance(h.points);
+    addHistoryPoint('earn', h.name + ' (отмена провала)', +h.points);
+    showToast('Отменено');
+  }
   else {
     if (cur === 'done') subBalance(h.points);
-    comp[key] = 'fail'; subBalance(h.points); showToast(`−${h.points} ${getThemeEmoji().points}`);
+    comp[key] = 'fail';
+    subBalance(h.points);
+    addHistoryPoint('earn', h.name + ' (провалено)', -h.points);
+    showToast(`−${h.points} ${getThemeEmoji().points}`);
   }
   save(); updateBalance(); renderToday();
 }
@@ -2333,6 +2438,7 @@ function saveNumeric(id, dayKey) {
   const comp = state.completions[dayKey];
   const key = `num-${id}`;
   const prev = comp[key];
+  const numericKey = `num-${id}`;
 
   if (prev) {
     if (prev.ok) subBalance(h.points);
@@ -2344,10 +2450,12 @@ function saveNumeric(id, dayKey) {
   if (ok) {
     comp[key] = { value: v, ok: true };
     addBalance(h.points);
+    addHistoryPoint('earn', `${h.name}: ${v}`, +h.points, numericKey);
     showToast(`+${h.points} ${getThemeEmoji().points}`);
   } else {
     comp[key] = { value: v, ok: false };
     subBalance(h.points);
+    addHistoryPoint('earn', `${h.name}: ${v}`, -h.points, numericKey);
     showToast(`−${h.points} ${getThemeEmoji().points} Условие не выполнено`);
   }
   save(); updateBalance(); renderToday();
@@ -2359,10 +2467,12 @@ function failNumeric(id, dayKey) {
   const comp = state.completions[dayKey];
   const key = `num-${id}`;
   const prev = comp[key];
+  const numericKey = `num-${id}`;
 
   if (prev && prev.failed) {
     addBalance(h.points);
     delete comp[key];
+    addHistoryPoint('earn', h.name + ' (отмена провала)', +h.points, numericKey);
     showToast('Отменено');
   } else {
     if (prev) {
@@ -2371,6 +2481,7 @@ function failNumeric(id, dayKey) {
     }
     comp[key] = { failed: true };
     subBalance(h.points);
+    addHistoryPoint('earn', h.name + ' (провалено)', -h.points, numericKey);
     showToast(`−${h.points} ${getThemeEmoji().points} Провал`);
   }
   save(); updateBalance(); renderToday();
@@ -2770,6 +2881,7 @@ function buyReward(id) {
   if (!confirm(`Купить "${r.name}" за ${r.price} баллов?`)) return;
   subBalance(r.price);
   state.history.push({ id: uid(), name: r.name, price: r.price, date: new Date().toISOString() });
+  addHistoryPoint('spend', r.name, -r.price);
   save(); updateBalance(); renderSpend();
   showToast(`Поздравляю! Ты заслужила ${getThemeEmoji().points}`);
 }
@@ -2917,7 +3029,128 @@ function openHabitModalForDate(dateStr) {
     if (dateInput) dateInput.value = dateStr;
   }, 350);
 }
+/* ========== HISTORY POINTS ========== */
+// Добавить запись в историю баллов
+// type: 'earn' | 'spend' | 'gift'
+// numericKey: 'num-{habitId}' — если это числовой ритуал за день (обновление существующей записи)
+function addHistoryPoint(type, label, points, numericKey) {
+  if (!Array.isArray(state.historyPoints)) state.historyPoints = [];
 
+  const now = new Date();
+  const todayK = dateKey(now);
+
+  // Если это числовой ритуал — обновляем существующую запись за сегодня
+  if (numericKey) {
+    const existingIdx = state.historyPoints.findIndex(p => {
+      if (p.numericKey !== numericKey) return false;
+      const pDate = new Date(p.date);
+      return dateKey(pDate) === todayK;
+    });
+
+    if (existingIdx >= 0) {
+      // Обновляем существующую
+      state.historyPoints[existingIdx].points = points;
+      state.historyPoints[existingIdx].label = label;
+      state.historyPoints[existingIdx].date = now.toISOString();
+      state.historyPoints[existingIdx].balanceAfter = state.balance;
+      save();
+      return;
+    }
+  }
+
+  // Создаём новую запись
+  const entry = {
+    id: uid(),
+    date: now.toISOString(),
+    type,
+    label,
+    points,
+    balanceAfter: state.balance,
+    numericKey: numericKey || null
+  };
+
+  state.historyPoints.push(entry);
+
+  // Ограничиваем до 5000 записей (удаляем самые старые)
+  if (state.historyPoints.length > 5000) {
+    state.historyPoints = state.historyPoints.slice(-5000);
+  }
+
+  save();
+}
+// Открыть модалку с историей баллов
+function openHistoryPoints() {
+  renderHistoryModal();
+  document.getElementById('historyPointsModal').classList.add('active');
+}
+
+// Отрисовать историю баллов с группировкой по месяцам
+function renderHistoryModal() {
+  const list = document.getElementById('historyPointsList');
+  if (!list) return;
+
+  const e = getThemeEmoji();
+
+  // Если истории нет — пустое состояние
+  if (!Array.isArray(state.historyPoints) || state.historyPoints.length === 0) {
+    list.innerHTML = `<div class="hp-empty"><span class="emoji">${e.empty}</span>Пока нет изменений баллов</div>`;
+    return;
+  }
+
+  // Сортируем по дате (новые сверху)
+  const sorted = state.historyPoints.slice().sort((a, b) => {
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  // Группируем по месяцам
+  const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  const groups = {};
+  const orderKeys = [];
+
+  sorted.forEach(item => {
+    const d = new Date(item.date);
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    const key = `${y}-${String(m+1).padStart(2,'0')}`;
+    if (!groups[key]) {
+      groups[key] = {
+        year: y,
+        month: m,
+        items: []
+      };
+      orderKeys.push(key);
+    }
+    groups[key].items.push(item);
+  });
+
+  // Рендерим
+  let html = '';
+  orderKeys.forEach(key => {
+    const g = groups[key];
+    html += `<div class="hp-month">${monthNames[g.month]} ${g.year}</div>`;
+
+    g.items.forEach(item => {
+      const d = new Date(item.date);
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const dateStr = `${day}.${month}`;
+      const pointsClass = item.points >= 0 ? 'plus' : 'minus';
+      const pointsStr = item.points >= 0 ? `+${item.points}` : `${item.points}`;
+
+      html += `
+        <div class="hp-item">
+          <div class="hp-item-left">
+            <div class="hp-date">${dateStr}</div>
+            <div class="hp-label">${escapeHtml(item.label)}</div>
+          </div>
+          <div class="hp-points ${pointsClass}">${pointsStr}</div>
+        </div>
+      `;
+    });
+  });
+
+  list.innerHTML = html;
+}
 /* ========== HABIT MODAL ========== */
 const weekdaysSelected = new Set();
 let multiPartsSelected = [];
@@ -4001,6 +4234,7 @@ function claimBirthdayGift() {
   btn.disabled = true;
   addBalance(1000);
   state.lastBirthdayGift = String(new Date().getFullYear());
+  addHistoryPoint('gift', 'Подарок на день рождения', +1000);
   save(); updateBalance();
   showToast(`+1000 ${getThemeEmoji().points} С днём рождения!`);
   setTimeout(() => {
@@ -4014,6 +4248,7 @@ function claimWelcomeGift() {
   btn.disabled = true;
   addBalance(100);
   state.welcomeGiftReceived = true;
+  addHistoryPoint('gift', 'Подарок на регистрацию', +100);
   save(); updateBalance();
   showToast(`+100 ${getThemeEmoji().points} Добро пожаловать!`);
   setTimeout(() => {
@@ -4026,6 +4261,7 @@ function claimReturnGift() {
   if (btn.disabled) return;
   btn.disabled = true;
   addBalance(100);
+  addHistoryPoint('gift', 'Подарок на возвращение', +100);
   save(); updateBalance();
   showToast(`+100 ${getThemeEmoji().points} С возвращением!`);
   setTimeout(() => {
@@ -4105,6 +4341,10 @@ function handleImportFile(e) {
             delete h.monthlyDay;
           }
         });
+      }
+      // Миграция: historyPoints
+      if (!Array.isArray(state.historyPoints)) {
+        state.historyPoints = [];
       }
       save();
       applyTheme(state.theme || 'pink');;
