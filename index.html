@@ -820,6 +820,89 @@
     margin-bottom: 12px;
     line-height: 1.5;
   }
+    /* Мини-календарь в модалке (для monthly) */
+  .mini-cal {
+    margin-top: 8px;
+    background: var(--card-bg);
+    border: 2px solid var(--pink-soft);
+    border-radius: 16px;
+    padding: 12px 10px;
+  }
+  .mini-cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+  .mini-cal-weekday {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-soft);
+    padding: 3px 0;
+    text-transform: uppercase;
+  }
+  .mini-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+  .mini-cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text);
+    user-select: none;
+  }
+  .mini-cal-day.empty {
+    cursor: default;
+    color: transparent;
+  }
+  .mini-cal-day:not(.empty):hover {
+    background: var(--pink-soft);
+  }
+  .mini-cal-day.selected {
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(255,126,179,0.35);
+  }
+  .mini-cal-day.today {
+    outline: 2px solid var(--pink-deep);
+    outline-offset: -2px;
+  }
+  .mini-cal-day.today.selected {
+    outline: none;
+  }
+
+  /* Поле для ввода чисел месяца */
+  .monthly-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 2px solid var(--pink-soft);
+    background: var(--card-bg);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 600;
+    outline: none;
+    transition: all 0.2s;
+    margin-top: 10px;
+  }
+  .monthly-input:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 4px rgba(255,182,213,0.2);
+  }
+  .monthly-input::placeholder {
+    color: var(--text-soft);
+    font-weight: 500;
+  }
   .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
   .btn { flex: 1; padding: 15px; border-radius: 18px; border: none; font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; }
   .btn-primary { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: #fff; box-shadow: 0 6px 18px rgba(255,126,179,0.4); }
@@ -1214,9 +1297,13 @@
         <label>Дни недели</label>
         <div class="chips" id="weekdaysChips"></div>
       </div>
-      <div class="field" id="monthlyField" style="display:none;">
-        <label>Число месяца</label>
-        <input type="number" id="habitMonthlyDay" min="1" max="31" value="1">
+         <div class="field" id="monthlyField" style="display:none;">
+        <label>Числа месяца</label>
+        <div class="mini-cal">
+          <div class="mini-cal-weekdays" id="miniCalWeekdays"></div>
+          <div class="mini-cal-grid" id="miniCalGrid"></div>
+        </div>
+        <input type="text" class="monthly-input" id="habitMonthlyDays" placeholder="Числа через запятую: 1, 5, 25..." autocomplete="off">
       </div>
       <div class="field" id="onceField" style="display:none;">
         <label>Дата</label>
@@ -1543,6 +1630,22 @@ function load() {
   if (!state.extra || typeof state.extra !== 'object') {
     state.extra = {};
   }
+  // Миграция: monthlyDay → monthlyDays (массив)
+  if (state.habits && state.habits.length) {
+    state.habits.forEach(h => {
+      if (h.freq === 'monthly') {
+        if (!Array.isArray(h.monthlyDays)) {
+          if (typeof h.monthlyDay === 'number') {
+            h.monthlyDays = [h.monthlyDay];
+          } else {
+            h.monthlyDays = [1];
+          }
+        }
+        delete h.monthlyDay;
+      }
+      // createdАt: старым ритуалам не ставим — они «существовали всегда»
+    });
+  }
 }
   
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
@@ -1585,6 +1688,10 @@ const TIMES = ['Утро', 'День', 'Вечер', 'Ночь'];
 function isHabitScheduled(habit, date) {
   const d = new Date(date); d.setHours(0,0,0,0);
   const key = dateKey(d);
+
+  // Проверка createdAt: не показывать ритуал раньше даты его создания
+  if (habit.createdAt && key < habit.createdAt) return false;
+
   switch(habit.freq) {
     case 'daily': return true;
     case 'multi': return true;
@@ -1592,7 +1699,10 @@ function isHabitScheduled(habit, date) {
       const wd = (d.getDay() + 6) % 7;
       return (habit.weekdays || []).includes(wd);
     }
-    case 'monthly': return d.getDate() === (habit.monthlyDay || 1);
+    case 'monthly': {
+      const days = habit.monthlyDays || [habit.monthlyDay || 1];
+      return days.includes(d.getDate());
+    }
     case 'once': return habit.onceDate === key;
     default: return false;
   }
@@ -1614,7 +1724,15 @@ function freqToText(h) {
       baseText = days || 'По дням недели';
       break;
     }
-    case 'monthly': baseText = `${h.monthlyDay || 1}-го числа`; break;
+    case 'monthly': {
+      const days = (h.monthlyDays || [h.monthlyDay || 1]).slice().sort((a,b)=>a-b);
+      if (days.length === 1) {
+        baseText = `${days[0]}-го числа`;
+      } else {
+        baseText = `${days.join(', ')} числа`;
+      }
+      break;
+    }
     case 'once': {
       if (!h.onceDate) baseText = 'Один раз';
       else {
@@ -1715,6 +1833,21 @@ function handleWelcomeImport(e) {
       }
       if (!state.extra || typeof state.extra !== 'object') {
         state.extra = {};
+      }
+      // Миграция: monthlyDay → monthlyDays
+      if (state.habits) {
+        state.habits.forEach(h => {
+          if (h.freq === 'monthly') {
+            if (!Array.isArray(h.monthlyDays)) {
+              if (typeof h.monthlyDay === 'number') {
+                h.monthlyDays = [h.monthlyDay];
+              } else {
+                h.monthlyDays = [1];
+              }
+            }
+            delete h.monthlyDay;
+          }
+        });
       }
       state.welcomeGiftReceived = true;
       save();
@@ -2792,6 +2925,83 @@ let currentTimeLabel = '';
 let habitEditMode = 'main';
 let tplEditingIndex = -1;
 let suggestionsEnabled = false; // включаем подсказки только в «Сегодня»
+const monthlyDaysSelected = new Set(); // выбранные числа месяца
+
+// ========== MINI CALENDAR (для monthly) ==========
+function renderMiniCalendar() {
+  const weekdaysEl = document.getElementById('miniCalWeekdays');
+  const gridEl = document.getElementById('miniCalGrid');
+  if (!weekdaysEl || !gridEl) return;
+
+  // Дни недели
+  weekdaysEl.innerHTML = WEEKDAYS.map(w => `<div class="mini-cal-weekday">${w}</div>`).join('');
+
+  // Сетка текущего месяца
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const todayDate = now.getDate();
+
+  const first = new Date(year, month, 1);
+  const startWd = (first.getDay() + 6) % 7; // Пн = 0
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  let html = '';
+  // Пустые клетки до первого дня
+  for (let i = 0; i < startWd; i++) {
+    html += `<div class="mini-cal-day empty"></div>`;
+  }
+  // Дни месяца
+  for (let d = 1; d <= daysInMonth; d++) {
+    let cls = 'mini-cal-day';
+    if (monthlyDaysSelected.has(d)) cls += ' selected';
+    if (d === todayDate) cls += ' today';
+    html += `<div class="${cls}" onclick="toggleMiniDay(${d})">${d}</div>`;
+  }
+  gridEl.innerHTML = html;
+
+  // Обновляем поле ввода
+  updateMonthlyInput();
+}
+
+function toggleMiniDay(d) {
+  if (monthlyDaysSelected.has(d)) {
+    monthlyDaysSelected.delete(d);
+  } else {
+    monthlyDaysSelected.add(d);
+  }
+  renderMiniCalendar();
+}
+
+function updateMonthlyInput() {
+  const input = document.getElementById('habitMonthlyDays');
+  if (!input) return;
+  const sorted = Array.from(monthlyDaysSelected).sort((a,b) => a - b);
+  input.value = sorted.join(', ');
+}
+
+function syncMonthlyFromInput() {
+  const input = document.getElementById('habitMonthlyDays');
+  if (!input) return;
+  const parsed = parseMonthlyDays(input.value);
+  monthlyDaysSelected.clear();
+  parsed.forEach(d => monthlyDaysSelected.add(d));
+  renderMiniCalendar();
+}
+
+// Парсинг строки «1, 15, 25» → [1, 15, 25]
+function parseMonthlyDays(str) {
+  if (!str) return [];
+  const parts = String(str).split(',').map(s => s.trim()).filter(Boolean);
+  const nums = new Set();
+  parts.forEach(p => {
+    const n = parseInt(p, 10);
+    if (!isNaN(n) && n >= 1 && n <= 31) {
+      nums.add(n);
+    }
+  });
+  return Array.from(nums).sort((a,b) => a - b);
+}
 
 // ========== SUGGESTIONS ==========
 // Показ/скрытие подсказок при вводе названия
@@ -2987,6 +3197,18 @@ function onFreqChange() {
   document.getElementById('monthlyField').style.display = f === 'monthly' ? 'block' : 'none';
   document.getElementById('onceField').style.display = f === 'once' ? 'block' : 'none';
   if (f === 'multi' && t !== 'numeric') onMultiInput();
+
+  // Если monthly — рисуем мини-календарь и привязываем поле ввода
+  if (f === 'monthly') {
+    renderMiniCalendar();
+    // Привязываем событие к полю ввода (только один раз)
+    const input = document.getElementById('habitMonthlyDays');
+    if (input && !input.dataset.bound) {
+      input.dataset.bound = '1';
+      input.addEventListener('blur', syncMonthlyFromInput);
+      input.addEventListener('change', syncMonthlyFromInput);
+    }
+  }
 }
 function onMultiInput() {
   const n = parseInt(document.getElementById('habitMulti').value) || 2;
@@ -3054,6 +3276,9 @@ function openHabitModal(id) {
     newInput.addEventListener('focus', updateSuggestions);
   }
 
+  // Очищаем выбранные числа месяца
+  monthlyDaysSelected.clear();
+
   if (id) {
     const h = state.habits.find(x => x.id === id);
     if (!h) return;
@@ -3067,8 +3292,17 @@ function openHabitModal(id) {
     document.getElementById('habitNumericUnit').value = h.numericUnit || '';
     document.getElementById('habitFreq').value = h.freq || 'daily';
     document.getElementById('habitMulti').value = h.multi || 2;
-    document.getElementById('habitMonthlyDay').value = h.monthlyDay || 1;
     document.getElementById('habitOnceDate').value = h.onceDate || '';
+    // Загружаем выбранные числа месяца
+    if (h.freq === 'monthly') {
+      const days = h.monthlyDays || [h.monthlyDay || 1];
+      days.forEach(d => monthlyDaysSelected.add(d));
+      const input = document.getElementById('habitMonthlyDays');
+      if (input) input.value = days.slice().sort((a,b)=>a-b).join(', ');
+    } else {
+      const input = document.getElementById('habitMonthlyDays');
+      if (input) input.value = '';
+    }
     currentTimeLabel = h.timeLabel || '';
     (h.weekdays || []).forEach(wd => {
       weekdaysSelected.add(wd);
@@ -3088,8 +3322,9 @@ function openHabitModal(id) {
     document.getElementById('habitNumericUnit').value = '';
     document.getElementById('habitFreq').value = 'daily';
     document.getElementById('habitMulti').value = 2;
-    document.getElementById('habitMonthlyDay').value = 1;
     document.getElementById('habitOnceDate').value = dateKey(new Date());
+    const input = document.getElementById('habitMonthlyDays');
+    if (input) input.value = '';
     delBtn.style.display = 'none';
   }
   buildTimeLabelChips();
@@ -3161,9 +3396,25 @@ function buildHabitFromForm() {
   }
   habit.multi = parseInt(document.getElementById('habitMulti').value) || 2;
   habit.weekdays = freq === 'weekly' ? Array.from(weekdaysSelected) : [];
-  habit.monthlyDay = parseInt(document.getElementById('habitMonthlyDay').value) || 1;
   habit.onceDate = document.getElementById('habitOnceDate').value;
   habit.multiParts = (freq === 'multi' && type !== 'numeric' && multiPartsSelected.length) ? multiPartsSelected.slice() : [];
+
+  // Monthly — парсим числа месяца
+  if (habit.freq === 'monthly') {
+    // Сначала синхронизируем из поля ввода (если пользователь что-то печатал)
+    const input = document.getElementById('habitMonthlyDays');
+    if (input) {
+      const parsed = parseMonthlyDays(input.value);
+      monthlyDaysSelected.clear();
+      parsed.forEach(d => monthlyDaysSelected.add(d));
+    }
+    const days = Array.from(monthlyDaysSelected).sort((a,b) => a - b);
+    if (days.length === 0) {
+      showToast('Выбери хотя бы одно число');
+      return null;
+    }
+    habit.monthlyDays = days;
+  }
 
   if (type === 'numeric') {
     habit.numericOp = document.getElementById('habitNumericOp').value;
@@ -3248,8 +3499,16 @@ function saveHabit() {
   if (id) {
     habit.id = id;
     const idx = state.habits.findIndex(x => x.id === id);
-    if (idx >= 0) state.habits[idx] = habit;
-  } else state.habits.push(habit);
+    if (idx >= 0) {
+      // Сохраняем createdAt при редактировании
+      habit.createdAt = state.habits[idx].createdAt || undefined;
+      state.habits[idx] = habit;
+    }
+  } else {
+    // Новый ритуал — ставим createdAt
+    habit.createdAt = dateKey(new Date());
+    state.habits.push(habit);
+  }
   save(); closeModal('habitModal');
   renderToday(); renderRituals(); renderCalendar();
   showToast(id ? 'Обновлено' : 'Ритуал добавлен 🎀');
@@ -3820,6 +4079,7 @@ function handleImportFile(e) {
         extra: {}
       }, data);
       // Миграция
+      // Миграция
       if (state.habits) {
         state.habits.forEach(h => {
           if (h.type === 'numeric' && h.freq === 'numeric') h.freq = 'daily';
@@ -3831,8 +4091,23 @@ function handleImportFile(e) {
       if (!state.extra || typeof state.extra !== 'object') {
         state.extra = {};
       }
+      // Миграция: monthlyDay → monthlyDays
+      if (state.habits) {
+        state.habits.forEach(h => {
+          if (h.freq === 'monthly') {
+            if (!Array.isArray(h.monthlyDays)) {
+              if (typeof h.monthlyDay === 'number') {
+                h.monthlyDays = [h.monthlyDay];
+              } else {
+                h.monthlyDays = [1];
+              }
+            }
+            delete h.monthlyDay;
+          }
+        });
+      }
       save();
-      applyTheme(state.theme || 'pink');
+      applyTheme(state.theme || 'pink');;
       pendingTheme = state.theme || 'pink';
       renderGreeting(); updateBalance(); initCalendar();
       renderToday(); renderRituals(); renderSpend(); renderCalendar();
