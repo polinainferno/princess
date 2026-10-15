@@ -3651,15 +3651,6 @@ function renderCalDayList() {
   list.innerHTML = noteHtml + itemsHtml;
 }
 
-// Раскрытие подзадач в календаре
-function toggleCompositeCal(id) {
-  const sub = document.getElementById(`calSub-${id}`);
-  const arrow = document.getElementById(`calArrow-${id}`);
-  if (!sub || !arrow) return;
-  const isOpen = sub.style.display !== 'none';
-  sub.style.display = isOpen ? 'none' : 'block';
-  arrow.textContent = isOpen ? '▸' : '▾';
-}
   // Кнопка добавления — только для сегодня и будущих
   if (selectedDate >= todayMid) {
     const dateStr2 = dateKey(selectedDate);
@@ -3669,6 +3660,16 @@ function toggleCompositeCal(id) {
   }
 }
 
+// Раскрытие подзадач в календаре
+function toggleCompositeCal(id) {
+  const sub = document.getElementById(`calSub-${id}`);
+  const arrow = document.getElementById(`calArrow-${id}`);
+  if (!sub || !arrow) return;
+  const isOpen = sub.style.display !== 'none';
+  sub.style.display = isOpen ? 'none' : 'block';
+  arrow.textContent = isOpen ? '▸' : '▾';
+}
+  
 function openHabitModalForDate(dateStr) {
   // Открываем модалку создания ритуала и предзаполняем дату для once
   openHabitModal();
