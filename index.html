@@ -1518,7 +1518,8 @@ let state = {
   welcomeGiftReceived: false,
   lastBackup: '', lastReminderDate: '', neverRemindBackup: false,
   templates: [],
-  excluded: {}
+  excluded: {},
+  extra: {}
 };
   
 function load() {
@@ -1537,6 +1538,10 @@ function load() {
   // Миграция: если нет excluded — создаём пустой объект
   if (!state.excluded || typeof state.excluded !== 'object') {
     state.excluded = {};
+  }
+  // Миграция: если нет extra — создаём пустой объект
+  if (!state.extra || typeof state.extra !== 'object') {
+    state.extra = {};
   }
 }
   
@@ -1696,7 +1701,8 @@ function handleWelcomeImport(e) {
         welcomeGiftReceived: true,
         lastBackup: '', lastReminderDate: '', neverRemindBackup: false,
         templates: [],
-        excluded: {}
+        excluded: {},
+        extra: {}
       }, data);
       // Миграция
       if (state.habits) {
@@ -1707,8 +1713,8 @@ function handleWelcomeImport(e) {
       if (!state.excluded || typeof state.excluded !== 'object') {
         state.excluded = {};
       }
-      if (!state.excluded || typeof state.excluded !== 'object') {
-        state.excluded = {};
+      if (!state.extra || typeof state.extra !== 'object') {
+        state.extra = {};
       }
       state.welcomeGiftReceived = true;
       save();
@@ -1926,9 +1932,19 @@ function renderToday() {
 
   const scheduled = state.habits.filter(h => isHabitScheduled(h, today));
   const excluded = state.excluded[key] || [];
+  const extra = state.extra[key] || [];
+
+  // Объединяем scheduled + extra (без дублей)
+  const scheduledIds = scheduled.map(h => h.id);
+  const extraHabits = extra
+    .filter(id => !scheduledIds.includes(id))
+    .map(id => state.habits.find(h => h.id === id))
+    .filter(Boolean);
+
+  const allForToday = scheduled.concat(extraHabits);
   const cards = [];
 
-  scheduled.forEach(h => {
+  allForToday.forEach(h => {
     if (excluded.includes(h.id)) return; // скрыт на сегодня
     if (h.type === 'numeric') {
       cards.push({ key: `num-${h.id}`, habitId: h.id, timeIndex: null, habit: h });
@@ -2063,6 +2079,20 @@ function renderTodayCard(card, dayKey, e) {
 function hideHabitFromToday(habitId) {
   const today = new Date();
   const key = dateKey(today);
+
+  // Если это extra-ритуал (не в расписании) — просто убираем из extra
+  const scheduled = state.habits.filter(h => isHabitScheduled(h, today));
+  const isScheduled = scheduled.some(s => s.id === habitId);
+
+  if (!isScheduled && state.extra[key] && state.extra[key].includes(habitId)) {
+    state.extra[key] = state.extra[key].filter(id => id !== habitId);
+    save();
+    showToast('Убрано с сегодня 💕');
+    renderToday();
+    return;
+  }
+
+  // Иначе — скрываем через excluded
   if (!state.excluded[key]) state.excluded[key] = [];
   if (!state.excluded[key].includes(habitId)) {
     state.excluded[key].push(habitId);
@@ -2842,16 +2872,19 @@ function pickSuggestion(habitId) {
   const today = new Date();
   const dayKey = dateKey(today);
   const excluded = state.excluded[dayKey] || [];
+  const extra = state.extra[dayKey] || [];
   const scheduled = state.habits.filter(h => isHabitScheduled(h, today));
-  const isAdded = scheduled.some(s => s.id === habit.id) && !excluded.includes(habit.id);
+  const isScheduled = scheduled.some(s => s.id === habit.id);
+  const isExtra = extra.includes(habit.id);
+  const isAdded = (isScheduled || isExtra) && !excluded.includes(habit.id);
 
+  // Уже в списке на сегодня
   if (isAdded) {
-    // Уже добавлен на сегодня — ничего не делаем
     showToast('Уже добавлен на сегодня 💕');
     return;
   }
 
-  // Если скрыт — убираем из скрытых
+  // Скрыт — возвращаем (убираем из excluded)
   if (excluded.includes(habit.id)) {
     state.excluded[dayKey] = excluded.filter(id => id !== habit.id);
     save();
@@ -2861,14 +2894,15 @@ function pickSuggestion(habitId) {
     return;
   }
 
-  // Если существует, но не в расписании на сегодня — просто добавляем.
-  // Но у нас все ритуалы «идут» по расписанию автоматически через isHabitScheduled.
-  // Значит, «не добавлен сегодня» может значить только «скрыт».
-  // Если ритуал есть, но не по расписанию на сегодня (например, weekly по другим дням),
-  // то просто сообщим, что он не запланирован. Проще: добавить в скрытые-исключения некорректно.
-  // Поэтому: если не скрыт и не по расписанию — считаем «уже доступен, но не на сегодня».
-  showToast('Уже есть в списке ритуалов 💕');
+  // Не в расписании на сегодня → добавляем в extra
+  if (!state.extra[dayKey]) state.extra[dayKey] = [];
+  if (!state.extra[dayKey].includes(habit.id)) {
+    state.extra[dayKey].push(habit.id);
+  }
+  save();
   closeModal('habitModal');
+  renderToday();
+  showToast('Добавлено на сегодня 💕');
 }
 
 function buildWeekdayChips() {
@@ -3165,6 +3199,7 @@ function saveHabit() {
   const dayKey = dateKey(today);
 
   // Проверка дубликатов при СОЗДАНИИ
+  // Проверка дубликатов при СОЗДАНИИ
   if (!id) {
     const normalizedNew = habit.name.trim().toLowerCase();
     const existing = state.habits.find(h => h.name.trim().toLowerCase() === normalizedNew);
@@ -3174,7 +3209,16 @@ function saveHabit() {
       if (suggestionsEnabled) {
         // Режим «Сегодня»: добавить существующий (или вернуть из скрытых)
         const excluded = state.excluded[dayKey] || [];
-        if (excluded.includes(existing.id)) {
+        const extra = state.extra[dayKey] || [];
+        const scheduled = state.habits.filter(h => isHabitScheduled(h, today));
+        const isScheduled = scheduled.some(s => s.id === existing.id);
+        const isExtra = extra.includes(existing.id);
+        const isAdded = (isScheduled || isExtra) && !excluded.includes(existing.id);
+
+        if (isAdded) {
+          showToast('Уже добавлен на сегодня 💕');
+          closeModal('habitModal');
+        } else if (excluded.includes(existing.id)) {
           // был скрыт — возвращаем
           state.excluded[dayKey] = excluded.filter(x => x !== existing.id);
           save();
@@ -3182,9 +3226,15 @@ function saveHabit() {
           renderToday();
           showToast('Возвращён в расписание 💕');
         } else {
-          // уже добавлен или есть в списке
-          showToast('Такой ритуал уже есть 💕');
+          // не в расписании → добавляем в extra
+          if (!state.extra[dayKey]) state.extra[dayKey] = [];
+          if (!state.extra[dayKey].includes(existing.id)) {
+            state.extra[dayKey].push(existing.id);
+          }
+          save();
           closeModal('habitModal');
+          renderToday();
+          showToast('Добавлено на сегодня 💕');
         }
         return;
       } else {
@@ -3765,13 +3815,21 @@ function handleImportFile(e) {
         createdAt: '', lastVisit: '',
         welcomeGiftReceived: false,
         lastBackup: '', lastReminderDate: '', neverRemindBackup: false,
-        templates: []
+        templates: [],
+        excluded: {},
+        extra: {}
       }, data);
       // Миграция
       if (state.habits) {
         state.habits.forEach(h => {
           if (h.type === 'numeric' && h.freq === 'numeric') h.freq = 'daily';
         });
+      }
+      if (!state.excluded || typeof state.excluded !== 'object') {
+        state.excluded = {};
+      }
+      if (!state.extra || typeof state.extra !== 'object') {
+        state.extra = {};
       }
       save();
       applyTheme(state.theme || 'pink');
