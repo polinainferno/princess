@@ -158,6 +158,24 @@
     --err-color: #d88a7a; --err-bg: #3d2018;
     --bday-outline: #c9a876; --bday-text: #c9a876; --bday-bg: #3a4230;
   }
+  
+  [data-theme="siren"] {
+    --pink: #8a8a8a; --pink-deep: #1a1a1a; --pink-soft: #f0f0f0;
+    --lavender: #b8b8b8; --lavender-deep: #4a4a4a;
+    --gold: #1a1a1a; --gold-soft: #f0f0f0;
+    --text: #2a2a2a; --text-soft: #7a7a7a;
+    --bg1: #f5f5f5; --bg2: #ececec; --bg3: #e0e0e0;
+    --card-bg: #ffffff; --card-border: #d8d8d8; --modal-bg: #ffffff;
+    --shadow: 0 8px 24px rgba(26, 26, 26, 0.08);
+    --card-shadow: 0 4px 16px rgba(26, 26, 26, 0.06);
+    --balance-bg: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+    --emoji-name: "🖤"; --emoji-points: "💎";
+    --emoji-tab-today: "📋"; --emoji-tab-rituals: "☕"; --emoji-tab-spend: "🛍️";
+    --emoji-empty: "📄"; --emoji-button: "";
+    --ok-color: #4a7a4a; --ok-bg: #e8f0e8;
+    --err-color: #a84a4a; --err-bg: #f5e8e8;
+    --bday-outline: #1a1a1a; --bday-text: #1a1a1a; --bday-bg: #f0f0f0;
+  }
 
    /* ============ SPLASH SCREEN ============ */
   #splash {
@@ -274,8 +292,8 @@
   .welcome-step.active { display: block; animation: fadeIn 0.4s ease; }
 
   .theme-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr);
-    gap: 10px; margin-top: 14px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 8px; margin-top: 12px;
   }
   .theme-card {
     background: var(--card-bg);
@@ -1605,7 +1623,8 @@ const THEMES = [
   { id: 'sage',     emoji: '🌿', name: 'Sage Garden',       colors: ['#a8c9a4','#7ba374','#b8d4b3','#e4f0e0'] },
   { id: 'berry',    emoji: '🍇', name: 'Berry Cosmos',      colors: ['#d68cb8','#b85e9b','#a888c8','#f5dcf0'] },
   { id: 'noir',     emoji: '🖤', name: 'Noir Rose',         colors: ['#1a1418','#b85e7a','#e8b4b8','#3d1f2a'] },
-  { id: 'cottage',  emoji: '🍄', name: 'Dark Cottage',      colors: ['#1a2018','#8a9a7a','#c9a876','#2a3024'] }
+  { id: 'cottage',  emoji: '🍄', name: 'Dark Cottage',      colors: ['#1a2018','#8a9a7a','#c9a876','#2a3024'] },
+  { id: 'siren',    emoji: '💼', name: 'Office Siren',      colors: ['#f5f5f5','#8a8a8a','#1a1a1a','#e0e0e0'] }
 ];
 let pendingTheme = 'pink';
 
