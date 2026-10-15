@@ -2087,7 +2087,7 @@ function hideHabitFromToday(habitId) {
   if (!isScheduled && state.extra[key] && state.extra[key].includes(habitId)) {
     state.extra[key] = state.extra[key].filter(id => id !== habitId);
     save();
-    showToast('Удалено из сегодня');
+    showToast('Удалено из расписания');
     renderToday();
     return;
   }
