@@ -2672,7 +2672,6 @@ function failSimple(id, dayKey) {
   save(); updateBalance(); renderToday();
   checkAllDone();
 }
-}
 function toggleMulti(id, slot, dayKey) {
   const h = state.habits.find(x => x.id === id);
   if (!h) return;
