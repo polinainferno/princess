@@ -957,6 +957,81 @@
     color: var(--text-soft);
     font-weight: 500;
   }
+    /* Поле ввода с подсказками (для шаблонов) */
+  .subtask-input-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    align-items: center;
+  }
+  .subtask-input-row input {
+    flex: 1;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 2px solid var(--pink-soft);
+    background: var(--card-bg);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 600;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .subtask-input-row input:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 4px rgba(255,182,213,0.2);
+  }
+  .subtask-add-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255,126,179,0.4);
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .subtask-add-btn:active { transform: scale(0.9); }
+
+  .suggestions-list {
+    margin-top: 6px;
+    background: var(--card-bg);
+    border: 2px solid var(--pink-soft);
+    border-radius: 16px;
+    overflow: hidden;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .suggestion-item {
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid var(--pink-soft);
+  }
+  .suggestion-item:last-child { border-bottom: none; }
+  .suggestion-item:hover { background: var(--pink-soft); }
+  .suggestion-item:active { transform: scale(0.99); }
+  .suggestion-item .check-mark {
+    color: var(--ok-color);
+    font-size: 16px;
+    font-weight: 900;
+    opacity: 0.7;
+  }
   .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
   .btn { flex: 1; padding: 15px; border-radius: 18px; border: none; font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; }
   .btn-primary { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: #fff; box-shadow: 0 6px 18px rgba(255,126,179,0.4); }
@@ -1546,8 +1621,17 @@
 <div class="modal-overlay" id="tplEditModal">
   <div class="modal">
     <div class="modal-title" id="tplEditTitle">Шаблон</div>
-    <div id="tplEditList" style="max-height:50vh;overflow-y:auto;"></div>
-    <button class="tpl-action-btn" onclick="addRitualToCurrentTemplate()" style="margin-top:14px;">+ Добавить ритуал</button>
+    <div id="tplEditList" style="max-height:40vh;overflow-y:auto;"></div>
+
+    <!-- Поле ввода с подсказками для добавления ритуала в шаблон -->
+    <div style="margin-top:14px;">
+      <div class="subtask-input-row">
+        <input type="text" id="tplSubtaskInput" placeholder="Название ритуала..." autocomplete="off" maxlength="60">
+        <button type="button" class="subtask-add-btn" onclick="addTplSubtaskFromInput()">+</button>
+      </div>
+      <div id="tplSubtaskSuggestions" class="suggestions-list" style="display:none;"></div>
+    </div>
+
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeTplEditor()">Отмена</button>
       <button class="btn btn-primary" onclick="saveTplEditor()">Сохранить <span class="btn-emoji">💕</span></button>
@@ -3803,7 +3887,42 @@ function saveHabit() {
     habit.createdAt = dateKey(new Date());
     state.habits.push(habit);
   }
-  save(); closeModal('habitModal');
+
+  save();
+  closeModal('habitModal');
+
+  // Если мы пришли из шаблона — добавляем ритуал в него и возвращаемся
+  if (window._returnToTemplate && tplEditorState) {
+    window._returnToTemplate = false;
+    // Добавляем в шаблон
+    const alreadyIn = tplEditorState.rituals.some(r => r.id === habit.id);
+    if (!alreadyIn) {
+      tplEditorState.rituals.push({
+        id: habit.id,
+        name: habit.name,
+        points: habit.points,
+        type: habit.type || 'check',
+        freq: habit.freq || 'daily',
+        multi: habit.multi || 1,
+        multiParts: habit.multiParts ? habit.multiParts.slice() : [],
+        weekdays: habit.weekdays ? habit.weekdays.slice() : [],
+        monthlyDays: habit.monthlyDays ? habit.monthlyDays.slice() : [],
+        onceDate: habit.onceDate || '',
+        timeLabel: habit.timeLabel || '',
+        numericOp: habit.numericOp,
+        numericTarget: habit.numericTarget,
+        numericUnit: habit.numericUnit
+      });
+    }
+    // Перерисовываем списки и открываем редактор шаблона
+    renderToday(); renderRituals(); renderCalendar();
+    setTimeout(() => {
+      openTplEditor();
+    }, 200);
+    showToast('Добавлено в шаблон');
+    return;
+  }
+
   renderToday(); renderRituals(); renderCalendar();
   showToast(id ? 'Обновлено' : 'Ритуал добавлен 🎀');
 }
@@ -4221,9 +4340,34 @@ function openTplEditor() {
   document.getElementById('tplEditTitle').textContent = tplEditorState.mode === 'new'
     ? 'Новый шаблон: ' + tplEditorState.name
     : 'Шаблон: ' + tplEditorState.name;
+
+  // Очищаем поле ввода и подсказки
+  const inp = document.getElementById('tplSubtaskInput');
+  if (inp) inp.value = '';
+  const sug = document.getElementById('tplSubtaskSuggestions');
+  if (sug) { sug.style.display = 'none'; sug.innerHTML = ''; }
+
+  // Привязываем события к полю (один раз)
+  if (inp && !inp.dataset.bound) {
+    inp.dataset.bound = '1';
+    inp.addEventListener('input', updateTplSubtaskSuggestions);
+    inp.addEventListener('focus', updateTplSubtaskSuggestions);
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addTplSubtaskFromInput();
+      }
+      if (e.key === 'Escape') {
+        const s = document.getElementById('tplSubtaskSuggestions');
+        if (s) { s.style.display = 'none'; s.innerHTML = ''; }
+      }
+    });
+  }
+
   renderTplEditorList();
   document.getElementById('tplEditModal').classList.add('active');
 }
+
 function renderTplEditorList() {
   const list = document.getElementById('tplEditList');
   if (!tplEditorState || tplEditorState.rituals.length === 0) {
@@ -4239,10 +4383,16 @@ function renderTplEditorList() {
           <span class="badge freq">${freqToText(r)}</span>
         </div>
       </div>
-      <button class="tpl-mini-btn" onclick="editTplRitual(${i})">✏️</button>
-      <button class="tpl-mini-btn" onclick="removeTplRitual(${i})">🗑</button>
+      <button class="tpl-mini-btn" onclick="editTplRitual(${i})" title="Редактировать">✏️</button>
+      <button class="tpl-mini-btn" onclick="removeTplRitual(${i})" title="Убрать из шаблона">🗑</button>
     </div>
   `).join('');
+
+  // Перерисовываем подсказки (если поле не пустое)
+  const inp = document.getElementById('tplSubtaskInput');
+  if (inp && inp.value.trim()) {
+    updateTplSubtaskSuggestions();
+  }
 }
 function editTplRitual(i) {
   if (!tplEditorState) return;
@@ -4255,9 +4405,157 @@ function removeTplRitual(i) {
   tplEditorState.rituals.splice(i, 1);
   renderTplEditorList();
 }
+// Открыть полную модалку создания ритуала (для добавления в шаблон)
 function addRitualToCurrentTemplate() {
+  openHabitModalForTemplateNew();
+}
+
+// ========== SUBTASK SUGGESTIONS для шаблонов ==========
+
+// Показ подсказок при вводе в поле шаблона
+function updateTplSubtaskSuggestions() {
+  const container = document.getElementById('tplSubtaskSuggestions');
+  const input = document.getElementById('tplSubtaskInput');
+  if (!container || !input) return;
+
+  const query = (input.value || '').trim().toLowerCase();
+  if (!query) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+
+  // Какие ID уже в шаблоне
+  const currentIds = tplEditorState ? tplEditorState.rituals.map(r => r.id).filter(Boolean) : [];
+
+  // Ищем: по всему тексту, без учёта регистра
+  const matches = [];
+  state.habits.forEach(h => {
+    const nameLower = h.name.toLowerCase();
+    const idx = nameLower.indexOf(query);
+    if (idx === -1) return;
+    matches.push({ habit: h, pos: idx });
+  });
+
+  // Сортировка: сначала совпадение в начале, потом по позиции, потом по алфавиту
+  matches.sort((a, b) => {
+    const aStart = a.pos === 0 ? 0 : 1;
+    const bStart = b.pos === 0 ? 0 : 1;
+    if (aStart !== bStart) return aStart - bStart;
+    if (a.pos !== b.pos) return a.pos - b.pos;
+    return a.habit.name.localeCompare(b.habit.name);
+  });
+
+  const top = matches.slice(0, 5);
+  if (top.length === 0) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = top.map(m => {
+    const inTpl = currentIds.includes(m.habit.id);
+    const checkHtml = inTpl ? `<span class="check-mark">✓</span>` : '';
+    return `
+      <div class="suggestion-item" onclick="pickTplSubtask('${m.habit.id}')">
+        <span>${escapeHtml(m.habit.name)}</span>
+        ${checkHtml}
+      </div>
+    `;
+  }).join('');
+  container.style.display = 'block';
+}
+
+// Тап по подсказке — добавить ритуал в шаблон
+function pickTplSubtask(id) {
   if (!tplEditorState) return;
-  openHabitModalForTpl({ name: '', points: 10, type: 'check', freq: 'daily', multi: 1, multiParts: [], weekdays: [], monthlyDay: 1, onceDate: dateKey(new Date()), timeLabel: '' }, -1);
+  const existing = state.habits.find(h => h.id === id);
+  if (!existing) return;
+
+  // Проверяем, есть ли уже в шаблоне
+  const alreadyIn = tplEditorState.rituals.some(r => r.id === id);
+  if (alreadyIn) {
+    showToast('Уже в списке');
+    return;
+  }
+
+  // Добавляем копию ритуала в шаблон
+  tplEditorState.rituals.push({
+    id: existing.id,
+    name: existing.name,
+    points: existing.points,
+    type: existing.type || 'check',
+    freq: existing.freq || 'daily',
+    multi: existing.multi || 1,
+    multiParts: existing.multiParts ? existing.multiParts.slice() : [],
+    weekdays: existing.weekdays ? existing.weekdays.slice() : [],
+    monthlyDays: existing.monthlyDays ? existing.monthlyDays.slice() : [],
+    onceDate: existing.onceDate || '',
+    timeLabel: existing.timeLabel || '',
+    numericOp: existing.numericOp,
+    numericTarget: existing.numericTarget,
+    numericUnit: existing.numericUnit
+  });
+
+  renderTplEditorList();
+  // Очищаем поле и подсказки
+  const input = document.getElementById('tplSubtaskInput');
+  if (input) input.value = '';
+  const sug = document.getElementById('tplSubtaskSuggestions');
+  if (sug) { sug.style.display = 'none'; sug.innerHTML = ''; }
+  input && input.focus();
+}
+
+// Enter / «+» в поле шаблона
+function addTplSubtaskFromInput() {
+  const input = document.getElementById('tplSubtaskInput');
+  if (!input) return;
+  const name = input.value.trim();
+  if (!name) return;
+
+  // Проверяем, есть ли уже такой ритуал (без учёта регистра)
+  const normalized = name.toLowerCase();
+  const existing = state.habits.find(h => h.name.trim().toLowerCase() === normalized);
+
+  if (existing) {
+    // Уже есть в библиотеке — добавляем в шаблон
+    if (!tplEditorState) return;
+    const alreadyIn = tplEditorState.rituals.some(r => r.id === existing.id);
+    if (alreadyIn) {
+      showToast('Уже в списке');
+      return;
+    }
+    pickTplSubtask(existing.id);
+    return;
+  }
+
+  // Не существует — открываем полную модалку создания
+  // с предзаполненным названием, и после сохранения вернёмся в шаблон
+  openHabitModalForTemplateNew(name);
+}
+
+// Сохранить текущий черновик шаблона перед открытием модалки создания
+function saveTplDraftBeforeModal() {
+  // tplEditorState уже содержит всё, что нужно
+  // просто закроем модалку шаблона и запомним, что мы вернёмся
+}
+
+// Открыть полную модалку создания нового ритуала,
+// после сохранения ритуал добавится в шаблон
+function openHabitModalForTemplateNew(prefillName) {
+  // Запоминаем, что нужно вернуться в шаблон
+  window._returnToTemplate = true;
+  // Закрываем модалку шаблона
+  document.getElementById('tplEditModal').classList.remove('active');
+  // Открываем обычную модалку создания
+  openHabitModal();
+  // Если передано имя — заполняем
+  if (prefillName) {
+    setTimeout(() => {
+      const nameField = document.getElementById('habitName');
+      if (nameField) nameField.value = prefillName;
+    }, 100);
+  }
 }
 function closeTplEditor() {
   tplEditorState = null;
