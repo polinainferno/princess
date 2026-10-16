@@ -4242,10 +4242,26 @@ function toggleTplCheck(i) {
   tplPreviewSource.rituals[i]._checked = !tplPreviewSource.rituals[i]._checked;
   renderTplChecklist();
 }
+
 function addSelectedFromTemplate() {
   const selected = tplPreviewSource.rituals.filter(r => r._checked);
-  if (selected.length === 0) { showToast('Ничего не выбрано'); return; }
+  if (selected.length === 0) { showToast('Ничего не выбрано 💕'); return; }
+
+  let added = 0;
+  let skipped = 0;
+
   selected.forEach(r => {
+    // Проверяем, есть ли уже такой ритуал (без учёта регистра)
+    const normalized = r.name.trim().toLowerCase();
+    const existing = state.habits.find(h => h.name.trim().toLowerCase() === normalized);
+
+    if (existing) {
+      // Уже есть — пропускаем
+      skipped++;
+      return;
+    }
+
+    // Создаём новый
     const habit = {
       id: uid(),
       name: r.name,
@@ -4255,9 +4271,10 @@ function addSelectedFromTemplate() {
       multi: r.multi || 1,
       multiParts: r.multiParts ? r.multiParts.slice() : [],
       weekdays: r.weekdays ? r.weekdays.slice() : [],
-      monthlyDay: r.monthlyDay || 1,
+      monthlyDays: r.monthlyDays ? r.monthlyDays.slice() : [],
       onceDate: r.onceDate || '',
-      timeLabel: r.timeLabel || ''
+      timeLabel: r.timeLabel || '',
+      createdAt: dateKey(new Date())
     };
     if (r.type === 'numeric') {
       habit.numericOp = r.numericOp || 'max';
@@ -4265,11 +4282,20 @@ function addSelectedFromTemplate() {
       habit.numericUnit = r.numericUnit || '';
     }
     state.habits.push(habit);
+    added++;
   });
+
   save();
   closeModal('tplPreviewModal');
   renderToday(); renderRituals(); renderCalendar();
-  showToast(`Добавлено ${selected.length}`);
+
+  if (added === 0 && skipped > 0) {
+    showToast('Все ритуалы уже в списке');
+  } else if (skipped > 0) {
+    showToast(`Добавлено ${added} (${skipped} уже было)`);
+  } else {
+    showToast(`Добавлено ${added}`);
+  }
 }
 
 function openTplNameModal(title, callback, initialValue) {
