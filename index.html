@@ -3644,7 +3644,12 @@ function openHabitModalForTpl(tplRitual, index) {
   document.getElementById('habitNumericUnit').value = tplRitual.numericUnit || '';
   document.getElementById('habitFreq').value = tplRitual.freq || 'daily';
   document.getElementById('habitMulti').value = tplRitual.multi || 2;
-  document.getElementById('habitMonthlyDay').value = tplRitual.monthlyDay || 1;
+   // Старое поле удалено — используем новое (monthlyDays)
+  const mDaysField = document.getElementById('habitMonthlyDays');
+  if (mDaysField) {
+    const days = tplRitual.monthlyDays || (tplRitual.monthlyDay ? [tplRitual.monthlyDay] : []);
+    mDaysField.value = days.slice().sort((a,b) => a - b).join(', ');
+  }
   document.getElementById('habitOnceDate').value = tplRitual.onceDate || dateKey(new Date());
   currentTimeLabel = tplRitual.timeLabel || '';
   (tplRitual.weekdays || []).forEach(wd => {
