@@ -1466,7 +1466,18 @@
     </div>
     <div class="section-title" id="calDayTitle"></div>
     <div id="calDayList"></div>
-    <div id="calAddBtn"></div>
+    
+    <!-- Поле добавления ритуала в календаре -->
+    <div id="calAddSection" style="margin-top: 12px; display: none;">
+      <div class="subtask-input-row">
+        <input type="text" id="calSubtaskInput" placeholder="Название ритуала..." autocomplete="off" maxlength="60">
+        <button type="button" class="subtask-add-btn" onclick="addCalFromInput()">+</button>
+      </div>
+      <div id="calSubtaskSuggestions" class="suggestions-list" style="display:none;"></div>
+    </div>
+
+    <!-- Сюда JS будет вставлять старую кнопку "+ Добавить на этот день" (и мы её скроем) -->
+    <div id="calAddBtn" style="display: none;"></div>
   </div>
 </div>
 
@@ -3274,16 +3285,33 @@ function renderCalDayList() {
   const todayMid = new Date(); todayMid.setHours(0,0,0,0);
   const sameAsToday = selectedDate.getTime() === todayMid.getTime();
   const dateStr = sameAsToday ? 'Сегодня' : selectedDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+  
+  const key = dateKey(selectedDate);
   const scheduled = state.habits.filter(h => isHabitScheduled(h, selectedDate));
+  const excluded = state.excluded[key] || [];
+  const extra = state.extra[key] || [];
+
+  // Объединяем scheduled + extra (без дублей)
+  const scheduledIds = scheduled.map(h => h.id);
+  const extraHabits = extra
+    .filter(id => !scheduledIds.includes(id))
+    .map(id => state.habits.find(h => h.id === id))
+    .filter(Boolean);
+
+  const allForDay = scheduled.concat(extraHabits);
+  
+  // Фильтруем скрытые
+  const visible = allForDay.filter(h => !excluded.includes(h.id));
+
   const isFutureBday = isBirthday(selectedDate) && selectedDate > todayMid && !sameAsToday;
   title.textContent = `🎀 ${dateStr}`;
   let noteHtml = '';
   if (isFutureBday) noteHtml = `<div class="bday-note">🎁 Тебя будет ждать подарок</div>`;
-  if (scheduled.length === 0 && !isFutureBday) {
+  
+  if (visible.length === 0 && !isFutureBday) {
     list.innerHTML = noteHtml + `<div class="empty" style="padding:16px;">Нет ритуалов на этот день</div>`;
   } else {
-    const key = dateKey(selectedDate);
-    const itemsHtml = scheduled.map(h => {
+    const itemsHtml = visible.map(h => {
       let status = '⬜';
       if (h.type === 'numeric') {
         const comp = (state.completions[key] || {})[`num-${h.id}`];
@@ -3311,15 +3339,158 @@ function renderCalDayList() {
     }).join('');
     list.innerHTML = noteHtml + itemsHtml;
   }
-  // Кнопка добавления — только для сегодня и будущих
-  if (selectedDate >= todayMid) {
-    const dateStr2 = dateKey(selectedDate);
-    addBtnContainer.innerHTML = `<button class="add-btn" onclick="openHabitModalForDate('${dateStr2}')">+ Добавить ритуал на этот день</button>`;
-  } else {
-    addBtnContainer.innerHTML = '';
+  // Блок добавления — только для сегодня и будущих
+  const addSection = document.getElementById('calAddSection');
+  if (addSection) {
+    if (selectedDate >= todayMid) {
+      addSection.style.display = 'block';
+      // Привязываем события к полю ввода (один раз)
+      const inp = document.getElementById('calSubtaskInput');
+      if (inp && !inp.dataset.bound) {
+        inp.dataset.bound = '1';
+        inp.addEventListener('input', updateCalSuggestions);
+        inp.addEventListener('focus', updateCalSuggestions);
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            addCalFromInput();
+          }
+          if (e.key === 'Escape') {
+            const s = document.getElementById('calSubtaskSuggestions');
+            if (s) { s.style.display = 'none'; s.innerHTML = ''; }
+          }
+        });
+      }
+    } else {
+      addSection.style.display = 'none';
+    }
   }
 }
+// ========== CALENDAR SUBTASK SUGGESTIONS ==========
 
+function updateCalSuggestions() {
+  const container = document.getElementById('calSubtaskSuggestions');
+  const input = document.getElementById('calSubtaskInput');
+  if (!container || !input || !selectedDate) return;
+
+  const query = (input.value || '').trim().toLowerCase();
+  if (!query) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+
+  const key = dateKey(selectedDate);
+  const excluded = state.excluded[key] || [];
+  const extra = state.extra[key] || [];
+  const scheduled = state.habits.filter(h => isHabitScheduled(h, selectedDate));
+  
+  const scheduledIds = scheduled.map(h => h.id);
+  const extraHabits = extra
+    .filter(id => !scheduledIds.includes(id))
+    .map(id => state.habits.find(h => h.id === id))
+    .filter(Boolean);
+    
+  const allForDay = scheduled.concat(extraHabits);
+  const visible = allForDay.filter(h => !excluded.includes(h.id));
+  const visibleIds = visible.map(h => h.id);
+
+  const matches = [];
+  state.habits.forEach(h => {
+    const nameLower = h.name.toLowerCase();
+    const idx = nameLower.indexOf(query);
+    if (idx === -1) return;
+    matches.push({ habit: h, pos: idx });
+  });
+
+  matches.sort((a, b) => {
+    const aStart = a.pos === 0 ? 0 : 1;
+    const bStart = b.pos === 0 ? 0 : 1;
+    if (aStart !== bStart) return aStart - bStart;
+    if (a.pos !== b.pos) return a.pos - b.pos;
+    return a.habit.name.localeCompare(b.habit.name);
+  });
+
+  const top = matches.slice(0, 5);
+  if (top.length === 0) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = top.map(m => {
+    const inDay = visibleIds.includes(m.habit.id);
+    const checkHtml = inDay ? `<span class="check-mark">✓</span>` : '';
+    return `
+      <div class="suggestion-item" onclick="pickCalSuggestion('${m.habit.id}')">
+        <span>${escapeHtml(m.habit.name)}</span>
+        ${checkHtml}
+      </div>
+    `;
+  }).join('');
+  container.style.display = 'block';
+}
+
+function pickCalSuggestion(id) {
+  if (!selectedDate) return;
+  const key = dateKey(selectedDate);
+  const excluded = state.excluded[key] || [];
+  const extra = state.extra[key] || [];
+  const scheduled = state.habits.filter(h => isHabitScheduled(h, selectedDate));
+  
+  const isScheduled = scheduled.some(s => s.id === id);
+  const isExtra = extra.includes(id);
+  const isAdded = (isScheduled || isExtra) && !excluded.includes(id);
+
+  if (isAdded) {
+    showToast('Уже в списке 💕');
+    return;
+  }
+
+  // Если скрыт — возвращаем (убираем из excluded)
+  if (excluded.includes(id)) {
+    state.excluded[key] = excluded.filter(x => x !== id);
+    save();
+    renderCalendar();
+    showToast('Возвращён в расписание 💕');
+    return;
+  }
+
+  // Не в расписании на этот день → добавляем в extra
+  if (!state.extra[key]) state.extra[key] = [];
+  if (!state.extra[key].includes(id)) {
+    state.extra[key].push(id);
+  }
+  save();
+  renderCalendar();
+  showToast('Добавлено на этот день 💕');
+
+  // Очищаем поле
+  const input = document.getElementById('calSubtaskInput');
+  if (input) input.value = '';
+  const sug = document.getElementById('calSubtaskSuggestions');
+  if (sug) { sug.style.display = 'none'; sug.innerHTML = ''; }
+  input && input.focus();
+}
+
+function addCalFromInput() {
+  const input = document.getElementById('calSubtaskInput');
+  if (!input || !selectedDate) return;
+  const name = input.value.trim();
+  if (!name) return;
+
+  // Ищем существующий по точному совпадению без учёта регистра
+  const normalized = name.toLowerCase();
+  const existing = state.habits.find(h => h.name.trim().toLowerCase() === normalized);
+
+  if (existing) {
+    pickCalSuggestion(existing.id);
+    return;
+  }
+
+  // Если нового нет — открываем обычную модалку создания (с датой)
+  openHabitModalForDate(dateKey(selectedDate));
+}
 function openHabitModalForDate(dateStr) {
   // Открываем модалку создания ритуала и предзаполняем дату для once
   openHabitModal();
