@@ -1479,6 +1479,140 @@
   [data-theme="newyear"] #snowCanvas {
     display: block;
   }
+  /* ============ FAQ ============ */
+  .faq-search-wrap {
+    margin-bottom: 12px;
+  }
+  .faq-search {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 2px solid var(--pink-soft);
+    background: var(--card-bg);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    outline: none;
+    transition: all 0.2s;
+  }
+  .faq-search:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 4px var(--glow-soft);
+  }
+  .faq-search::placeholder {
+    color: var(--text-soft);
+    font-weight: 500;
+  }
+
+  .faq-list {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin-bottom: 4px;
+  }
+
+  .faq-section {
+    margin-bottom: 8px;
+  }
+  .faq-section-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 15px;
+    color: var(--pink-deep);
+    margin: 14px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 2px dashed var(--pink-soft);
+  }
+  .faq-section:first-child .faq-section-title {
+    margin-top: 0;
+  }
+
+  .faq-item {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 16px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .faq-item.open {
+    border-color: var(--pink);
+    box-shadow: 0 4px 14px var(--glow-soft);
+  }
+
+  .faq-question {
+    width: 100%;
+    padding: 14px 16px;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    transition: background 0.15s;
+  }
+  .faq-question:hover {
+    background: var(--pink-soft);
+  }
+  .faq-question-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .faq-arrow {
+    font-size: 12px;
+    color: var(--pink-deep);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .faq-item.open .faq-arrow {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .faq-item.open .faq-answer {
+    max-height: 600px; /* запас, чтобы длинный ответ влез */
+  }
+  .faq-answer-inner {
+    padding: 0 16px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.55;
+    color: var(--text);
+    border-top: 1px solid var(--pink-soft);
+    padding-top: 12px;
+    margin-top: 2px;
+  }
+
+  .faq-highlight {
+    background: var(--pink-soft);
+    color: var(--pink-deep);
+    padding: 0 3px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+
+  .faq-empty {
+    text-align: center;
+    padding: 30px 15px;
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .faq-empty .emoji {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
 </style>
 </head>
 <body>
@@ -1517,13 +1651,14 @@
 <input type="file" id="welcomeImportFile" accept=".json,application/json" style="display:none" onchange="handleWelcomeImport(event)">
 
 <div class="app">
-  <div class="greeting-row">
-    <div class="greeting" id="greetingWrap">
-      <div class="greeting-text" id="greetingText" onclick="editName()">Имя <span id="greetingEmoji">💕</span></div>
-      <div class="greeting-hint">нажми, чтобы изменить</div>
-    </div>
-    <button class="palette-btn" onclick="openThemeModal()" title="Тема">🎨</button>
+<div class="greeting-row">
+  <div class="greeting" id="greetingWrap">
+    <div class="greeting-text" id="greetingText" onclick="editName()">Имя <span id="greetingEmoji">💕</span></div>
+    <div class="greeting-hint">Нажми, чтобы изменить</div>
   </div>
+  <button class="palette-btn" onclick="openThemeModal()" title="Тема">🎨</button>
+  <button class="palette-btn" onclick="openFaq()" title="Помощь" aria-label="Помощь">?</button>
+</div>
 
   <div class="balance-card" onclick="openHistoryPoints()" style="cursor: pointer;">
     <div class="balance-label">Твои баллы</div>
@@ -1763,7 +1898,19 @@
     <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="handleImportFile(event)">
   </div>
 </div>
-
+<!-- FAQ modal -->
+<div class="modal-overlay" id="faqModal">
+  <div class="modal">
+    <div class="modal-title">Помощь</div>
+    <div class="faq-search-wrap">
+      <input type="text" class="faq-search" id="faqSearch" placeholder="Поиск по вопросам..." autocomplete="off" oninput="filterFaq()">
+    </div>
+    <div class="faq-list" id="faqList"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('faqModal')">Закрыть <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
 <!-- Templates main modal -->
 <div class="modal-overlay" id="templatesModal">
   <div class="modal">
@@ -1933,6 +2080,264 @@ const THEMES = [
   { id: 'siren',    emoji: '💼', name: 'Office Siren',      colors: ['#f5f5f5','#8a8a8a','#1a1a1a','#e0e0e0'] },
   { id: 'newyear',  emoji: '🎄', name: 'New Year Magic',    colors: ['#0f1a2e','#a8d8e8','#f0d78c','#e8eef8'] }
 ];
+/* ========== FAQ ========== */
+const FAQ_DATA = [
+  {
+    section: 'Основы',
+    items: [
+      {
+        q: 'Что такое ритуал?',
+        a: 'Маленькое действие, которое ты хочешь делать регулярно: почистить зубы, выпить воды, лечь до 23:00. Каждое выполнение приносит баллы.',
+        k: ['привычка', 'задача', 'действие', 'регулярно']
+      },
+      {
+        q: 'Чем «провал» отличается от «не отметить»?',
+        a: '«Не отметить» — нейтрально: если день ещё не закончился, ты можешь отметить его в любой момент. «Провал» (кнопка ✕) — осознанная фиксация: «сегодня не сделала», и за это списываются баллы. Провал можно отменить повторным нажатием.',
+        k: ['провал', 'пропуск', 'минус', 'списание', 'не сделать']
+      },
+      {
+        q: 'Что значит «скрыть на сегодня»?',
+        a: 'Свайп влево убирает ритуал из списка на этот день, не удаляя его из расписания. Он снова появится на следующий день в расписании.',
+        k: ['скрыть', 'свайп', 'убрать', 'вернуть', 'undo']
+      },
+      {
+        q: 'Почему ритуал не появился в «Сегодня»?',
+        a: 'Проверь расписание: у ритуала может быть периодичность «по дням недели», «по числам месяца» или «один раз». Или, возможно, ты его скрыла на сегодня.',
+        k: ['не появился', 'пропал', 'не видно', 'расписание', 'периодичность']
+      }
+    ]
+  },
+  {
+    section: 'Баллы и награды',
+    items: [
+      {
+        q: 'Откуда берутся баллы?',
+        a: 'За каждый выполненный ритуал своя сумма (указана на карточке). За провал списывается столько же. Подарки: 100 за регистрацию, 1000 на день рождения, 100 за возвращение после долгого отсутствия.',
+        k: ['баллы', 'начислить', 'заработать', 'подарок', 'бонус']
+      },
+      {
+        q: 'Куда деваются баллы?',
+        a: 'Ты сама создаёшь награды во вкладке «Потратить». Когда баллов хватает, жмёшь «Купить», баланс уменьшается, награда попадает в историю покупок.',
+        k: ['потратить', 'награда', 'купить', 'списать', 'покупка', 'магазин']
+      },
+      {
+        q: 'Что если баллов не хватает?',
+        a: 'Кнопка «Купить» неактивна, под наградой виден прогресс-бар: сколько ещё нужно. Баллы не уходят в минус.',
+        k: ['не хватает', 'мало', 'минус', 'прогресс', 'недостаточно']
+      },
+      {
+        q: 'Где посмотреть историю баллов?',
+        a: 'Тапни по карточке «Твои баллы», и откроется история начислений и списаний.',
+        k: ['история', 'баллы', 'начисления', 'списания', 'журнал']
+      }
+    ]
+  },
+  {
+    section: 'Ритуалы',
+    items: [
+      {
+        q: 'Чем «Обычный» отличается от «Числового»?',
+        a: 'Обычный — галочка «сделала / не сделала». Числовой — вводишь число и сравниваешь с целью: «не более 1800 ккал», «не менее 8000 шагов». Если условие выполнено, баллы начисляются, если нет — списываются.',
+        k: ['обычный', 'числовой', 'тип', 'цель', 'ккал', 'шаги', 'число']
+      },
+      {
+        q: 'Что такое «Несколько раз в день»?',
+        a: 'Ритуал, который нужно выполнить N раз (например, «выпить воды» ×4). Каждая отметка приносит баллы отдельно. Можно разбить по времени суток (например, «утром и вечером»).',
+        k: ['несколько', 'multi', 'раз в день', 'счётчик', 'утро', 'вечер']
+      },
+      {
+        q: 'Как изменить или удалить ритуал?',
+        a: 'Тапни по карточке на вкладке «Ритуалы». Откроется редактор. Там же кнопка 🗑 для удаления.',
+        k: ['изменить', 'редактировать', 'удалить', 'редактор']
+      },
+      {
+        q: 'Можно ли изменить порядок карточек в «Сегодня»?',
+        a: 'Да, потяни за ручку ☰ слева от карточки и перетащи вверх или вниз. Порядок сохранится.',
+        k: ['порядок', 'перетащить', 'drag', 'ручка', 'сортировка']
+      }
+    ]
+  },
+  {
+    section: 'Календарь',
+    items: [
+      {
+        q: 'Зачем нужен календарь?',
+        a: 'Посмотреть, что было в прошлые дни, и запланировать ритуалы на будущее. Точка под числом — есть ритуалы, 🎂 — твой день рождения, выделенный день — сегодня.',
+        k: ['календарь', 'прошлое', 'будущее', 'планирование', 'дни']
+      },
+      {
+        q: 'Можно ли добавить ритуал на конкретный день?',
+        a: 'Да. Выбери день в календаре, введи название в поле под списком. Если такой ритуал уже есть, он добавится на этот день; если нет, откроется создание нового.',
+        k: ['добавить', 'день', 'план', 'конкретный', 'дата']
+      },
+      {
+        q: 'Почему в прошлых днях нельзя добавить ритуал?',
+        a: 'Прошлое не редактируется, чтобы не переписывать историю. Можно смотреть, но не менять.',
+        k: ['прошлое', 'нельзя', 'редактировать', 'история']
+      }
+    ]
+  },
+  {
+    section: 'Шаблоны',
+    items: [
+      {
+        q: 'Что такое шаблоны?',
+        a: 'Готовые наборы ритуалов. Во вкладке «Ритуалы» → «Шаблоны» есть готовые («Утренний набор», «Вечерний набор») и твои собственные. Можно добавить все ритуалы из шаблона разом или выбрать нужные.',
+        k: ['шаблон', 'набор', 'готовый', 'пресет', 'рутина']
+      },
+      {
+        q: 'Как сохранить свои ритуалы как шаблон?',
+        a: '«Шаблоны» → «+ Сохранить текущие ритуалы как шаблон». Пригодится, если хочешь начать с чистого листа, но не потерять набор.',
+        k: ['сохранить', 'шаблон', 'копия', 'свой']
+      }
+    ]
+  },
+  {
+    section: 'Данные',
+    items: [
+      {
+        q: 'Где хранятся мои данные?',
+        a: 'Только на твоём устройстве, в браузере. Никуда не отправляются, аккаунта нет.',
+        k: ['данные', 'хранение', 'локально', 'приватность', 'браузер']
+      },
+      {
+        q: 'Что будет, если очистить кэш браузера?',
+        a: 'Данные пропадут. Поэтому раз в месяц приложение напоминает сделать резервную копию: 🎨 → «Сохранить данные» — скачается JSON-файл. Его можно загрузить обратно через «Загрузить данные».',
+        k: ['кэш', 'очистить', 'потерять', 'бэкап', 'резервная копия', 'экспорт', 'импорт']
+      },
+      {
+        q: 'Можно ли перенести данные на другое устройство?',
+        a: 'Да, через тот же JSON: сохрани на одном, загрузи на другом. 🎨 → «Сохранить данные» / «Загрузить данные».',
+        k: ['перенести', 'другое устройство', 'телефон', 'экспорт', 'импорт', 'json']
+      }
+    ]
+  },
+  {
+    section: 'Темы',
+    items: [
+      {
+        q: 'Как сменить тему?',
+        a: 'Кнопка 🎨 рядом с именем. Доступно 9 основных тем + особые темы для разных событий. Выбор сохраняется.',
+        k: ['тема', 'сменить', 'оформление', 'цвет', 'палитра', 'дизайн']
+      }
+    ]
+  }
+];
+/* ========== FAQ: рендер, поиск, аккордеон ========== */
+let _faqOpenIndexes = new Set(); // какие вопросы раскрыты (по индексу "section-item")
+
+function escapeHtmlFaq(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// Подсветка совпадений (только в уже экранированном тексте)
+function highlightText(text, words) {
+  if (!words || words.length === 0) return escapeHtmlFaq(text);
+  const escaped = escapeHtmlFaq(text);
+  // Сортируем по длине — сначала длинные, чтобы не перекрывать короткими
+  const sorted = words.slice().sort((a, b) => b.length - a.length);
+  let result = escaped;
+  sorted.forEach(w => {
+    if (!w) return;
+    const safe = w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`(${safe})`, 'gi');
+    result = result.replace(re, '<span class="faq-highlight">$1</span>');
+  });
+  return result;
+}
+
+// Разбить запрос на слова
+function parseQuery(q) {
+  return String(q || '')
+    .toLowerCase()
+    .split(/\s+/)
+    .map(s => s.trim())
+    .filter(s => s.length >= 2); // игнорируем односимвольные
+}
+
+// Проверить, подходит ли вопрос под запрос (любое слово)
+function faqItemMatches(item, words) {
+  if (words.length === 0) return true;
+  const haystack = (item.q + ' ' + item.a + ' ' + (item.k || []).join(' ')).toLowerCase();
+  return words.some(w => haystack.includes(w));
+}
+
+function renderFaq() {
+  const list = document.getElementById('faqList');
+  if (!list) return;
+  const query = (document.getElementById('faqSearch') || {}).value || '';
+  const words = parseQuery(query);
+
+  let html = '';
+  let totalShown = 0;
+
+  FAQ_DATA.forEach((group, gIdx) => {
+    // фильтруем вопросы в группе
+    const matched = group.items.filter(item => faqItemMatches(item, words));
+    if (matched.length === 0) return;
+    totalShown += matched.length;
+
+    html += `<div class="faq-section">`;
+    html += `<div class="faq-section-title">${escapeHtmlFaq(group.section)}</div>`;
+
+    matched.forEach(item => {
+      const realIdx = group.items.indexOf(item);
+      const key = `${gIdx}-${realIdx}`;
+      const isOpen = _faqOpenIndexes.has(key);
+
+      // подсветка: в вопросе — по words, в ответе — тоже
+      const qHtml = highlightText(item.q, words);
+      const aHtml = highlightText(item.a, words);
+
+      html += `
+        <div class="faq-item${isOpen ? ' open' : ''}">
+          <button class="faq-question" onclick="toggleFaqItem('${key}')">
+            <span class="faq-question-text">${qHtml}</span>
+            <span class="faq-arrow">▼</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">${aHtml}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  });
+
+  if (totalShown === 0) {
+    const e = getThemeEmoji();
+    html = `<div class="faq-empty"><span class="emoji">${e.empty}</span>Ничего не нашлось. Попробуй другое слово.</div>`;
+  }
+
+  list.innerHTML = html;
+}
+
+function toggleFaqItem(key) {
+  const el = document.querySelector(`.faq-item[data-key="${key}"]`);
+  // data-key мы не ставили — обойдёмся через поиск по порядку в списке
+  // Проще: переключаем по индексу в открытых и перерисовываем
+  if (_faqOpenIndexes.has(key)) {
+    _faqOpenIndexes.delete(key);
+  } else {
+    _faqOpenIndexes.add(key);
+  }
+  renderFaq();
+}
+
+function filterFaq() {
+  // при поиске сбрасываем раскрытие, чтобы не путаться
+  _faqOpenIndexes.clear();
+  renderFaq();
+}
+
+function openFaq() {
+  _faqOpenIndexes.clear();
+  const inp = document.getElementById('faqSearch');
+  if (inp) inp.value = '';
+  renderFaq();
+  document.getElementById('faqModal').classList.add('active');
+}
 let pendingTheme = 'pink';
 
 function detectSystemTheme() {
