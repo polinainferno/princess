@@ -1105,7 +1105,44 @@
     pointer-events: none;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
-
+  .undo-toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--card-bg);
+    color: var(--text);
+    padding: 12px 14px 12px 18px;
+    border-radius: 20px;
+    border: 2px solid var(--card-border);
+    box-shadow: 0 8px 24px var(--glow);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    z-index: 650;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+    max-width: calc(100vw - 40px);
+  }
+  .undo-toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+  .undo-toast-btn {
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 7px 14px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .undo-toast-btn:active { transform: scale(0.94); }
   /* Центральное уведомление «всё выполнено» */
   .all-done-overlay {
     position: fixed;
@@ -1784,7 +1821,17 @@
     </div>
   </div>
 </div>
-
+<!-- Универсальная модалка подтверждения -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal" style="max-width: 380px;">
+    <div class="modal-title" id="confirmTitle">Подтверждение</div>
+    <div id="confirmMessage" style="text-align:center;font-size:14px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:20px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="confirmCancelBtn" onclick="closeConfirm(false)">Отмена</button>
+      <button class="btn btn-primary" id="confirmOkBtn" onclick="closeConfirm(true)">ОК</button>
+    </div>
+  </div>
+</div>
 <!-- 🎂 День рождения -->
 <div class="gift-overlay" id="bdayModal">
   <div class="gift-modal">
@@ -1824,7 +1871,10 @@
 </div>
 
 <div class="toast" id="toast"></div>
-
+<div class="undo-toast" id="undoToast">
+  <span id="undoToastText">Скрыто на сегодня</span>
+  <button class="undo-toast-btn" id="undoToastBtn" onclick="runUndo()">Вернуть</button>
+</div>
 <!-- Уведомление «всё выполнено» -->
 <div class="all-done-overlay" id="allDoneOverlay">
   <div class="all-done-card">
@@ -2704,8 +2754,15 @@ function hideHabitFromToday(habitId) {
   if (!isScheduled && state.extra[key] && state.extra[key].includes(habitId)) {
     state.extra[key] = state.extra[key].filter(id => id !== habitId);
     save();
-    showToast('Удалено на сегодня');
     renderToday();
+    showUndo('Удалено на сегодня', () => {
+      if (!state.extra[key]) state.extra[key] = [];
+      if (!state.extra[key].includes(habitId)) {
+        state.extra[key].push(habitId);
+      }
+      save();
+      renderToday();
+    });
     return;
   }
 
@@ -2715,8 +2772,14 @@ function hideHabitFromToday(habitId) {
     state.excluded[key].push(habitId);
   }
   save();
-  showToast('Скрыто на сегодня');
   renderToday();
+  showUndo('Скрыто на сегодня', () => {
+    if (state.excluded[key]) {
+      state.excluded[key] = state.excluded[key].filter(id => id !== habitId);
+      save();
+      renderToday();
+    }
+  });
 }
 
 function deleteHabitCompletely(habitId) {
@@ -3288,17 +3351,20 @@ function renderSpend() {
     `).join('');
   }
 }
-function buyReward(id) {
+async function buyReward(id) {
   const r = state.rewards.find(x => x.id === id);
   if (!r || state.balance < r.price) return;
-  if (!confirm(`Купить "${r.name}" за ${r.price} баллов?`)) return;
+  const ok = await showConfirm(`Купить «${r.name}» за ${r.price} баллов?`, {
+    title: 'Подтвердить покупку',
+    okText: 'Купить'
+  });
+  if (!ok) return;
   subBalance(r.price);
   state.history.push({ id: uid(), name: r.name, price: r.price, date: new Date().toISOString() });
   addHistoryPoint('spend', r.name, -r.price);
   save(); updateBalance(); renderSpend();
   showToast(`Поздравляю! Ты заслужила ${getThemeEmoji().points}`);
 }
-
 /* ========== CALENDAR ========== */
 let calYear, calMonth, selectedDate;
 function initCalendar() {
@@ -4395,12 +4461,16 @@ function openExistingFromDuplicate(existingId) {
     openHabitModal(existingId);
   }, 250);
 }
-
-function deleteHabit() {
+async function deleteHabit() {
   if (habitEditMode !== 'main') { closeModal('habitModal'); return; }
   const id = document.getElementById('habitId').value;
   if (!id) return;
-  if (!confirm('Удалить этот ритуал?')) return;
+  const ok = await showConfirm('Удалить этот ритуал?', {
+    title: 'Удалить ритуал',
+    okText: 'Удалить',
+    danger: true
+  });
+  if (!ok) return;
   state.habits = state.habits.filter(h => h.id !== id);
   save(); closeModal('habitModal');
   renderToday(); renderRituals(); renderCalendar();
@@ -4442,10 +4512,15 @@ function saveReward() {
   save(); closeModal('rewardModal'); renderSpend();
   showToast(id ? 'Обновлено' : 'Награда добавлена 🎁');
 }
-function deleteReward() {
+async function deleteReward() {
   const id = document.getElementById('rewardId').value;
   if (!id) return;
-  if (!confirm('Удалить эту награду?')) return;
+  const ok = await showConfirm('Удалить эту награду?', {
+    title: 'Удалить награду',
+    okText: 'Удалить',
+    danger: true
+  });
+  if (!ok) return;
   state.rewards = state.rewards.filter(r => r.id !== id);
   save(); closeModal('rewardModal'); renderSpend();
   showToast('Удалено 🗑');
@@ -4459,10 +4534,76 @@ function closeModal(id) {
   if (dup) dup.remove();
   suggestionsEnabled = false;
 }
+/* ========== CONFIRM DIALOG ========== */
+let _confirmResolve = null;
 
+function showConfirm(message, options = {}) {
+  return new Promise(resolve => {
+    _confirmResolve = resolve;
+    const title = options.title || 'Подтверждение';
+    const okText = options.okText || 'ОК';
+    const cancelText = options.cancelText || 'Отмена';
+    const danger = options.danger === true;
+
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMessage').textContent = message;
+
+    const okBtn = document.getElementById('confirmOkBtn');
+    const cancelBtn = document.getElementById('confirmCancelBtn');
+    okBtn.textContent = okText;
+    cancelBtn.textContent = cancelText;
+    okBtn.className = danger ? 'btn btn-danger' : 'btn btn-primary';
+    // В btn-danger нет flex:1, поэтому добавим inline, чтобы кнопки были одинаковой ширины
+    okBtn.style.flex = '1';
+    okBtn.style.padding = '15px';
+
+    document.getElementById('confirmModal').classList.add('active');
+  });
+}
+
+function closeConfirm(result) {
+  document.getElementById('confirmModal').classList.remove('active');
+  if (_confirmResolve) {
+    _confirmResolve(result);
+    _confirmResolve = null;
+  }
+}
+/* ========== UNDO TOAST ========== */
+let _undoAction = null;
+let _undoTimer = null;
+
+function showUndo(text, action) {
+  const el = document.getElementById('undoToast');
+  const textEl = document.getElementById('undoToastText');
+  if (!el || !textEl) return;
+  textEl.textContent = text;
+  _undoAction = action;
+  el.classList.add('show');
+  clearTimeout(_undoTimer);
+  _undoTimer = setTimeout(() => {
+    el.classList.remove('show');
+    _undoAction = null;
+  }, 4000);
+}
+
+function runUndo() {
+  const el = document.getElementById('undoToast');
+  if (!el) return;
+  el.classList.remove('show');
+  clearTimeout(_undoTimer);
+  const action = _undoAction;
+  _undoAction = null;
+  if (typeof action === 'function') action();
+}
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
   overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('active');
+    if (e.target !== overlay) return;
+    // Особый случай: confirm-модалка должна резолвить промис как «Отмена»
+    if (overlay.id === 'confirmModal') {
+      closeConfirm(false);
+    } else {
+      overlay.classList.remove('active');
+    }
   });
 });
 document.addEventListener('keydown', e => {
@@ -4786,14 +4927,18 @@ function renameTemplate(id) {
     showToast('Переименовано');
   }, tpl.name);
 }
-function deleteTemplate(id) {
-  if (!confirm('Удалить этот шаблон?')) return;
+async function deleteTemplate(id) {
+  const ok = await showConfirm('Удалить этот шаблон?', {
+    title: 'Удалить шаблон',
+    okText: 'Удалить',
+    danger: true
+  });
+  if (!ok) return;
   state.templates = state.templates.filter(t => t.id !== id);
   save();
   renderTemplatesList();
   showToast('Шаблон удалён 🗑');
 }
-
 function openTplEditor() {
   if (!tplEditorState) return;
   document.getElementById('tplEditTitle').textContent = tplEditorState.mode === 'new'
@@ -4858,9 +5003,14 @@ function editTplRitual(i) {
   const r = tplEditorState.rituals[i];
   openHabitModalForTpl(r, i);
 }
-function removeTplRitual(i) {
+async function removeTplRitual(i) {
   if (!tplEditorState) return;
-  if (!confirm('Удалить ритуал из шаблона?')) return;
+  const ok = await showConfirm('Удалить ритуал из шаблона?', {
+    title: 'Удалить из шаблона',
+    okText: 'Удалить',
+    danger: true
+  });
+  if (!ok) return;
   tplEditorState.rituals.splice(i, 1);
   renderTplEditorList();
 }
