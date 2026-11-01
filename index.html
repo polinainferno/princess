@@ -2103,16 +2103,7 @@ function dateKey(d) {
   return `${y}-${m}-${day}`;
 }
 function isHolidayPeriod() {
-  const now = new Date();
-  const y = now.getFullYear();
-  // 20 декабря — 7 января (переход через год)
-  const start = new Date(y, 11, 20);        // 20 декабря текущего года
-  const end = new Date(y + 1, 0, 7, 23, 59, 59); // 7 января следующего года
-  // Если сейчас январь (месяц 0) — проверяем период, начавшийся в прошлом году
-  if (now.getMonth() === 0 && now.getDate() <= 7) {
-    return true;
-  }
-  return now >= start && now <= new Date(y, 11, 31, 23, 59, 59);
+  return true; // ВРЕМЕННО: имитация праздников
 }
 function showToast(msg) {
   const t = document.getElementById('toast');
