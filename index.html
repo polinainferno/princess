@@ -1511,7 +1511,13 @@
   }
   .backup-link:hover { color: var(--pink-deep); background: var(--pink-soft); }
   .backup-link:active { transform: scale(0.95); }
-
+  .backup-link.danger {
+    color: var(--err-color);
+  }
+  .backup-link.danger:hover {
+    color: var(--err-color);
+    background: var(--err-bg);
+  }
   /* Templates */
   .tabs-tpl {
     display: flex; gap: 6px; margin-bottom: 18px;
@@ -2162,6 +2168,11 @@
         <span>📂</span><span>Загрузить данные</span>
       </button>
     </div>
+    <div class="backup-footer" style="border-top: none; margin-top: 6px; padding-top: 6px;">
+      <button class="backup-link danger" onclick="confirmDeleteAllData()">
+        <span>🗑</span><span>Удалить данные</span>
+      </button>
+    </div>
     <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="handleImportFile(event)">
   </div>
 </div>
@@ -2613,6 +2624,11 @@ const FAQ_DATA = [
         q: 'Можно ли перенести данные на другое устройство?',
         a: 'Да, через тот же JSON: сохрани на одном, загрузи на другом. 🎨 → «Сохранить данные» / «Загрузить данные».',
         k: ['перенести', 'другое устройство', 'телефон', 'экспорт', 'импорт', 'json']
+      },
+      {
+        q: 'Как удалить все данные и начать заново?',
+        a: 'Открой 🎨, промотай вниз и найди кнопку «Удалить данные». Приложение предложит сначала сделать резервную копию, потом удалит всё: ритуалы, награды, историю, шаблоны и твои темы. После этого приложение будет как при первом запуске.',
+        k: ['удалить', 'всё', 'заново', 'сброс', 'начать сначала', 'очистить', 'стереть']
       }
     ]
   },
@@ -6638,6 +6654,30 @@ function exportData() {
   }
 }
 function importData() { document.getElementById('importFile').click(); }
+async function confirmDeleteAllData() {
+  const ok = await showConfirm('Удалить все данные? Это необратимо: ритуалы, награды, история, шаблоны и твои темы исчезнут.', {
+    title: 'Удалить все данные',
+    okText: 'Удалить',
+    danger: true
+  });
+  if (!ok) return;
+
+  // Второй, мягкий шаг: предложить бэкап (не блокирует)
+  const okBackup = await showConfirm('Сначала сохранить резервную копию?', {
+    title: 'Резервная копия',
+    okText: 'Сохранить данные',
+    cancelText: 'Нет, удалить',
+    danger: false
+  });
+  if (okBackup) {
+    exportData();
+    // Даём экспорту время начать скачивание, потом спрашиваем ещё раз
+    await new Promise(r => setTimeout(r, 600));
+  }
+
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
 function handleImportFile(e) {
   const file = e.target.files[0];
   if (!file) return;
