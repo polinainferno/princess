@@ -3047,9 +3047,11 @@ function renderThemeGrids() {
     </div>
   `;
 
-  const html = builtinCards + customCards + addCard;
-  document.getElementById('themeGrid').innerHTML = html;
-  document.getElementById('themeGridModal').innerHTML = html;
+  // В онбординге (themeGrid) — только базовые + активные сезонные, без «+»
+  document.getElementById('themeGrid').innerHTML = builtinCards;
+
+  // В модалке темы (themeGridModal) — базовые + активные сезонные + пользовательские + «+»
+  document.getElementById('themeGridModal').innerHTML = builtinCards + customCards + addCard;
 }
 /* ========== РЕДАКТОР ПОЛЬЗОВАТЕЛЬСКОЙ ТЕМЫ ========== */
 let _ctDraft = null;       // текущий черновик
