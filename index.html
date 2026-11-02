@@ -438,6 +438,39 @@
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 3px 8px var(--glow);
   }
+  .theme-card-add {
+    border-style: dashed !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  .theme-card-add:hover {
+    background: var(--pink-soft) !important;
+  }
+  .theme-card-add .theme-emoji {
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .theme-card-edit {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.15s;
+    z-index: 2;
+  }
+  .theme-card-edit:hover {
+    transform: scale(1.15);
+  }
   .theme-emoji { font-size: 22px; margin-bottom: 6px; }
   .theme-name {
     font-size: 10px; font-weight: 700;
@@ -1736,6 +1769,117 @@
   [data-theme="back2school"] body::before {
     opacity: 1;
   }
+  /* ============ РЕДАКТОР ПОЛЬЗОВАТЕЛЬСКОЙ ТЕМЫ ============ */
+  .color-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 16px;
+    background: var(--card-bg); border: 2px solid var(--card-border);
+  }
+  .color-swatch {
+    width: 42px; height: 42px; border-radius: 12px;
+    border: 2px solid var(--card-border); flex-shrink: 0;
+    cursor: pointer; position: relative; overflow: hidden;
+  }
+  .color-swatch input[type="color"] {
+    position: absolute; inset: -10px;
+    width: calc(100% + 20px); height: calc(100% + 20px);
+    border: none; cursor: pointer; padding: 0; background: none;
+  }
+  .color-hex {
+    flex: 1; min-width: 0;
+    padding: 10px 12px; border-radius: 10px;
+    border: 2px solid var(--pink-soft); background: var(--bg1);
+    font-family: 'Courier New', monospace; font-size: 13px;
+    font-weight: 700; color: var(--text); outline: none;
+    text-transform: uppercase;
+  }
+  .color-hex:focus { border-color: var(--pink); }
+
+  .emoji-group {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .emoji-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; padding: 10px 12px; border-radius: 16px;
+    background: var(--card-bg); border: 2px solid var(--card-border);
+    width: 100%;
+  }
+  .emoji-label {
+    font-size: 12px; font-weight: 700; color: var(--text);
+    flex: 1 1 auto; min-width: 0; white-space: normal;
+    line-height: 1.3; overflow-wrap: break-word;
+  }
+  .emoji-input {
+    width: 60px; min-width: 60px; flex: 0 0 60px;
+    padding: 9px 0; border-radius: 10px;
+    border: 2px solid var(--pink-soft); background: var(--bg1);
+    font-size: 20px; line-height: 1; text-align: center;
+    outline: none; color: var(--text); font-family: inherit;
+  }
+  .emoji-input:focus { border-color: var(--pink); }
+
+  .contrast-warn {
+    display: none;
+    padding: 12px 14px; border-radius: 14px;
+    font-size: 12px; font-weight: 600; line-height: 1.5;
+    margin-bottom: 14px;
+    background: var(--err-bg); color: var(--err-color);
+    border: 2px dashed var(--err-color);
+  }
+  .contrast-warn.show { display: block; }
+
+  .preview-wrap {
+    margin-top: 18px; margin-bottom: 18px;
+    padding: 14px; border-radius: 20px;
+    border: 2px dashed var(--pink);
+    background: var(--bg1);
+  }
+  .preview-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 20px;
+    color: var(--pink-deep);
+    margin-bottom: 12px;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .preview-balance {
+    border-radius: 18px; padding: 14px; text-align: center;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .preview-balance-label {
+    font-size: 10px; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+  .preview-balance-value {
+    font-size: 28px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .preview-card {
+    border-radius: 14px; padding: 10px 12px;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .preview-card-info { flex: 1; min-width: 0; }
+  .preview-card-name { font-weight: 700; font-size: 12px; margin-bottom: 2px; }
+  .preview-card-meta { font-size: 10px; display: flex; gap: 5px; flex-wrap: wrap; }
+  .preview-badge { padding: 1px 6px; border-radius: 8px; font-weight: 600; }
+  .preview-check {
+    width: 28px; height: 28px; min-width: 28px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .preview-tabs {
+    display: flex; justify-content: space-around;
+    padding: 8px; border-radius: 14px; margin-top: 10px;
+  }
+  .preview-tab {
+    font-size: 9px; font-weight: 600; text-align: center; flex: 1;
+  }
+  .preview-tab-icon {
+    font-size: 16px; display: block; margin-bottom: 2px;
+  }
 </style>
 </head>
 <body>
@@ -2031,6 +2175,123 @@
     <div class="faq-list" id="faqList"></div>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="closeModal('faqModal')">Закрыть <span class="btn-emoji">💕</span></button>
+    </div>
+  </div>
+</div>
+<!-- Редактор пользовательской темы -->
+<div class="modal-overlay" id="customThemeModal">
+  <div class="modal">
+    <div class="modal-title" id="customThemeTitle">Новая тема 🎨</div>
+
+    <div class="field">
+      <label>Название темы</label>
+      <input type="text" id="ctName" placeholder="Например, Моя весенняя" maxlength="30" autocomplete="off">
+    </div>
+
+    <div class="field">
+      <label>Цвет фона</label>
+      <div class="color-row">
+        <div class="color-swatch" id="swatchBg" style="background:#ffe4ef">
+          <input type="color" id="colorBg" value="#ffe4ef" oninput="onCtColor('bg', this.value)">
+        </div>
+        <input type="text" class="color-hex" id="hexBg" value="#FFE4EF" maxlength="7" oninput="onCtHex('bg', this.value)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Цвет карточек</label>
+      <div class="color-row">
+        <div class="color-swatch" id="swatchCard" style="background:#ffffff">
+          <input type="color" id="colorCard" value="#ffffff" oninput="onCtColor('card', this.value)">
+        </div>
+        <input type="text" class="color-hex" id="hexCard" value="#FFFFFF" maxlength="7" oninput="onCtHex('card', this.value)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Цвет границ</label>
+      <div class="color-row">
+        <div class="color-swatch" id="swatchBorder" style="background:#fff8fc">
+          <input type="color" id="colorBorder" value="#fff8fc" oninput="onCtColor('border', this.value)">
+        </div>
+        <input type="text" class="color-hex" id="hexBorder" value="#FFF8FC" maxlength="7" oninput="onCtHex('border', this.value)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Цвет текста</label>
+      <div class="color-row">
+        <div class="color-swatch" id="swatchText" style="background:#6b4a5e">
+          <input type="color" id="colorText" value="#6b4a5e" oninput="onCtColor('text', this.value)">
+        </div>
+        <input type="text" class="color-hex" id="hexText" value="#6B4A5E" maxlength="7" oninput="onCtHex('text', this.value)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Цвет вторичного текста</label>
+      <div class="color-row">
+        <div class="color-swatch" id="swatchTextSoft" style="background:#a68a9b">
+          <input type="color" id="colorTextSoft" value="#a68a9b" oninput="onCtColor('textSoft', this.value)">
+        </div>
+        <input type="text" class="color-hex" id="hexTextSoft" value="#A68A9B" maxlength="7" oninput="onCtHex('textSoft', this.value)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Акцентный цвет</label>
+      <div class="color-row">
+        <div class="color-swatch" id="swatchAccent" style="background:#ff7eb3">
+          <input type="color" id="colorAccent" value="#ff7eb3" oninput="onCtColor('accent', this.value)">
+        </div>
+        <input type="text" class="color-hex" id="hexAccent" value="#FF7EB3" maxlength="7" oninput="onCtHex('accent', this.value)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Эмодзи</label>
+      <div class="emoji-group">
+        <div class="emoji-row"><span class="emoji-label">Приветствие (рядом с именем)</span><input type="text" class="emoji-input" id="ctEmojiName" value="💕" maxlength="4" autocomplete="off"></div>
+        <div class="emoji-row"><span class="emoji-label">Баллы, баланс, бейджи</span><input type="text" class="emoji-input" id="ctEmojiPoints" value="💖" maxlength="4" autocomplete="off"></div>
+        <div class="emoji-row"><span class="emoji-label">Вкладка «Сегодня»</span><input type="text" class="emoji-input" id="ctEmojiTabToday" value="🏠" maxlength="4" autocomplete="off"></div>
+        <div class="emoji-row"><span class="emoji-label">Вкладка «Ритуалы»</span><input type="text" class="emoji-input" id="ctEmojiTabRituals" value="🎀" maxlength="4" autocomplete="off"></div>
+        <div class="emoji-row"><span class="emoji-label">Вкладка «Потратить»</span><input type="text" class="emoji-input" id="ctEmojiTabSpend" value="🎁" maxlength="4" autocomplete="off"></div>
+        <div class="emoji-row"><span class="emoji-label">Пустые состояния</span><input type="text" class="emoji-input" id="ctEmojiEmpty" value="🌸" maxlength="4" autocomplete="off"></div>
+        <div class="emoji-row"><span class="emoji-label">Кнопка «Сохранить»</span><input type="text" class="emoji-input" id="ctEmojiButton" value="💕" maxlength="4" autocomplete="off"></div>
+      </div>
+    </div>
+
+    <div class="contrast-warn" id="ctContrastWarn"></div>
+
+    <div class="preview-wrap" id="ctPreviewWrap">
+      <div class="preview-title" id="ctPreviewTitle">Превью <span id="ctPreviewTitleEmoji">💕</span></div>
+      <div class="preview-balance" id="ctPreviewBalance">
+        <div class="preview-balance-label" id="ctPreviewBalanceLabel">Твои баллы</div>
+        <div class="preview-balance-value">
+          <span id="ctPreviewBalanceNum">1280</span>
+          <span id="ctPreviewBalanceEmoji">💖</span>
+        </div>
+      </div>
+      <div class="preview-card" id="ctPreviewCard">
+        <div class="preview-card-info">
+          <div class="preview-card-name" id="ctPreviewCardName">Выпить воды</div>
+          <div class="preview-card-meta">
+            <span class="preview-badge" id="ctPreviewCardBadge">+1 💖</span>
+          </div>
+        </div>
+        <div class="preview-check" id="ctPreviewCheck">✓</div>
+      </div>
+      <div class="preview-tabs" id="ctPreviewTabs">
+        <div class="preview-tab"><span class="preview-tab-icon" id="ctPreviewTabToday">🏠</span>Сегодня</div>
+        <div class="preview-tab"><span class="preview-tab-icon" id="ctPreviewTabRituals">🎀</span>Ритуалы</div>
+        <div class="preview-tab"><span class="preview-tab-icon" id="ctPreviewTabSpend">🎁</span>Потратить</div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="ctDeleteBtn" onclick="deleteCustomTheme()" style="display:none;">🗑</button>
+      <button class="btn btn-secondary" onclick="closeModal('customThemeModal')">Отмена</button>
+      <button class="btn btn-primary" onclick="saveCustomTheme()">Сохранить <span id="ctSaveBtnEmoji">💕</span></button>
     </div>
   </div>
 </div>
@@ -2493,9 +2754,16 @@ function detectSystemTheme() {
 }
 
 function applyTheme(id) {
+  // Если id — это id пользовательской темы, применяем её
+  if (state.customThemes && state.customThemes.some(t => t.id === id)) {
+    const t = state.customThemes.find(t => t.id === id);
+    applyCustomTheme(t);
+    return;
+  }
+  // Иначе — обычная тема (сбрасываем возможные кастомные переопределения)
+  clearCustomTheme();
   document.documentElement.setAttribute('data-theme', id);
   refreshThemeEmoji();
-  updateThemeColorMeta(id);
 }
 
 function updateThemeColorMeta(themeId) {
@@ -2557,12 +2825,178 @@ function refreshThemeEmoji() {
     el.textContent = e.button;
   });
 }
+/* ========== ПОЛЬЗОВАТЕЛЬСКИЕ ТЕМЫ: ЦВЕТА И КОНТРАСТ ========== */
 
+// HEX → [h, s, l] (0–360, 0–100, 0–100), или null если невалидный
+function hexToHsl(hex) {
+  let h = hex.replace('#', '');
+  if (h.length === 3) h = h.split('').map(c => c + c).join('');
+  if (h.length !== 6) return null;
+  const r = parseInt(h.slice(0,2),16)/255;
+  const g = parseInt(h.slice(2,4),16)/255;
+  const b = parseInt(h.slice(4,6),16)/255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b);
+  let hh = 0, s = 0;
+  const l = (max+min)/2;
+  const d = max - min;
+  if (d !== 0) {
+    s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max) {
+      case r: hh = (g-b)/d + (g<b?6:0); break;
+      case g: hh = (b-r)/d + 2; break;
+      case b: hh = (r-g)/d + 4; break;
+    }
+    hh *= 60;
+  }
+  return [hh, s*100, l*100];
+}
+
+function hslToHex(h, s, l) {
+  s /= 100; l /= 100;
+  const c = (1 - Math.abs(2*l - 1)) * s;
+  const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+  const m = l - c/2;
+  let r=0,g=0,b=0;
+  if (h < 60) { r=c; g=x; b=0; }
+  else if (h < 120) { r=x; g=c; b=0; }
+  else if (h < 180) { r=0; g=c; b=x; }
+  else if (h < 240) { r=0; g=x; b=c; }
+  else if (h < 300) { r=x; g=0; b=c; }
+  else { r=c; g=0; b=x; }
+  const toHex = v => Math.round((v + m) * 255).toString(16).padStart(2,'0');
+  return '#' + toHex(r) + toHex(g) + toHex(b);
+}
+
+// Из одного цвета фона — 3 стопа градиента (светлее / базовый / темнее)
+function generateBgStops(base) {
+  const hsl = hexToHsl(base);
+  if (!hsl) return [base, base, base];
+  const [h, s, l] = hsl;
+  return [
+    hslToHex(h, s, Math.min(100, l + 8)),
+    base,
+    hslToHex(h, s, Math.max(0, l - 8))
+  ];
+}
+
+// Из акцента — мягкий (--pink-soft) и насыщенный (--pink-deep)
+function generateAccentSoft(base) {
+  const hsl = hexToHsl(base);
+  if (!hsl) return base;
+  const [h, s, l] = hsl;
+  return hslToHex(h, Math.max(0, Math.min(100, s - 20)), Math.min(100, l + 40));
+}
+function generateAccentDeep(base) {
+  const hsl = hexToHsl(base);
+  if (!hsl) return base;
+  const [h, s, l] = hsl;
+  return hslToHex(h, Math.min(100, s + 5), Math.max(0, l - 15));
+}
+
+// Из акцента — --glow / --glow-soft (rgba с прозрачностью)
+function accentToGlow(accentHex, alpha) {
+  const h = accentHex.replace('#','');
+  const r = parseInt(h.slice(0,2),16);
+  const g = parseInt(h.slice(2,4),16);
+  const b = parseInt(h.slice(4,6),16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+// Контраст по WCAG
+function relLuminance(hex) {
+  const h = hex.replace('#','');
+  const r = parseInt(h.slice(0,2),16)/255;
+  const g = parseInt(h.slice(2,4),16)/255;
+  const b = parseInt(h.slice(4,6),16)/255;
+  const toLin = c => c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4);
+  return 0.2126*toLin(r) + 0.7152*toLin(g) + 0.0722*toLin(b);
+}
+function contrastRatio(a, b) {
+  const l1 = relLuminance(a), l2 = relLuminance(b);
+  const L = Math.max(l1, l2), D = Math.min(l1, l2);
+  return (L + 0.05) / (D + 0.05);
+}
+function themeContrastIssues(theme) {
+  const issues = [];
+  if (contrastRatio(theme.text, theme.card) < 3) issues.push('текст плохо читается на карточках');
+  if (contrastRatio(theme.text, theme.bg) < 3) issues.push('текст плохо читается на фоне');
+  return issues;
+}
+
+/* ========== ПОЛЬЗОВАТЕЛЬСКИЕ ТЕМЫ: ПРИМЕНЕНИЕ ========== */
+
+function applyCustomTheme(themeObj) {
+  if (!themeObj) return;
+  const root = document.documentElement;
+  const bgStops = generateBgStops(themeObj.bg);
+  const accentSoft = generateAccentSoft(themeObj.accent);
+  const accentDeep = generateAccentDeep(themeObj.accent);
+
+  const vars = {
+    '--pink': themeObj.accent,
+    '--pink-deep': accentDeep,
+    '--pink-soft': accentSoft,
+    '--lavender': accentSoft,
+    '--lavender-deep': accentDeep,
+    '--gold': themeObj.accent,
+    '--gold-soft': accentSoft,
+    '--text': themeObj.text,
+    '--text-soft': themeObj.textSoft,
+    '--bg1': bgStops[0],
+    '--bg2': bgStops[1],
+    '--bg3': bgStops[2],
+    '--card-bg': themeObj.card,
+    '--card-border': themeObj.border,
+    '--modal-bg': themeObj.card,
+    '--shadow': `0 8px 24px ${accentToGlow(themeObj.accent, 0.18)}`,
+    '--card-shadow': `0 4px 16px ${accentToGlow(themeObj.accent, 0.1)}`,
+    '--balance-bg': `linear-gradient(135deg, ${themeObj.card} 0%, ${accentSoft} 100%)`,
+    '--emoji-name': `"${themeObj.emojiName}"`,
+    '--emoji-points': `"${themeObj.emojiPoints}"`,
+    '--emoji-tab-today': `"${themeObj.emojiTabToday}"`,
+    '--emoji-tab-rituals': `"${themeObj.emojiTabRituals}"`,
+    '--emoji-tab-spend': `"${themeObj.emojiTabSpend}"`,
+    '--emoji-empty': `"${themeObj.emojiEmpty}"`,
+    '--emoji-button': `"${themeObj.emojiButton}"`,
+    '--ok-color': '#3ca55c',
+    '--ok-bg': '#e6ffe9',
+    '--err-color': '#d66',
+    '--err-bg': '#ffe0e0',
+    '--bday-outline': themeObj.accent,
+    '--bday-text': themeObj.accent,
+    '--bday-bg': accentSoft,
+    '--glow': accentToGlow(themeObj.accent, 0.5),
+    '--glow-soft': accentToGlow(themeObj.accent, 0.2)
+  };
+
+  Object.entries(vars).forEach(([k, v]) => root.style.setProperty(k, v));
+  root.setAttribute('data-theme', 'custom');
+  refreshThemeEmoji();
+}
+
+function clearCustomTheme() {
+  const root = document.documentElement;
+  // Удаляем все инлайн-переопределения
+  const vars = [
+    '--pink','--pink-deep','--pink-soft','--lavender','--lavender-deep',
+    '--gold','--gold-soft','--text','--text-soft',
+    '--bg1','--bg2','--bg3','--card-bg','--card-border','--modal-bg',
+    '--shadow','--card-shadow','--balance-bg',
+    '--emoji-name','--emoji-points','--emoji-tab-today','--emoji-tab-rituals','--emoji-tab-spend',
+    '--emoji-empty','--emoji-button',
+    '--ok-color','--ok-bg','--err-color','--err-bg',
+    '--bday-outline','--bday-text','--bday-bg',
+    '--glow','--glow-soft'
+  ];
+  vars.forEach(v => root.style.removeProperty(v));
+}
 function renderThemeGrids() {
   const seasonalIds = ['newyear', 'valentine', 'summerDay', 'back2school', 'halloween'];
-  const html = THEMES.filter(t => {
-    if (!seasonalIds.includes(t.id)) return true;        // обычные темы — всегда
-    return isThemeActiveNow(t.id);                        // сезонные — только в свой день
+
+  // Обычные + активные сезонные
+  const builtinCards = THEMES.filter(t => {
+    if (!seasonalIds.includes(t.id)) return true;
+    return isThemeActiveNow(t.id);
   }).map(t => `
     <div class="theme-card${pendingTheme === t.id ? ' selected' : ''}" data-theme-id="${t.id}" onclick="chooseTheme('${t.id}')">
       <div class="theme-emoji">${t.emoji}</div>
@@ -2572,16 +3006,277 @@ function renderThemeGrids() {
       </div>
     </div>
   `).join('');
+
+  // Пользовательские темы
+  const customCards = (state.customThemes || []).map(t => {
+    const soft = generateAccentSoft(t.accent);
+    const deep = generateAccentDeep(t.accent);
+    const colors = [t.bg, t.accent, deep, t.card];
+    return `
+      <div class="theme-card${pendingTheme === t.id ? ' selected' : ''}" data-theme-id="${t.id}" onclick="chooseTheme('${t.id}')">
+        <div class="theme-emoji">${t.emojiPoints || '💖'}</div>
+        <div class="theme-name">${escapeHtml(t.name)}</div>
+        <div class="theme-palette">
+          ${colors.map(c => `<div class="theme-dot" style="background:${c};"></div>`).join('')}
+        </div>
+        <div class="theme-card-edit" onclick="event.stopPropagation(); editCustomTheme('${t.id}')" title="Редактировать">✏️</div>
+      </div>
+    `;
+  }).join('');
+
+  // Кнопка «+» — всегда в конце (и в онбординге, и в модалке)
+  const addCard = `
+    <div class="theme-card theme-card-add" onclick="openCustomThemeEditor()" title="Создать свою тему">
+      <div class="theme-emoji" style="font-size:28px;color:var(--pink-deep);">+</div>
+      <div class="theme-name" style="font-size:9px;">Своя тема</div>
+    </div>
+  `;
+
+  const html = builtinCards + customCards + addCard;
   document.getElementById('themeGrid').innerHTML = html;
   document.getElementById('themeGridModal').innerHTML = html;
 }
+/* ========== РЕДАКТОР ПОЛЬЗОВАТЕЛЬСКОЙ ТЕМЫ ========== */
+let _ctDraft = null;       // текущий черновик
+let _ctEditId = null;      // id редактируемой темы (null = новая)
 
+function defaultCustomTheme() {
+  return {
+    name: '',
+    bg: '#ffe4ef', card: '#ffffff', border: '#fff8fc',
+    text: '#6b4a5e', textSoft: '#a68a9b', accent: '#ff7eb3',
+    emojiName: '💕', emojiPoints: '💖',
+    emojiTabToday: '🏠', emojiTabRituals: '🎀', emojiTabSpend: '🎁',
+    emojiEmpty: '🌸', emojiButton: '💕'
+  };
+}
+
+function fillEditorForm(t) {
+  _ctDraft = t;
+  document.getElementById('ctName').value = t.name || '';
+  const colorKeys = ['bg','card','border','text','textSoft','accent'];
+  colorKeys.forEach(k => {
+    const cap = k.charAt(0).toUpperCase() + k.slice(1);
+    document.getElementById('color' + cap).value = t[k];
+    document.getElementById('hex' + cap).value = t[k].toUpperCase();
+    document.getElementById('swatch' + cap).style.background = t[k];
+  });
+  document.getElementById('ctEmojiName').value = t.emojiName;
+  document.getElementById('ctEmojiPoints').value = t.emojiPoints;
+  document.getElementById('ctEmojiTabToday').value = t.emojiTabToday;
+  document.getElementById('ctEmojiTabRituals').value = t.emojiTabRituals;
+  document.getElementById('ctEmojiTabSpend').value = t.emojiTabSpend;
+  document.getElementById('ctEmojiEmpty').value = t.emojiEmpty;
+  document.getElementById('ctEmojiButton').value = t.emojiButton;
+  updateCtPreview();
+}
+
+function onCtColor(key, value) {
+  if (!_ctDraft) return;
+  _ctDraft[key] = value;
+  const cap = key.charAt(0).toUpperCase() + key.slice(1);
+  document.getElementById('hex' + cap).value = value.toUpperCase();
+  document.getElementById('swatch' + cap).style.background = value;
+  updateCtPreview();
+}
+
+function onCtHex(key, value) {
+  if (!_ctDraft) return;
+  let v = value.trim();
+  if (v && !v.startsWith('#')) v = '#' + v;
+  if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v)) {
+    _ctDraft[key] = v;
+    const cap = key.charAt(0).toUpperCase() + key.slice(1);
+    document.getElementById('color' + cap).value = v;
+    document.getElementById('swatch' + cap).style.background = v;
+    updateCtPreview();
+  }
+}
+
+function updateCtPreview() {
+  if (!_ctDraft) return;
+  const t = _ctDraft;
+  const soft = generateAccentSoft(t.accent);
+  const deep = generateAccentDeep(t.accent);
+  const stops = generateBgStops(t.bg);
+
+  const wrap = document.getElementById('ctPreviewWrap');
+  wrap.style.background = `linear-gradient(160deg, ${stops[0]} 0%, ${stops[1]} 50%, ${stops[2]} 100%)`;
+
+  const pTitle = document.getElementById('ctPreviewTitle');
+  pTitle.style.color = deep;
+  document.getElementById('ctPreviewTitleEmoji').textContent = t.emojiName;
+
+  const bal = document.getElementById('ctPreviewBalance');
+  bal.style.background = `linear-gradient(135deg, ${t.card} 0%, ${soft} 100%)`;
+  bal.style.border = `2px solid ${t.card}`;
+  document.getElementById('ctPreviewBalanceLabel').style.color = t.textSoft;
+  document.getElementById('ctPreviewBalanceNum').style.color = deep;
+  const pe = document.getElementById('ctPreviewBalanceEmoji');
+  pe.style.color = deep; pe.textContent = t.emojiPoints;
+
+  const card = document.getElementById('ctPreviewCard');
+  card.style.background = t.card;
+  card.style.border = `2px solid ${t.border}`;
+  document.getElementById('ctPreviewCardName').style.color = t.text;
+  const badge = document.getElementById('ctPreviewCardBadge');
+  badge.style.background = soft; badge.style.color = deep;
+  badge.textContent = '+1 ' + t.emojiPoints;
+
+  const chk = document.getElementById('ctPreviewCheck');
+  chk.style.background = `linear-gradient(135deg, ${t.accent}, ${deep})`;
+  chk.style.color = '#fff';
+
+  document.getElementById('ctPreviewTabToday').textContent = t.emojiTabToday;
+  document.getElementById('ctPreviewTabRituals').textContent = t.emojiTabRituals;
+  document.getElementById('ctPreviewTabSpend').textContent = t.emojiTabSpend;
+  document.getElementById('ctPreviewTabs').style.background = t.card;
+  document.querySelectorAll('.preview-tab').forEach(el => el.style.color = deep);
+
+  document.getElementById('ctSaveBtnEmoji').textContent = t.emojiButton;
+
+  const issues = themeContrastIssues(t);
+  const warn = document.getElementById('ctContrastWarn');
+  if (issues.length) {
+    warn.textContent = '⚠ ' + issues.join(', ') + '. Всё равно сохранить?';
+    warn.classList.add('show');
+  } else {
+    warn.classList.remove('show');
+  }
+}
+
+function openCustomThemeEditor() {
+  _ctEditId = null;
+  document.getElementById('customThemeTitle').textContent = 'Новая тема 🎨';
+  document.getElementById('ctDeleteBtn').style.display = 'none';
+  fillEditorForm(defaultCustomTheme());
+  document.getElementById('customThemeModal').classList.add('active');
+  setTimeout(() => document.getElementById('ctName').focus(), 300);
+}
+
+function editCustomTheme(id) {
+  const t = state.customThemes.find(x => x.id === id);
+  if (!t) return;
+  _ctEditId = id;
+  document.getElementById('customThemeTitle').textContent = 'Редактировать тему 🎨';
+  document.getElementById('ctDeleteBtn').style.display = 'block';
+  fillEditorForm({ ...t });
+  document.getElementById('customThemeModal').classList.add('active');
+}
+
+function saveCustomTheme() {
+  if (!_ctDraft) return;
+  const name = _ctDraft.name.trim();
+  if (!name) { showToast('Введи название темы'); return; }
+
+  // Считываем эмодзи из полей
+  _ctDraft.emojiName = document.getElementById('ctEmojiName').value || '💕';
+  _ctDraft.emojiPoints = document.getElementById('ctEmojiPoints').value || '💖';
+  _ctDraft.emojiTabToday = document.getElementById('ctEmojiTabToday').value || '🏠';
+  _ctDraft.emojiTabRituals = document.getElementById('ctEmojiTabRituals').value || '🎀';
+  _ctDraft.emojiTabSpend = document.getElementById('ctEmojiTabSpend').value || '🎁';
+  _ctDraft.emojiEmpty = document.getElementById('ctEmojiEmpty').value || '🌸';
+  _ctDraft.emojiButton = document.getElementById('ctEmojiButton').value || '💕';
+  _ctDraft.name = name;
+
+  if (_ctEditId) {
+    // Редактирование
+    const idx = state.customThemes.findIndex(t => t.id === _ctEditId);
+    if (idx >= 0) {
+      _ctDraft.id = _ctEditId;
+      state.customThemes[idx] = { ..._ctDraft };
+      if (state.activeCustomThemeId === _ctEditId) {
+        applyCustomTheme(_ctDraft);
+      }
+    }
+  } else {
+    // Новая
+    const newTheme = { ..._ctDraft, id: 'custom_' + uid() };
+    state.customThemes.push(newTheme);
+    state.theme = newTheme.id;
+    state.activeCustomThemeId = newTheme.id;
+    applyCustomTheme(newTheme);
+    pendingTheme = newTheme.id;
+  }
+  save();
+  closeModal('customThemeModal');
+  renderThemeGrids();
+  if (state.name) {
+    renderGreeting();
+    updateBalance();
+    renderToday();
+    renderRituals();
+    renderSpend();
+    renderCalendar();
+  }
+  showToast(_ctEditId ? 'Тема обновлена 🎨' : 'Тема создана 🎨');
+  _ctDraft = null;
+  _ctEditId = null;
+}
+
+async function deleteCustomTheme() {
+  if (!_ctEditId) return;
+  const ok = await showConfirm('Удалить эту тему?', {
+    title: 'Удалить тему',
+    okText: 'Удалить',
+    danger: true
+  });
+  if (!ok) return;
+  const idToDelete = _ctEditId;
+  state.customThemes = state.customThemes.filter(t => t.id !== idToDelete);
+  if (state.activeCustomThemeId === idToDelete) {
+    state.activeCustomThemeId = null;
+    state.theme = 'pink';
+    applyTheme('pink');
+  }
+  save();
+  closeModal('customThemeModal');
+  renderThemeGrids();
+  if (state.name) {
+    renderGreeting();
+    updateBalance();
+    renderToday();
+    renderRituals();
+    renderSpend();
+    renderCalendar();
+  }
+  showToast('Тема удалена 🗑');
+  _ctDraft = null;
+  _ctEditId = null;
+}
+
+// Привязка эмодзи-полей
+document.querySelectorAll('#customThemeModal .emoji-input').forEach(inp => {
+  inp.addEventListener('input', () => {
+    if (!_ctDraft) return;
+    const map = {
+      ctEmojiName: 'emojiName', ctEmojiPoints: 'emojiPoints',
+      ctEmojiTabToday: 'emojiTabToday', ctEmojiTabRituals: 'emojiTabRituals',
+      ctEmojiTabSpend: 'emojiTabSpend', ctEmojiEmpty: 'emojiEmpty',
+      ctEmojiButton: 'emojiButton'
+    };
+    if (map[inp.id]) _ctDraft[map[inp.id]] = inp.value;
+    updateCtPreview();
+  });
+});
+document.getElementById('ctName').addEventListener('input', e => {
+  if (_ctDraft) _ctDraft.name = e.target.value;
+});
 function chooseTheme(id) {
   pendingTheme = id;
+
+  // Если это пользовательская тема — запоминаем активную
+  const isCustom = state.customThemes && state.customThemes.some(t => t.id === id);
+  if (isCustom) {
+    state.activeCustomThemeId = id;
+    state.theme = id;
+    save();
+  } else {
+    state.activeCustomThemeId = null;
+  }
+
   applyTheme(id);
 
-  // Если сейчас активна сезонная тема и пользователь вручную выбрал НЕ её —
-  // запоминаем отказ именно от этой сезонной темы на текущий год.
   const currentYear = new Date().getFullYear();
   let activeSeasonalId = null;
   if (isHolidayPeriod()) activeSeasonalId = 'newyear';
@@ -2634,7 +3329,10 @@ let state = {
   historyPoints: [],
   seasonalDismissed: {},
   seasonalAutoApplied: {},
-  seasonalGiftsReceived: {}
+  seasonalGiftsReceived: {},
+  themeBeforeHoliday: '',
+  customThemes: [],
+  activeCustomThemeId: null
 };
   
 function load() {
@@ -2692,6 +3390,17 @@ function load() {
   // Переносим старый флаг авто-применения НГ
   if (state.newYearThemeAutoAppliedYear && !state.seasonalAutoApplied.newyear) {
     state.seasonalAutoApplied.newyear = state.newYearThemeAutoAppliedYear;
+  }
+  // Миграция: пользовательские темы
+  if (!Array.isArray(state.customThemes)) {
+    state.customThemes = [];
+  }
+  if (state.activeCustomThemeId === undefined) {
+    state.activeCustomThemeId = null;
+  }
+  // Проверка: если activeCustomThemeId указывает на несуществующую тему — сбрасываем
+  if (state.activeCustomThemeId && !state.customThemes.some(t => t.id === state.activeCustomThemeId)) {
+    state.activeCustomThemeId = null;
   }
 }
   
@@ -2971,7 +3680,10 @@ function handleWelcomeImport(e) {
         historyPoints: [],
         seasonalDismissed: {},
         seasonalAutoApplied: {},
-        seasonalGiftsReceived: {}
+        seasonalGiftsReceived: {},
+        themeBeforeHoliday: '',
+        customThemes: [],
+        activeCustomThemeId: null
       }, data);
       // Миграция
       if (state.habits) {
@@ -5932,7 +6644,10 @@ function handleImportFile(e) {
         extra: {},
         seasonalDismissed: {},
         seasonalAutoApplied: {},
-        seasonalGiftsReceived: {}
+        seasonalGiftsReceived: {},
+        themeBeforeHoliday: '',
+        customThemes: [],
+        activeCustomThemeId: null
       }, data);
       // Миграция
       if (state.habits) {
@@ -6132,14 +6847,15 @@ function resolveInitialTheme() {
   const currentYear = new Date().getFullYear();
   const savedTheme = state.theme || 'pink';
 
-  // ---- НЕ праздничный период ----
-  const anySeasonalActive =
-    isHolidayPeriod() || !!getActiveSeasonalTheme();
-
+  // Если сейчас не праздничный период — проверяем кастомную тему
+  const anySeasonalActive = isHolidayPeriod() || !!getActiveSeasonalTheme();
   if (!anySeasonalActive) {
-    // Если тема всё ещё сезонная (пользователь не менял её вручную),
-    // возвращаем ту, что была до праздника.
-    const seasonalIds = ['newyear', 'valentine', 'summerDay', 'back2school', 'halloween'];
+    // Если сохранённая тема — это id пользовательской темы, применяем её
+    if (state.customThemes && state.customThemes.some(t => t.id === savedTheme)) {
+      return savedTheme;
+    }
+    // Иначе — стандартная логика возврата с сезонной
+    const seasonalIds = ['newyear','valentine','summerDay','back2school','halloween'];
     if (seasonalIds.includes(savedTheme)) {
       const wasDismissed = (state.seasonalDismissed || {})[savedTheme] === currentYear;
       if (!wasDismissed) {
@@ -6154,7 +6870,6 @@ function resolveInitialTheme() {
   }
 
   // ---- Праздничный период ----
-  // Определяем, какая сезонная тема активна сейчас
   let activeId = null;
   if (isHolidayPeriod()) activeId = 'newyear';
   else {
@@ -6163,11 +6878,9 @@ function resolveInitialTheme() {
   }
   if (!activeId) return savedTheme;
 
-  // Если пользователь в этом году уже отказался от этой темы — уважаем выбор
   const dismissed = (state.seasonalDismissed || {})[activeId];
   if (dismissed === currentYear) return savedTheme;
 
-  // Иначе — навязываем сезонную
   const autoApplied = (state.seasonalAutoApplied || {})[activeId];
   if (autoApplied !== currentYear) {
     if (savedTheme !== activeId) {
