@@ -4113,7 +4113,6 @@ function hideHabitFromToday(habitId) {
   const today = new Date();
   const key = dateKey(today);
 
-  // Если это extra-ритуал (не в расписании) — просто убираем из extra
   const scheduled = state.habits.filter(h => isHabitScheduled(h, today));
   const isScheduled = scheduled.some(s => s.id === habitId);
 
@@ -4121,6 +4120,7 @@ function hideHabitFromToday(habitId) {
     state.extra[key] = state.extra[key].filter(id => id !== habitId);
     save();
     renderToday();
+    checkAllDone();
     showUndo('Удалено на сегодня', () => {
       if (!state.extra[key]) state.extra[key] = [];
       if (!state.extra[key].includes(habitId)) {
@@ -4132,13 +4132,13 @@ function hideHabitFromToday(habitId) {
     return;
   }
 
-  // Иначе — скрываем через excluded
   if (!state.excluded[key]) state.excluded[key] = [];
   if (!state.excluded[key].includes(habitId)) {
     state.excluded[key].push(habitId);
   }
   save();
   renderToday();
+  checkAllDone();
   showUndo('Скрыто на сегодня', () => {
     if (state.excluded[key]) {
       state.excluded[key] = state.excluded[key].filter(id => id !== habitId);
