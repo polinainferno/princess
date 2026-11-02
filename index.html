@@ -6281,139 +6281,7 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
       });
     }
   }
-  // Ёлочка справа: ветки, шары, гирлянда
-  let tree = null;
 
-  function buildTree() {
-    const treeH = Math.min(H * 0.42, 320);   // высота ёлки — не больше 42% экрана
-    const treeW = treeH * 0.62;               // ширина основания
-    const baseX = W - treeW * 0.55;           // чуть прижата к правому краю
-    const baseY = H * 0.68 - 4;               // стоит «на снегу»
-
-    // Ярусы (треугольники) — 3 слоя, каждый шире предыдущего
-    const layers = [
-      { topY: baseY - treeH,        bottomY: baseY - treeH * 0.62, halfW: treeW * 0.36 },
-      { topY: baseY - treeH * 0.72, bottomY: baseY - treeH * 0.38, halfW: treeW * 0.5 },
-      { topY: baseY - treeH * 0.5,  bottomY: baseY - treeH * 0.12, halfW: treeW * 0.64 }
-    ];
-
-    // Шары — случайно вдоль ярусов
-    const balls = [];
-    const ballColors = [
-      '255, 200, 80',   // золотой
-      '255, 120, 120',  // красный
-      '160, 220, 255',  // голубой
-      '255, 180, 220'   // розовый
-    ];
-    const ballCount = 9;
-    for (let i = 0; i < ballCount; i++) {
-      const layer = layers[1 + (i % 2)];
-      const t = 0.25 + Math.random() * 0.65;   // позиция по высоте яруса
-      const y = layer.topY + (layer.bottomY - layer.topY) * t;
-      // ширина на этой высоте — линейно сужается кверху
-      const localHalfW = layer.halfW * (1 - t * 0.85);
-      const x = baseX + (Math.random() - 0.5) * localHalfW * 1.6;
-      balls.push({
-        x, y,
-        r: 3 + Math.random() * 1.8,
-        color: ballColors[Math.floor(Math.random() * ballColors.length)],
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.8 + Math.random() * 0.6
-      });
-    }
-
-    // Гирлянда — точки по спирали вдоль ярусов
-    const garland = [];
-    const garlandColors = ['255,220,120', '255,140,140', '140,230,160', '140,200,255'];
-    let colorIdx = 0;
-    layers.forEach((layer, li) => {
-      const dots = 6 + li * 2;
-      for (let i = 0; i < dots; i++) {
-        const t = i / (dots - 1);                 // 0..1 слева направо
-        const y = layer.topY + (layer.bottomY - layer.topY) * (0.5 + Math.sin(t * Math.PI) * 0.2);
-        const halfW = layer.halfW * (1 - ((y - layer.topY) / (layer.bottomY - layer.topY)) * 0.85);
-        const x = baseX + (t - 0.5) * 2 * halfW;
-        garland.push({
-          x, y,
-          r: 1.8,
-          color: garlandColors[colorIdx % garlandColors.length],
-          phase: Math.random() * Math.PI * 2,
-          speed: 0.9 + Math.random() * 0.7
-        });
-        colorIdx++;
-      }
-    });
-
-    tree = { baseX, baseY, treeH, treeW, layers, balls, garland };
-  }
-    function drawTree() {
-    if (!tree) return;
-    const { baseX, baseY, layers, balls, garland, treeH } = tree;
-
-    // Ствол
-    ctx.fillStyle = 'rgba(90, 60, 40, 0.85)';
-    const trunkW = treeH * 0.06;
-    ctx.fillRect(baseX - trunkW / 2, baseY - treeH * 0.1, trunkW, treeH * 0.14);
-
-    // Ярусы (ёлочные треугольники)
-    layers.forEach((layer) => {
-      ctx.beginPath();
-      ctx.moveTo(baseX, layer.topY);
-      ctx.lineTo(baseX - layer.halfW, layer.bottomY);
-      ctx.lineTo(baseX + layer.halfW, layer.bottomY);
-      ctx.closePath();
-      // тёмно-зелёный с лёгким градиентом
-      const g = ctx.createLinearGradient(baseX, layer.topY, baseX, layer.bottomY);
-      g.addColorStop(0, 'rgba(40, 90, 60, 0.92)');
-      g.addColorStop(1, 'rgba(25, 65, 45, 0.95)');
-      ctx.fillStyle = g;
-      ctx.fill();
-    });
-
-    // Гирлянда
-    garland.forEach(g => {
-      const pulse = 0.5 + 0.5 * Math.sin(time * g.speed + g.phase);
-      const alpha = 0.35 + pulse * 0.6;
-      const r = g.r * (0.8 + pulse * 0.5);
-      // мягкий ореол
-      const grad = ctx.createRadialGradient(g.x, g.y, 0, g.x, g.y, r * 4);
-      grad.addColorStop(0, `rgba(${g.color}, ${alpha * 0.5})`);
-      grad.addColorStop(1, `rgba(${g.color}, 0)`);
-      ctx.beginPath();
-      ctx.arc(g.x, g.y, r * 4, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
-      ctx.fill();
-      // сама точка
-      ctx.beginPath();
-      ctx.arc(g.x, g.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${g.color}, ${alpha})`;
-      ctx.fill();
-    });
-
-    // Шары
-    balls.forEach(b => {
-      // блик
-      const grad = ctx.createRadialGradient(
-        b.x - b.r * 0.4, b.y - b.r * 0.4, b.r * 0.1,
-        b.x, b.y, b.r
-      );
-      grad.addColorStop(0, `rgba(255,255,255,0.9)`);
-      grad.addColorStop(0.35, `rgba(${b.color}, 1)`);
-      grad.addColorStop(1, `rgba(${b.color}, 0.7)`);
-      ctx.beginPath();
-      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
-      ctx.fill();
-    });
-
-    // Звёздочка на макушке
-    const topY = layers[0].topY;
-    const pulse = 0.5 + 0.5 * Math.sin(time * 1.2);
-    ctx.beginPath();
-    ctx.arc(baseX, topY, 2.5 + pulse * 1.5, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255, 220, 100, ${0.6 + pulse * 0.4})`;
-    ctx.fill();
-  }
   function drawLights() {
     lights.forEach(l => {
       const pulse = 0.5 + 0.5 * Math.sin(time * l.speed + l.phase);
@@ -6438,24 +6306,25 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
     });
   }
   function drawSnowGround() {
-    const baseY = H * 0.68;
-    const waveAmp = 22;
-    const points = 28;
+    const baseY = H * 0.68;         // линия «земли» — примерно на 2/3 высоты
+    const waveAmp = 22;             // амплитуда волны — сугробы заметнее
+    const points = 28;              // больше точек — плавнее край
 
     ctx.beginPath();
     ctx.moveTo(0, H);
     ctx.lineTo(0, baseY);
     for (let i = 0; i <= points; i++) {
       const x = (W / points) * i;
-      // без time — снег неподвижен
+      // две волны разной частоты — сугробы «неравномерные», естественнее
       const y = baseY
-        + Math.sin(i * 0.7) * waveAmp
-        + Math.sin(i * 1.9) * (waveAmp * 0.35);
+        + Math.sin(i * 0.7 + time * 0.3) * waveAmp
+        + Math.sin(i * 1.9 + time * 0.6) * (waveAmp * 0.35);
       ctx.lineTo(x, y);
     }
     ctx.lineTo(W, H);
     ctx.closePath();
 
+    // градиент: сверху полупрозрачнее (пушистый край), снизу плотнее
     const grad = ctx.createLinearGradient(0, baseY - waveAmp, 0, H);
     grad.addColorStop(0, 'rgba(255,255,255,0.35)');
     grad.addColorStop(0.25, 'rgba(255,255,255,0.6)');
@@ -6475,10 +6344,7 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
     canvas.style.height = H + 'px';
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     if (currentMode && currentMode !== 'rays') buildParticles();
-    if (currentMode === 'snow') {
-      buildLights();
-      buildTree();
-    }
+    if (currentMode === 'snow') buildLights();
   }
 
   // ---------- ЧАСТИЦЫ ----------
@@ -6650,7 +6516,6 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
     } else if (currentMode === 'snow') {
       const cfg = MODES.snow;
       drawSnowGround();            // снег на земле — под снежинками
-      drawTree();
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.y += p.speed * dt;
@@ -6722,10 +6587,7 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
     currentMode = mode;
     resize();
     buildParticles();
-    if (mode === 'snow') {
-      buildLights();
-      buildTree();
-    }
+    if (mode === 'snow') buildLights();
     lastTime = performance.now();
     time = 0;
     rafId = requestAnimationFrame(frame);
