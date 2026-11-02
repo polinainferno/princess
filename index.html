@@ -6306,25 +6306,24 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
     });
   }
   function drawSnowGround() {
-    const baseY = H * 0.68;         // линия «земли» — примерно на 2/3 высоты
-    const waveAmp = 22;             // амплитуда волны — сугробы заметнее
-    const points = 28;              // больше точек — плавнее край
+    const baseY = H * 0.68;
+    const waveAmp = 22;
+    const points = 28;
 
     ctx.beginPath();
     ctx.moveTo(0, H);
     ctx.lineTo(0, baseY);
     for (let i = 0; i <= points; i++) {
       const x = (W / points) * i;
-      // две волны разной частоты — сугробы «неравномерные», естественнее
+      // без time — сугробы статичные, «не дышат»
       const y = baseY
-        + Math.sin(i * 0.7 + time * 0.3) * waveAmp
-        + Math.sin(i * 1.9 + time * 0.6) * (waveAmp * 0.35);
+        + Math.sin(i * 0.7) * waveAmp
+        + Math.sin(i * 1.9) * (waveAmp * 0.35);
       ctx.lineTo(x, y);
     }
     ctx.lineTo(W, H);
     ctx.closePath();
 
-    // градиент: сверху полупрозрачнее (пушистый край), снизу плотнее
     const grad = ctx.createLinearGradient(0, baseY - waveAmp, 0, H);
     grad.addColorStop(0, 'rgba(255,255,255,0.35)');
     grad.addColorStop(0.25, 'rgba(255,255,255,0.6)');
