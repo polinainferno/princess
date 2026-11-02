@@ -6290,7 +6290,30 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
       ctx.fill();
     });
   }
+  function drawSnowGround() {
+    const baseY = H - 18;           // линия «земли» чуть выше низа
+    const waveAmp = 10;             // амплитуда волны
+    const points = 24;              // сколько точек для волнистого края
 
+    ctx.beginPath();
+    ctx.moveTo(0, H);
+    ctx.lineTo(0, baseY);
+    for (let i = 0; i <= points; i++) {
+      const x = (W / points) * i;
+      const y = baseY + Math.sin(i * 0.9 + time * 0.4) * waveAmp;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(W, H);
+    ctx.closePath();
+
+    // градиент: сверху чуть прозрачнее, снизу плотнее
+    const grad = ctx.createLinearGradient(0, baseY - waveAmp, 0, H);
+    grad.addColorStop(0, 'rgba(255,255,255,0.55)');
+    grad.addColorStop(0.4, 'rgba(255,255,255,0.75)');
+    grad.addColorStop(1, 'rgba(255,255,255,0.92)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
   // ---------- РАЗМЕР ----------
   function resize() {
     DPR = window.devicePixelRatio || 1;
@@ -6473,6 +6496,7 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
       drawRays();
     } else if (currentMode === 'snow') {
       const cfg = MODES.snow;
+      drawSnowGround();            // снег на земле — под снежинками
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.y += p.speed * dt;
@@ -6483,8 +6507,7 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
         ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
         ctx.fill();
       }
-      // поверх снега — мерцающие огоньки (только для НГ)
-      drawLights();
+      drawLights();                // огоньки — поверх снега
     } else if (currentMode === 'hearts') {
       const cfg = MODES.hearts;
       for (let i = 0; i < particles.length; i++) {
