@@ -2820,29 +2820,6 @@ function applyTheme(id) {
   updateThemeColorMeta();
 }
 
-function updateThemeColorMeta(themeId) {
-  const colors = {
-    pink:     '#ffb6d5',
-    midnight: '#1a0f2e',
-    ocean:    '#8ed4d4',
-    summer:   '#ffb89a',
-    sage:     '#a8c9a4',
-    berry:    '#d68cb8',
-    noir:     '#1a1418',
-    cottage:  '#1a2018',
-    siren:    '#f5f5f5',
-    newyear:  '#0f1a2e'
-  };
-  const color = colors[themeId] || '#ffffff';
-  let meta = document.querySelector('meta[name="theme-color"]');
-  if (!meta) {
-    meta = document.createElement('meta');
-    meta.name = 'theme-color';
-    document.head.appendChild(meta);
-  }
-  meta.setAttribute('content', color);
-}
-
 function getThemeEmoji() {
   const styles = getComputedStyle(document.documentElement);
   const get = (name) => styles.getPropertyValue(name).trim().replace(/^"|"$/g, '');
