@@ -1886,6 +1886,20 @@
   .preview-tab-icon {
     font-size: 16px; display: block; margin-bottom: 2px;
   }
+  /* ============ REDUCED MOTION ============ */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    #effectCanvas {
+      display: none !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -7505,6 +7519,11 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
   }
 
   function syncEffects() {
+    // Если пользователь просил уменьшить движение — не запускаем эффекты
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      stop();
+      return;
+    }
     const themeId = document.documentElement.getAttribute('data-theme');
     const mode = modeForTheme(themeId);
     if (mode) start(mode);
@@ -7516,6 +7535,13 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
 
   window.addEventListener('resize', () => {
     if (rafId !== null) resize();
+    // Следим за изменением prefers-reduced-motion
+  if (window.matchMedia) {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = () => syncEffects();
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else if (mq.addListener) mq.addListener(onChange); // старые браузеры
+  }
   });
 
   syncEffects();
