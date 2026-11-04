@@ -2298,6 +2298,15 @@
         <div class="preview-tab"><span class="preview-tab-icon" id="ctPreviewTabSpend">🎁</span>Потратить</div>
       </div>
     </div>
+    <div class="backup-footer" style="margin-top: 4px; margin-bottom: 8px;">
+      <button class="backup-link" id="ctShareBtn" onclick="exportCustomTheme()" style="display:none;">
+        <span>📤</span><span>Поделиться темой</span>
+      </button>
+      <button class="backup-link" onclick="importCustomTheme()">
+        <span>📥</span><span>Загрузить тему</span>
+      </button>
+    </div>
+    <input type="file" id="ctImportFile" accept=".json,application/json" style="display:none" onchange="handleCtImportFile(event)">
 
     <div class="modal-actions">
       <button class="btn btn-danger" id="ctDeleteBtn" onclick="deleteCustomTheme()" style="display:none;">🗑</button>
@@ -3182,6 +3191,7 @@ function openCustomThemeEditor() {
   _ctEditId = null;
   document.getElementById('customThemeTitle').textContent = 'Новая тема 🎨';
   document.getElementById('ctDeleteBtn').style.display = 'none';
+  document.getElementById('ctShareBtn').style.display = 'none';   // ← добавить
   fillEditorForm(defaultCustomTheme());
   document.getElementById('customThemeModal').classList.add('active');
   setTimeout(() => document.getElementById('ctName').focus(), 300);
@@ -3193,6 +3203,7 @@ function editCustomTheme(id) {
   _ctEditId = id;
   document.getElementById('customThemeTitle').textContent = 'Редактировать тему 🎨';
   document.getElementById('ctDeleteBtn').style.display = 'block';
+  document.getElementById('ctShareBtn').style.display = 'inline-flex';   // ← добавить
   fillEditorForm({ ...t });
   document.getElementById('customThemeModal').classList.add('active');
 }
@@ -3246,7 +3257,112 @@ function saveCustomTheme() {
   _ctDraft = null;
   _ctEditId = null;
 }
+function exportCustomTheme() {
+  if (!_ctEditId) return;
+  const t = state.customThemes.find(x => x.id === _ctEditId);
+  if (!t) return;
+  try {
+    // Экспортируем без id — при импорте сгенерируется новый, чтобы не конфликтовать
+    const exportData = { ...t };
+    delete exportData.id;
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const safeName = (t.name || 'theme').replace(/[^a-zа-яё0-9]+/gi, '_').slice(0, 30);
+    a.download = `princess_theme_${safeName}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast('Тема сохранена в файл 📤');
+  } catch (e) {
+    console.warn('export theme error', e);
+    showToast('Не удалось сохранить тему');
+  }
+}
 
+function importCustomTheme() {
+  document.getElementById('ctImportFile').click();
+}
+
+function handleCtImportFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      // Валидация: должен быть объект с нужными полями
+      const required = ['name','bg','card','border','text','textSoft','accent',
+                        'emojiName','emojiPoints','emojiTabToday','emojiTabRituals',
+                        'emojiTabSpend','emojiEmpty','emojiButton'];
+      const missing = required.filter(k => !(k in data));
+      if (missing.length > 0) {
+        showToast('Не тот файл');
+        e.target.value = '';
+        return;
+      }
+      // Проверка цветов (что hex валидный)
+      const colorKeys = ['bg','card','border','text','textSoft','accent'];
+      const badColor = colorKeys.find(k => !/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(data[k]));
+      if (badColor) {
+        showToast('Не тот файл');
+        e.target.value = '';
+        return;
+      }
+
+      // Проверяем, есть ли уже тема с таким именем
+      const exists = state.customThemes.find(t => t.name.trim().toLowerCase() === data.name.trim().toLowerCase());
+      if (exists) {
+        // Спрашиваем: заменить или добавить как новую
+        showConfirm(`Тема «${data.name}» уже есть. Заменить её?`, {
+          title: 'Тема существует',
+          okText: 'Заменить',
+          cancelText: 'Добавить как новую',
+          danger: false
+        }).then(ok => {
+          if (ok) {
+            // Заменить существующую
+            const idx = state.customThemes.findIndex(t => t.id === exists.id);
+            if (idx >= 0) {
+              state.customThemes[idx] = { ...data, id: exists.id };
+              if (state.activeCustomThemeId === exists.id) {
+                applyCustomTheme(state.customThemes[idx]);
+              }
+            }
+            save();
+            closeModal('customThemeModal');
+            renderThemeGrids();
+            showToast('Тема заменена 📥');
+          } else {
+            // Добавить как новую
+            const newTheme = { ...data, id: 'custom_' + uid() };
+            state.customThemes.push(newTheme);
+            save();
+            closeModal('customThemeModal');
+            renderThemeGrids();
+            showToast('Тема добавлена 📥');
+          }
+        });
+      } else {
+        // Новая тема — просто добавляем
+        const newTheme = { ...data, id: 'custom_' + uid() };
+        state.customThemes.push(newTheme);
+        save();
+        closeModal('customThemeModal');
+        renderThemeGrids();
+        showToast('Тема добавлена 📥');
+      }
+    } catch (err) {
+      console.warn('import theme error', err);
+      showToast('Не удалось загрузить тему');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
 async function deleteCustomTheme() {
   if (!_ctEditId) return;
   const ok = await showConfirm('Удалить эту тему?', {
