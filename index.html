@@ -2483,10 +2483,10 @@ const THEMES = [
 // У newyear — особый период (20.12–07.01), поэтому он обрабатывается отдельно
 // (isHolidayPeriod), а здесь — только однодневные праздники.
 const SEASONAL_THEMES = [
-  { id: 'valentine',   month: 1,  day: 14, gift: 100, giftEmoji: '❤️', effect: 'hearts',  title: 'С днём всех влюблённых!' },
-  { id: 'summerDay',   month: 5,  day: 1,  gift: 100, giftEmoji: '🥭', effect: 'rays',    title: 'С первым днём лета!' },
-  { id: 'back2school', month: 8,  day: 1,  gift: 100, giftEmoji: '🍂', effect: 'leaves',  title: 'С началом учебного года!' },
-  { id: 'halloween',   month: 9,  day: 31, gift: 100, giftEmoji: '🦇', effect: 'bats',    title: 'С Хэллоуином!' }
+  { id: 'valentine',   month: 1, day: 14, endMonth: 1, endDay: 16, gift: 100, giftEmoji: '❤️', giftMonth: 1, giftDay: 14, effect: 'hearts',  title: 'С днём всех влюблённых!' },
+  { id: 'summerDay',   month: 5, day: 1,  endMonth: 5, endDay: 7,  gift: 100, giftEmoji: '🥭', giftMonth: 5, giftDay: 1,  effect: 'rays',    title: 'С первым днём лета!' },
+  { id: 'back2school', month: 8, day: 1,  endMonth: 8, endDay: 7,  gift: 100, giftEmoji: '🍂', giftMonth: 8, giftDay: 1,  effect: 'leaves',  title: 'С началом учебного года!' },
+  { id: 'halloween',   month: 9, day: 28, endMonth: 9, endDay: 31, gift: 100, giftEmoji: '🦇', giftMonth: 9, giftDay: 31, effect: 'bats',    title: 'С Хэллоуином!' }
 ];
 const SEASONAL_GIFT_TEXTS = {
   newyear: 'Спасибо, что пользуешься моим приложением. Я надеюсь, что в следующем году оно будет и дальше мотивировать тебя становиться лучшей версией себя, шаг за шагом, ритуал за ритуалом. Вот тебе небольшой подарок, чтобы начать новый год с чего-то приятного.',
@@ -3539,7 +3539,14 @@ function getActiveSeasonalTheme(date) {
   const d = date || new Date();
   const m = d.getMonth();
   const day = d.getDate();
-  return SEASONAL_THEMES.find(t => t.month === m && t.day === day) || null;
+  const cur = m * 100 + day;
+  return SEASONAL_THEMES.find(t => {
+    const start = t.month * 100 + t.day;
+    const end = t.endMonth * 100 + t.endDay;
+    if (start <= end) return cur >= start && cur <= end;
+    // переход через год (28 дек – 5 янв) — на будущее
+    return cur >= start || cur <= end;
+  }) || null;
 }
 
 // Возвращает true, если для темы с данным id сейчас её день (или новогодний период для newyear)
@@ -6822,12 +6829,21 @@ function runStartupChecks() {
 
 function checkSeasonalGift() {
   const now = new Date();
+  const m = now.getMonth();
+  const d = now.getDate();
   let activeId = null;
-  if (isHolidayPeriod()) activeId = 'newyear';
-  else {
+
+  if (isHolidayPeriod()) {
+    // Новый год: подарок 1 января
+    if (m === 0 && d === 1) activeId = 'newyear';
+  } else {
     const active = getActiveSeasonalTheme(now);
-    if (active) activeId = active.id;
+    // Подарок только в giftDay (главный день темы)
+    if (active && active.giftMonth === m && active.giftDay === d) {
+      activeId = active.id;
+    }
   }
+
   if (!activeId) return false;
 
   const thisYear = now.getFullYear();
