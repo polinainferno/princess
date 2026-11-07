@@ -1928,6 +1928,38 @@
   
   .modal-title { font-size: 1.4rem !important; }
   .btn { font-size: 0.95rem !important; }
+  /* ============ ФИКС СЕТКИ ТЕМ ============ */
+  .theme-card {
+    min-height: 84px;       /* фиксируем минимальную высоту */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px 6px 8px;
+    box-sizing: border-box;
+  }
+  
+  .theme-emoji {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  
+  .theme-name {
+    font-size: 0.62rem;     /* делаем текст внутри карточки компактнее */
+    line-height: 1.1;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* если название длинное — поставит троеточие */
+  }
+  
+  .theme-palette {
+    gap: 2px;
+  }
+  
+  .theme-dot {
+    width: 12px;            /* уменьшаем кружочки палитры, чтобы влезали */
+    height: 12px;
+  }
 </style>
 </head>
 <body>
