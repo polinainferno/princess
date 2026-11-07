@@ -20,7 +20,10 @@
 <style>
   :root { color-scheme: light only; }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
+  /* ============ АДАПТИВНЫЕ ШРИФТЫ ============ */
+  html {
+    font-size: clamp(14px, 4.2vw, 17px); 
+  }
   :root, [data-theme="pink"] {
     --pink: #ffb6d5; --pink-deep: #ff7eb3; --pink-soft: #ffe4ef;
     --lavender: #d8c4f0; --lavender-deep: #b794e0;
@@ -705,7 +708,7 @@
 
   .habit-info { flex: 1; min-width: 0; }
   .habit-name {
-    font-weight: 700; font-size: 15px; color: var(--text);
+    font-weight: 700; font-size: 0.95rem; color: var(--text);
     margin-bottom: 3px; word-break: break-word;
     display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
@@ -1900,21 +1903,31 @@
       display: none !important;
     }
   }
-  /* ============ АДАПТАЦИЯ ШРИФТОВ ПОД БОЛЬШИЕ ЭКРАНЫ ============ */
-  /* Увеличиваем базовый размер, чтобы на устройствах с высоким DPR было комфортнее */
-  html {
-    font-size: 17px; /* было 16px */
-  }
+  /* ============ АДАПТИВНЫЕ РАЗМЕРЫ (ПЕРЕОПРЕДЕЛЕНИЕ) ============ */
+  /* Перебиваем жёсткие px на rem для адаптивности */
   
-  /* И масштабируем те элементы, которые жестко заданы в px */
-  body { font-size: 1rem; }
-  .habit-name { font-size: 16px; } /* было 15px */
-  .habit-meta { font-size: 12px; } /* было 11px */
-  .badge, .done-badge { font-size: 11px; } /* было 10-11px */
-  .tab { font-size: 11px; } /* было 10px */
-  .greeting-text { font-size: 28px; } /* было 26px */
-  .balance-value .pts-num { font-size: 48px; } /* было 44px */
-  .plan-title { font-size: 19px; } /* было 17px */
+  .greeting-text { font-size: 1.6rem !important; }
+  .balance-label { font-size: 0.75rem !important; }
+  .balance-value .pts-num { font-size: 2.75rem !important; }
+  .balance-value .pts-emoji { font-size: 1.4rem !important; }
+  .plan-title { font-size: 1.05rem !important; }
+  
+  .habit-name { font-size: 0.95rem !important; }
+  .habit-meta { font-size: 0.72rem !important; }
+  .badge { font-size: 0.68rem !important; }
+  .done-badge { font-size: 0.75rem !important; }
+  
+  .check { font-size: 1.25rem !important; }
+  .fail-btn { font-size: 0.9rem !important; }
+  
+  .tab { font-size: 0.68rem !important; }
+  .tab .icon { font-size: 1.3rem !important; }
+  
+  .add-btn { font-size: 0.9rem !important; }
+  .welcome-btn { font-size: 1rem !important; }
+  
+  .modal-title { font-size: 1.4rem !important; }
+  .btn { font-size: 0.95rem !important; }
 </style>
 </head>
 <body>
