@@ -485,7 +485,7 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
 
-  .app { max-width: 480px; margin: 0 auto; padding: 24px 18px 30px; position: relative; z-index: 2; }
+  .app { max-width: 600px; margin: 0 auto; padding: 24px 18px 30px; position: relative; z-index: 2; }
 
   .greeting-row {
     display: flex; align-items: center; justify-content: center;
@@ -1900,6 +1900,21 @@
       display: none !important;
     }
   }
+  /* ============ АДАПТАЦИЯ ШРИФТОВ ПОД БОЛЬШИЕ ЭКРАНЫ ============ */
+  /* Увеличиваем базовый размер, чтобы на устройствах с высоким DPR было комфортнее */
+  html {
+    font-size: 17px; /* было 16px */
+  }
+  
+  /* И масштабируем те элементы, которые жестко заданы в px */
+  body { font-size: 1rem; }
+  .habit-name { font-size: 16px; } /* было 15px */
+  .habit-meta { font-size: 12px; } /* было 11px */
+  .badge, .done-badge { font-size: 11px; } /* было 10-11px */
+  .tab { font-size: 11px; } /* было 10px */
+  .greeting-text { font-size: 28px; } /* было 26px */
+  .balance-value .pts-num { font-size: 48px; } /* было 44px */
+  .plan-title { font-size: 19px; } /* было 17px */
 </style>
 </head>
 <body>
