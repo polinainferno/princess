@@ -1949,37 +1949,56 @@
   .modal-title { font-size: 1.4rem !important; }
   .btn { font-size: 0.95rem !important; }
   /* ============ ФИКС СЕТКИ ТЕМ ============ */
+  .theme-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important; /* делаем отступы между карточками чуть меньше */
+  }
+  
   .theme-card {
-    aspect-ratio: 1 / 1.05;  /* карточка сама рассчитает высоту от своей ширины */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10px 6px 8px;
-    box-sizing: border-box;
-    min-height: 0; /* сбрасываем возможные старые значения */
+    min-height: 0 !important;
+    height: auto !important;
+    aspect-ratio: auto !important; /* убираем квадратность */
+    padding: 12px 4px 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    overflow: hidden !important;
   }
   
   .theme-emoji {
-    font-size: 22px;
-    margin-bottom: 4px;
+    font-size: 24px !important; /* фиксируем размер эмодзи, чтобы не раздувался */
+    line-height: 1 !important;
+    margin-bottom: 6px !important;
   }
   
   .theme-name {
-    font-size: 0.62rem;     /* делаем текст внутри карточки компактнее */
-    line-height: 1.1;
-    margin-bottom: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; /* если название длинное — поставит троеточие */
+    font-size: 0.6rem !important; /* мелкий текст, чтобы влезал */
+    line-height: 1.1 !important;
+    margin-bottom: 6px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; /* длинное название заменится на ... */
+    max-width: 100% !important;
   }
   
   .theme-palette {
-    gap: 2px;
+    gap: 3px !important;
+    flex-wrap: nowrap !important;
   }
   
   .theme-dot {
-    width: 12px;            /* уменьшаем кружочки палитры, чтобы влезали */
-    height: 12px;
+    width: 10px !important;
+    height: 10px !important;
+  }
+  
+  /* Чиним кнопку "+ Своя тема" */
+  .theme-card-add .theme-emoji {
+    font-size: 24px !important;
+    margin-bottom: 2px !important;
+  }
+  .theme-card-add .theme-name {
+    font-size: 0.55rem !important;
+    white-space: normal !important; /* разрешаем перенос на 2 строки для "Своя тема" */
   }
 </style>
 </head>
