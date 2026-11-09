@@ -725,7 +725,7 @@
   .badge.err { background: var(--err-bg); color: var(--err-color); }
 
   .check {
-    width: 44px; height: 44px; min-width: 44px;
+    width: 40px; height: 40px; min-width: 40px;
     border-radius: 50%; border: 3px solid var(--pink);
     background: var(--card-bg); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
@@ -742,7 +742,7 @@
   }
 
   .fail-btn {
-    width: 38px; height: 38px; min-width: 38px;
+    width: 34px; height: 34px; min-width: 34px;
     border-radius: 50%; border: 2px solid var(--err-color);
     background: var(--card-bg); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
@@ -1912,10 +1912,26 @@
   .balance-value .pts-emoji { font-size: 1.4rem !important; }
   .plan-title { font-size: 1.05rem !important; }
   
-  .habit-name { font-size: 0.95rem !important; }
-  .habit-meta { font-size: 0.72rem !important; }
-  .badge { font-size: 0.68rem !important; }
-  .done-badge { font-size: 0.75rem !important; }
+  /* Карточки ритуалов — адаптивный фикс */
+  .card {
+    padding: 12px 10px !important; 
+    gap: 6px !important; 
+  }
+
+  .habit-name { 
+    font-size: clamp(0.85rem, 3.5vw, 0.95rem) !important; 
+    line-height: 1.2 !important;
+  }
+  
+  .habit-meta { 
+    font-size: 0.7rem !important; 
+    gap: 4px !important; 
+  }
+  
+  .badge, .done-badge { 
+    font-size: 0.65rem !important; 
+    padding: 2px 6px !important; 
+  }
   
   .check { font-size: 1.25rem !important; }
   .fail-btn { font-size: 0.9rem !important; }
