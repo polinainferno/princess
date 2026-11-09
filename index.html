@@ -1950,12 +1950,13 @@
   .btn { font-size: 0.95rem !important; }
   /* ============ ФИКС СЕТКИ ТЕМ ============ */
   .theme-card {
-    min-height: 84px;       /* фиксируем минимальную высоту */
+    aspect-ratio: 1 / 1.05;  /* карточка сама рассчитает высоту от своей ширины */
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: 10px 6px 8px;
     box-sizing: border-box;
+    min-height: 0; /* сбрасываем возможные старые значения */
   }
   
   .theme-emoji {
