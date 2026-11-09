@@ -315,7 +315,7 @@
   }
   #splash-text {
     font-family: 'Pacifico', cursive;
-    font-size: 32px;
+    font-size: clamp(24px, 6vw, 32px);
     color: var(--pink-deep);
     text-shadow: 2px 2px 0 var(--card-bg), 0 0 30px rgba(255,126,179,0.4);
     opacity: 0;
@@ -1906,11 +1906,15 @@
   /* ============ АДАПТИВНЫЕ РАЗМЕРЫ (ПЕРЕОПРЕДЕЛЕНИЕ) ============ */
   /* Перебиваем жёсткие px на rem для адаптивности */
   
-  .greeting-text { font-size: 1.6rem !important; }
+  .greeting-text { 
+    font-size: clamp(1.1rem, 4.5vw, 1.4rem) !important; 
+  }
+  .plan-title { 
+    font-size: clamp(0.85rem, 3.5vw, 1rem) !important; 
+  }
   .balance-label { font-size: 0.75rem !important; }
   .balance-value .pts-num { font-size: 2.75rem !important; }
   .balance-value .pts-emoji { font-size: 1.4rem !important; }
-  .plan-title { font-size: 1.05rem !important; }
   
   /* Карточки ритуалов — адаптивный фикс */
   .card {
