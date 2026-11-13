@@ -1949,7 +1949,7 @@
   .modal-title { font-size: 1.4rem !important; }
   .btn { font-size: 0.95rem !important; }
   
-  /* ============ ИДЕАЛЬНАЯ СЕТКА ТЕМ (ЖЕЛЕЗОБЕТОН) ============ */
+  /* ============ ИДЕАЛЬНАЯ СЕТКА ТЕМ (АДАПТИВНАЯ) ============ */
   .theme-grid {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
@@ -1958,9 +1958,12 @@
   }
   
   .theme-card {
-    height: 105px !important; /* Жесткая высота для всех карточек */
+    /* Задаем пропорцию: ширина чуть больше высоты */
+    aspect-ratio: 1 / 1.15 !important; 
     width: 100% !important;
-    padding: 6px 2px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 8px 4px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -1969,16 +1972,16 @@
     overflow: hidden !important;
   }
   
-  /* Эмодзи по центру */
+  /* Эмодзи делаем адаптивными */
   .theme-emoji {
-    font-size: 26px !important; 
+    font-size: clamp(20px, 6vw, 26px) !important; 
     line-height: 1 !important;
     flex-shrink: 0 !important;
   }
   
-  /* Текст чуть крупнее, чтобы читался, но без переносов */
+  /* Текст делаем адаптивным */
   .theme-name {
-    font-size: 10px !important; 
+    font-size: clamp(8px, 2.5vw, 10px) !important; 
     line-height: 1.1 !important;
     text-align: center !important;
     width: 100% !important;
@@ -1992,7 +1995,7 @@
   .theme-palette {
     display: flex !important;
     justify-content: center !important;
-    gap: 2px !important;
+    gap: 3px !important;
     flex-shrink: 0 !important;
   }
   .theme-dot {
@@ -2000,21 +2003,21 @@
     height: 8px !important;
   }
 
-  /* Специально для кнопки "+" */
+  /* Кнопка "+" */
   .theme-card-add {
-    height: 105px !important;
+    aspect-ratio: 1 / 1.15 !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 2px !important;
+    gap: 4px !important;
   }
   .theme-card-add .theme-emoji {
-    font-size: 22px !important;
+    font-size: clamp(18px, 5vw, 22px) !important;
     margin: 0 !important;
   }
   .theme-card-add .theme-name {
-    font-size: 9px !important;
+    font-size: clamp(8px, 2.5vw, 10px) !important;
     white-space: normal !important;
     line-height: 1 !important;
   }
