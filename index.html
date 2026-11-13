@@ -1949,20 +1949,18 @@
   .modal-title { font-size: 1.4rem !important; }
   .btn { font-size: 0.95rem !important; }
   
-  /* ============ ИДЕАЛЬНАЯ СЕТКА ТЕМ (КВАДРАТЫ) ============ */
+  /* ============ ИДЕАЛЬНАЯ СЕТКА ТЕМ (ЖЕЛЕЗОБЕТОН) ============ */
   .theme-grid {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 10px !important;
+    gap: 8px !important;
     width: 100% !important;
   }
   
   .theme-card {
-    aspect-ratio: 1 / 1 !important; /* ИДЕАЛЬНЫЙ КВАДРАТ */
+    height: 105px !important; /* Жесткая высота для всех карточек */
     width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    padding: 8px 4px !important;
+    padding: 6px 2px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -1971,52 +1969,52 @@
     overflow: hidden !important;
   }
   
+  /* Эмодзи по центру */
   .theme-emoji {
     font-size: 26px !important; 
     line-height: 1 !important;
-    margin-top: 4px !important;
     flex-shrink: 0 !important;
   }
   
+  /* Текст чуть крупнее, чтобы читался, но без переносов */
   .theme-name {
-    font-size: 9px !important; /* Жесткий размер, чтобы не плыло */
+    font-size: 10px !important; 
     line-height: 1.1 !important;
     text-align: center !important;
     width: 100% !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    margin: 2px 0 !important;
     flex-shrink: 0 !important;
   }
   
+  /* Кружочки */
   .theme-palette {
     display: flex !important;
     justify-content: center !important;
-    gap: 3px !important;
+    gap: 2px !important;
     flex-shrink: 0 !important;
-    margin-bottom: 2px !important;
   }
-  
   .theme-dot {
     width: 8px !important;
     height: 8px !important;
   }
 
+  /* Специально для кнопки "+" */
   .theme-card-add {
-    aspect-ratio: 1 / 1 !important;
+    height: 105px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 4px !important;
+    gap: 2px !important;
   }
   .theme-card-add .theme-emoji {
     font-size: 22px !important;
     margin: 0 !important;
   }
   .theme-card-add .theme-name {
-    font-size: 8px !important;
+    font-size: 9px !important;
     white-space: normal !important;
     line-height: 1 !important;
   }
