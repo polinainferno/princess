@@ -1949,21 +1949,22 @@
   .modal-title { font-size: 1.4rem !important; }
   .btn { font-size: 0.95rem !important; }
   
-   /* ============ ИДЕАЛЬНАЯ СЕТКА ТЕМ (CONTAINER QUERIES) ============ */
+   /* ============ ИДЕАЛЬНАЯ СЕТКА ТЕМ (ФИНАЛЬНЫЙ ФИКС) ============ */
   .theme-grid {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 0.6em !important;
+    gap: 8px !important;
     width: 100% !important;
     container-type: inline-size; 
   }
   
   .theme-card {
-    aspect-ratio: 1 / 1.35 !important; /* Еще выше (было 1.25) — больше места внутри */
+    /* Увеличили пропорцию, чтобы было место под кружочки */
+    aspect-ratio: 1 / 1.45 !important; 
     width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
-    padding: 0.8em 0.2em !important; /* Уменьшили боковые отступы, чтобы сетка была шире */
+    padding: 0.8em 0.2em !important; 
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -1972,16 +1973,15 @@
     overflow: hidden !important;
   }
   
-  /* Используем cqw (container query width) — размер зависит от ширины сетки */
   .theme-emoji {
-    font-size: 9cqw !important; /* было 10cqw — чуть уменьшили */
+    font-size: 9cqw !important; 
     line-height: 1 !important;
     flex-shrink: 0 !important;
-    margin-top: 0 !important; /* убрали верхний отступ */
+    margin-top: 0.2em !important;
   }
   
   .theme-name {
-    font-size: 3.8cqw !important; /* было 4cqw — чуть уменьшили */
+    font-size: 3.8cqw !important; 
     line-height: 1.1 !important;
     text-align: center !important;
     width: 100% !important;
@@ -1989,25 +1989,26 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     flex-shrink: 0 !important;
-    margin: 0.1em 0 !important; /* добавили минимальный отступ сверху и снизу */
+    margin: 0.2em 0 !important;
   }
   
   .theme-palette {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    gap: 3cqw !important; /* Расстояние между кружочками еще больше */
+    gap: 2.5cqw !important; /* Чуть уменьшили зазор */
     flex-shrink: 0 !important;
-    margin-bottom: 0.2em !important;
+    margin-bottom: 0.5em !important; 
+    padding-bottom: 0.2em !important; 
   }
   
   .theme-dot {
-    width: 6cqw !important; /* Кружочки заметно крупнее (было 4.5cqw) */
-    height: 6cqw !important; 
+    width: 5cqw !important; /* Золотая середина: не слишком мелко, но и не выпирает */
+    height: 5cqw !important;
   }
 
   .theme-card-add {
-    aspect-ratio: 1 / 1.15 !important;
+    aspect-ratio: 1 / 1.45 !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
