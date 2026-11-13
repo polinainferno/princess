@@ -1974,14 +1974,14 @@
   
   /* Используем cqw (container query width) — размер зависит от ширины сетки */
   .theme-emoji {
-    font-size: 10cqw !important; 
+    font-size: 9cqw !important; /* было 10cqw — чуть уменьшили */
     line-height: 1 !important;
     flex-shrink: 0 !important;
-    margin-top: 0.2em !important;
+    margin-top: 0 !important; /* убрали верхний отступ */
   }
   
   .theme-name {
-    font-size: 4cqw !important; 
+    font-size: 3.8cqw !important; /* было 4cqw — чуть уменьшили */
     line-height: 1.1 !important;
     text-align: center !important;
     width: 100% !important;
@@ -1989,14 +1989,17 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     flex-shrink: 0 !important;
+    margin: 0.1em 0 !important; /* добавили минимальный отступ сверху и снизу */
   }
   
   .theme-palette {
     display: flex !important;
     justify-content: center !important;
+    align-items: center !important; /* выравниваем кружочки по центру */
     gap: 1.5cqw !important;
     flex-shrink: 0 !important;
-    margin-bottom: 0.2em !important;
+    margin-bottom: 0.4em !important; /* Добавили отступ снизу, чтобы не прилипали к краю */
+    padding-bottom: 0.2em !important; /* Еще немного места */
   }
   
   .theme-dot {
