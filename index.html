@@ -2106,6 +2106,16 @@
           <option value="once">Не повторять (один раз)</option>
         </select>
       </div>
+      
+      <!-- ▼▼▼ НОВЫЙ БЛОК ▼▼▼ -->
+      <div class="field" id="untilDoneField" style="display:none;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; text-transform:none; font-size:14px; letter-spacing:0; color:var(--text);">
+          <input type="checkbox" id="habitUntilDone" style="width:18px; height:18px; accent-color:var(--pink-deep);">
+          <span>Не скрывать, пока не выполнено</span>
+        </label>
+        <div style="font-size:11px; color:var(--text-soft); margin-top:4px; padding-left:26px;">Будет висеть в списке, пока не сделаешь</div>
+      </div>
+      <!-- ▲▲▲ КОНЕЦ НОВОГО БЛОКА ▲▲▲ -->
       <div class="field" id="multiField" style="display:none;">
         <label>Сколько раз в день</label>
         <input type="number" id="habitMulti" value="2" min="2" max="20" oninput="onMultiInput()">
@@ -3745,23 +3755,113 @@ function isHabitScheduled(habit, date) {
   const d = new Date(date); d.setHours(0,0,0,0);
   const key = dateKey(d);
 
-  // Проверка createdAt: не показывать ритуал раньше даты его создания
   if (habit.createdAt && key < habit.createdAt) return false;
 
+  // 1. Попадает ли он в расписание на СЕГОДНЯ (без учёта выполнений)?
+  let scheduledToday = false;
   switch(habit.freq) {
-    case 'daily': return true;
-    case 'multi': return true;
+    case 'daily': scheduledToday = true; break;
+    case 'multi': scheduledToday = true; break;
     case 'weekly': {
       const wd = (d.getDay() + 6) % 7;
-      return (habit.weekdays || []).includes(wd);
+      scheduledToday = (habit.weekdays || []).includes(wd);
+      break;
     }
     case 'monthly': {
       const days = habit.monthlyDays || [habit.monthlyDay || 1];
-      return days.includes(d.getDate());
+      scheduledToday = days.includes(d.getDate());
+      break;
     }
-    case 'once': return habit.onceDate === key;
-    default: return false;
+    case 'once': scheduledToday = habit.onceDate === key; break;
+    default: scheduledToday = false;
   }
+
+  // Если это обычный ритуал или "до победного" не включён — просто возвращаем результат
+  if (!habit.untilDone || habit.freq === 'daily' || habit.freq === 'multi') {
+    return scheduledToday;
+  }
+
+  // === ЛОГИКА ДЛЯ "ДО ПОБЕДНОГО" (weekly, monthly, once) ===
+
+  // Если сегодня день старта цикла — показываем в любом случае
+  if (scheduledToday) return true;
+
+  const completions = state.completions || {};
+
+  // Вспомогательная функция: выполнен ли ритуал в конкретный день?
+  const isDoneOn = (dateKeyStr) => {
+    const comp = completions[dateKeyStr];
+    if (!comp) return false;
+    if (habit.type === 'numeric') {
+      const c = comp[`num-${habit.id}`];
+      return c && c.ok;
+    }
+    return comp[`simple-${habit.id}`] === 'done';
+  };
+
+  // --- Для weekly ---
+  if (habit.freq === 'weekly') {
+    const weekdays = habit.weekdays || [];
+    if (weekdays.length === 0) return false;
+
+    // Ищем последний прошедший день из расписания (не сегодня)
+    const wdToday = (d.getDay() + 6) % 7;
+    for (let i = 1; i <= 7; i++) {
+      const prev = new Date(d);
+      prev.setDate(prev.getDate() - i);
+      const prevWd = (prev.getDay() + 6) % 7;
+      if (weekdays.includes(prevWd)) {
+        // Нашли последний день цикла. Если он НЕ выполнен — висит.
+        return !isDoneOn(dateKey(prev));
+      }
+    }
+    return false;
+  }
+
+  // --- Для monthly ---
+  if (habit.freq === 'monthly') {
+    const days = (habit.monthlyDays || [habit.monthlyDay || 1]).slice().sort((a,b)=>a-b);
+    if (days.length === 0) return false;
+    const currentDay = d.getDate();
+
+    // Ищем последнее прошедшее число в этом месяце
+    let lastDayThisMonth = null;
+    for (let i = days.length - 1; i >= 0; i--) {
+      if (days[i] < currentDay) { lastDayThisMonth = days[i]; break; }
+    }
+
+    let lastDate = null;
+    if (lastDayThisMonth !== null) {
+      lastDate = new Date(d.getFullYear(), d.getMonth(), lastDayThisMonth);
+    } else {
+      // Иначе — последнее число в прошлом месяце
+      const prevMonth = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+      const daysInPrev = new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate();
+      for (let i = days.length - 1; i >= 0; i--) {
+        if (days[i] <= daysInPrev) {
+          lastDate = new Date(prevMonth.getFullYear(), prevMonth.getMonth(), days[i]);
+          break;
+        }
+      }
+    }
+
+    if (lastDate) {
+      return !isDoneOn(dateKey(lastDate));
+    }
+    return false;
+  }
+
+  // --- Для once ---
+  if (habit.freq === 'once') {
+    if (!habit.onceDate) return false;
+    // Если дата уже прошла, а ритуал не выполнен — висит
+    if (key > habit.onceDate) {
+      return !isDoneOn(habit.onceDate);
+    }
+    return false;
+  }
+
+  return false;
 }
 
 function freqToText(h) {
@@ -3889,6 +3989,7 @@ function handleWelcomeImport(e) {
       if (state.habits) {
         state.habits.forEach(h => {
           if (h.type === 'numeric' && h.freq === 'numeric') h.freq = 'daily';
+          if (h.untilDone === undefined) h.untilDone = false;
         });
       }
       if (!state.excluded || typeof state.excluded !== 'object') {
@@ -5614,6 +5715,21 @@ function onFreqChange() {
       input.addEventListener('change', syncMonthlyFromInput);
     }
   }
+
+  // ▼▼▼ ДОБАВИТЬ ЭТОТ БЛОК ▼▼▼
+  const untilDoneField = document.getElementById('untilDoneField');
+  if (untilDoneField) {
+    // Показываем галочку только для weekly, monthly и once
+    if (f === 'weekly' || f === 'monthly' || f === 'once') {
+      untilDoneField.style.display = 'block';
+    } else {
+      untilDoneField.style.display = 'none';
+      // Если пользователь выбрал daily/multi, снимаем галочку, чтобы она не висела в памяти
+      const checkbox = document.getElementById('habitUntilDone');
+      if (checkbox) checkbox.checked = false; 
+    }
+  }
+  // ▲▲▲ КОНЕЦ БЛОКА ▲▲▲
 }
 function onMultiInput() {
   const n = parseInt(document.getElementById('habitMulti').value) || 2;
@@ -5697,6 +5813,7 @@ function openHabitModal(id) {
     document.getElementById('habitNumericUnit').value = h.numericUnit || '';
     document.getElementById('habitFreq').value = h.freq || 'daily';
     document.getElementById('habitMulti').value = h.multi || 2;
+    document.getElementById('habitUntilDone').checked = !!h.untilDone; // <--- ДОБАВИТЬ ВОТ ЭТО
     document.getElementById('habitOnceDate').value = h.onceDate || '';
     // Загружаем выбранные числа месяца
     if (h.freq === 'monthly') {
@@ -5727,6 +5844,7 @@ function openHabitModal(id) {
     document.getElementById('habitNumericUnit').value = '';
     document.getElementById('habitFreq').value = 'daily';
     document.getElementById('habitMulti').value = 2;
+    document.getElementById('habitUntilDone').checked = false; // <--- ДОБАВИТЬ ВОТ ЭТО
     document.getElementById('habitOnceDate').value = dateKey(new Date());
     const input = document.getElementById('habitMonthlyDays');
     if (input) input.value = '';
@@ -5834,6 +5952,15 @@ function buildHabitFromForm() {
 
   if (habit.freq === 'weekly' && habit.weekdays.length === 0) { showToast('Выбери хотя бы один день'); return null; }
   if (habit.freq === 'once' && !habit.onceDate) { showToast('Выбери дату'); return null; }
+
+  // ▼▼▼ СОХРАНЯЕМ ГАЛОЧКУ "ДО ПОБЕДНОГО" ▼▼▼
+  habit.untilDone = document.getElementById('habitUntilDone').checked;
+  // Для daily/multi галочка не имеет смысла (даже если каким-то образом осталась отмеченной)
+  if (habit.freq === 'daily' || habit.freq === 'multi') {
+    habit.untilDone = false;
+  }
+  // ▲▲▲ КОНЕЦ ▲▲▲
+
   return habit;
 }
 
@@ -5941,6 +6068,7 @@ function saveHabit() {
         monthlyDays: habit.monthlyDays ? habit.monthlyDays.slice() : [],
         onceDate: habit.onceDate || '',
         timeLabel: habit.timeLabel || '',
+        untilDone: habit.untilDone || false,
         numericOp: habit.numericOp,
         numericTarget: habit.numericTarget,
         numericUnit: habit.numericUnit
@@ -6381,6 +6509,7 @@ function addSelectedFromTemplate() {
       monthlyDays: r.monthlyDays ? r.monthlyDays.slice() : [],
       onceDate: r.onceDate || '',
       timeLabel: r.timeLabel || '',
+      untilDone: r.untilDone || false,
       createdAt: dateKey(new Date())
     };
     if (r.type === 'numeric') {
@@ -6634,6 +6763,7 @@ function pickTplSubtask(id) {
     monthlyDays: existing.monthlyDays ? existing.monthlyDays.slice() : [],
     onceDate: existing.onceDate || '',
     timeLabel: existing.timeLabel || '',
+    untilDone: existing.untilDone || false,
     numericOp: existing.numericOp,
     numericTarget: existing.numericTarget,
     numericUnit: existing.numericUnit
@@ -6877,6 +7007,7 @@ function handleImportFile(e) {
       if (state.habits) {
         state.habits.forEach(h => {
           if (h.type === 'numeric' && h.freq === 'numeric') h.freq = 'daily';
+          if (h.untilDone === undefined) h.untilDone = false;
         });
       }
       if (!state.excluded || typeof state.excluded !== 'object') {
