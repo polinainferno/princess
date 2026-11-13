@@ -1949,21 +1949,19 @@
   .modal-title { font-size: 1.4rem !important; }
   .btn { font-size: 0.95rem !important; }
   
-  /* ============ ИДЕАЛЬНАЯ СЕТКА ТЕМ (СТАБИЛЬНАЯ) ============ */
+  /* ============ ЖЕЛЕЗОБЕТОННАЯ СЕТКА ТЕМ ============ */
   .theme-grid {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important; /* Жесткий отступ */
+    grid-template-columns: repeat(3, 100px) !important; /* 3 колонки строго по 100 пикселей */
+    gap: 12px !important;
+    justify-content: center !important; /* Центрируем всю сетку */
     width: 100% !important;
   }
   
   .theme-card {
-    /* Чуть-чуть меньше по высоте, чем в прошлый раз (было 1.45) */
-    aspect-ratio: 1 / 1.35 !important; 
-    width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    padding: 6px 4px !important; /* Уменьшили внутренние отступы */
+    width: 100px !important;
+    height: 125px !important; /* Жесткая высота */
+    padding: 8px 4px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -1973,41 +1971,41 @@
   }
   
   .theme-emoji {
-    font-size: 22px !important; /* Фиксированный размер, чтобы не прыгало */
+    font-size: 26px !important; 
     line-height: 1 !important;
     flex-shrink: 0 !important;
-    margin-top: 2px !important;
+    margin-top: 4px !important;
   }
   
   .theme-name {
-    font-size: 9px !important; /* Читаемый, но небольшой текст */
+    font-size: 10px !important; 
     line-height: 1.1 !important;
     text-align: center !important;
     width: 100% !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    flex-shrink: 0 !important;
     margin: 2px 0 !important;
+    flex-shrink: 0 !important;
   }
   
   .theme-palette {
     display: flex !important;
     justify-content: center !important;
-    align-items: center !important;
-    gap: 4px !important; /* Стабильный отступ */
+    gap: 4px !important;
     flex-shrink: 0 !important;
-    margin-bottom: 4px !important; /* Место снизу, чтобы не обрезались */
+    margin-bottom: 4px !important; /* Место, чтобы кружочки не обрезались */
   }
   
   .theme-dot {
-    width: 10px !important; /* Кружочки чуть меньше, чтобы точно влезли */
+    width: 10px !important;
     height: 10px !important;
   }
 
   /* Кнопка "+" */
   .theme-card-add {
-    aspect-ratio: 1 / 1.35 !important;
+    width: 100px !important;
+    height: 125px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -2015,7 +2013,7 @@
     gap: 4px !important;
   }
   .theme-card-add .theme-emoji {
-    font-size: 22px !important;
+    font-size: 24px !important;
     margin: 0 !important;
   }
   .theme-card-add .theme-name {
@@ -2024,7 +2022,6 @@
     line-height: 1.1 !important;
   }
 
-  /* Иконка редактирования (карандаш) */
   .theme-card-edit {
     width: 18px !important;
     height: 18px !important;
