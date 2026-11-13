@@ -1949,22 +1949,21 @@
   .modal-title { font-size: 1.4rem !important; }
   .btn { font-size: 0.95rem !important; }
   
-   /* ============ ИДЕАЛЬНАЯ СЕТКА ТЕМ (ФИНАЛ) ============ */
+   /* ============ ИДЕАЛЬНАЯ СЕТКА ТЕМ (CONTAINER QUERIES) ============ */
   .theme-grid {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important;
+    gap: 0.6em !important; /* Отступы привязаны к шрифту */
     width: 100% !important;
-    max-width: 360px !important; /* Ограничиваем ширину сетки, чтобы на планшете она не растягивалась */
-    margin: 0 auto !important; /* Центрируем сетку */
+    container-type: inline-size; /* Включаем контейнерные запросы для этой сетки */
   }
   
   .theme-card {
-    aspect-ratio: 1 / 1.05 !important; /* Делаем чуть более квадратными */
+    aspect-ratio: 1 / 1.15 !important; /* Пропорции карточки */
     width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
-    padding: 8px 4px !important;
+    padding: 0.5em 0.2em !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -1973,16 +1972,16 @@
     overflow: hidden !important;
   }
   
-  /* Эмодзи адаптивные, но с ограничением сверху */
+  /* Используем cqw (container query width) — размер зависит от ширины сетки */
   .theme-emoji {
-    font-size: clamp(22px, 6vw, 28px) !important; 
+    font-size: 10cqw !important; 
     line-height: 1 !important;
     flex-shrink: 0 !important;
+    margin-top: 0.2em !important;
   }
   
-  /* Текст адаптивный */
   .theme-name {
-    font-size: clamp(9px, 2.5vw, 11px) !important; 
+    font-size: 4cqw !important; 
     line-height: 1.1 !important;
     text-align: center !important;
     width: 100% !important;
@@ -1992,52 +1991,55 @@
     flex-shrink: 0 !important;
   }
   
-  /* Кружочки */
   .theme-palette {
     display: flex !important;
     justify-content: center !important;
-    gap: 3px !important;
+    gap: 1.5cqw !important;
     flex-shrink: 0 !important;
+    margin-bottom: 0.2em !important;
   }
+  
   .theme-dot {
-    width: 9px !important;
-    height: 9px !important;
+    width: 3cqw !important;
+    height: 3cqw !important;
   }
 
-  /* Кнопка "+" */
   .theme-card-add {
-    aspect-ratio: 1 / 1.05 !important;
+    aspect-ratio: 1 / 1.15 !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 4px !important;
+    gap: 0.5em !important;
   }
   .theme-card-add .theme-emoji {
-    font-size: clamp(20px, 5vw, 24px) !important;
+    font-size: 10cqw !important;
     margin: 0 !important;
   }
   .theme-card-add .theme-name {
-    font-size: clamp(9px, 2.5vw, 10px) !important;
+    font-size: 4cqw !important;
     white-space: normal !important;
     line-height: 1 !important;
   }
 
   .theme-card-edit {
-    width: 18px !important;
-    height: 18px !important;
-    font-size: 10px !important;
-    top: 2px !important;
-    left: 2px !important;
+    width: 7cqw !important;
+    height: 7cqw !important;
+    font-size: 4cqw !important;
+    top: 0.3em !important;
+    left: 0.3em !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
   
-  /* ============ СТАБИЛЬНЫЕ ЗАГОЛОВКИ ============ */
+  /* ============ СТАБИЛЬНЫЕ ЗАГОЛОВКИ (АДАПТИВНЫЕ) ============ */
   .greeting-row {
-    gap: 4px !important;
-    margin-bottom: 16px !important;
+    gap: 0.5em !important;
+    margin-bottom: 1em !important;
   }
   .greeting-text {
-    font-size: 26px !important; /* Стабильный размер */
+    font-size: 7cqw !important; /* Размер зависит от ширины модалки */
     margin: 0 !important;
   }
   .greeting {
@@ -2046,14 +2048,14 @@
     align-items: center !important; 
   }
   .greeting-hint {
-    font-size: 10px !important;
-    margin-top: 2px !important;
+    font-size: 3cqw !important;
+    margin-top: 0.2em !important;
     opacity: 0.8 !important;
   }
   .plan-title {
-    font-size: 20px !important;
-    margin-top: 10px !important;
-    margin-bottom: 15px !important;
+    font-size: 5.5cqw !important;
+    margin-top: 1em !important;
+    margin-bottom: 1em !important;
   }
 </style>
 </head>
