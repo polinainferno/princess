@@ -1948,90 +1948,110 @@
   
   .modal-title { font-size: 1.4rem !important; }
   .btn { font-size: 0.95rem !important; }
-  /* ============ ФИКС СЕТКИ ТЕМ ============ */
+  
+  /* ============ ИДЕАЛЬНАЯ СЕТКА ТЕМ (КВАДРАТЫ) ============ */
   .theme-grid {
+    display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important; /* делаем отступы между карточками чуть меньше */
+    gap: 10px !important;
+    width: 100% !important;
   }
   
   .theme-card {
-    min-height: 0 !important;
+    aspect-ratio: 1 / 1 !important; /* ИДЕАЛЬНЫЙ КВАДРАТ */
+    width: 100% !important;
     height: auto !important;
-    aspect-ratio: auto !important; /* убираем квадратность */
-    padding: 12px 4px 10px !important;
+    min-height: 0 !important;
+    padding: 8px 4px !important;
     display: flex !important;
     flex-direction: column !important;
+    align-items: center !important;
     justify-content: space-between !important;
+    box-sizing: border-box !important;
     overflow: hidden !important;
   }
   
   .theme-emoji {
-    font-size: 24px !important; /* фиксируем размер эмодзи, чтобы не раздувался */
+    font-size: 26px !important; 
     line-height: 1 !important;
-    margin-bottom: 6px !important;
+    margin-top: 4px !important;
+    flex-shrink: 0 !important;
   }
   
   .theme-name {
-    font-size: 0.6rem !important; /* мелкий текст, чтобы влезал */
+    font-size: 9px !important; /* Жесткий размер, чтобы не плыло */
     line-height: 1.1 !important;
-    margin-bottom: 6px !important;
+    text-align: center !important;
+    width: 100% !important;
     white-space: nowrap !important;
     overflow: hidden !important;
-    text-overflow: ellipsis !important; /* длинное название заменится на ... */
-    max-width: 100% !important;
+    text-overflow: ellipsis !important;
+    margin: 2px 0 !important;
+    flex-shrink: 0 !important;
   }
   
   .theme-palette {
+    display: flex !important;
+    justify-content: center !important;
     gap: 3px !important;
-    flex-wrap: nowrap !important;
+    flex-shrink: 0 !important;
+    margin-bottom: 2px !important;
   }
   
   .theme-dot {
-    width: 10px !important;
-    height: 10px !important;
+    width: 8px !important;
+    height: 8px !important;
   }
-  
-  /* Чиним кнопку "+ Своя тема" */
+
+  .theme-card-add {
+    aspect-ratio: 1 / 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+  }
   .theme-card-add .theme-emoji {
-    font-size: 24px !important;
-    margin-bottom: 2px !important;
-  }
-  .theme-card-add .theme-name {
-    font-size: 0.55rem !important;
-    white-space: normal !important; /* разрешаем перенос на 2 строки для "Своя тема" */
-  }
-  /* ============ ФИНАЛЬНЫЙ ФИКС ШАПКИ ============ */
-  
-  /* 1. Имя (приветствие) — чуть больше и ближе к центру */
-  .greeting-row {
-    gap: 4px !important; /* уменьшаем зазор между именем и кнопками */
-    margin-bottom: 16px !important; 
-  }
-  .greeting-text { 
-    font-size: clamp(1.4rem, 5vw, 1.7rem) !important; /* больше, но с защитой от раздувания */
+    font-size: 22px !important;
     margin: 0 !important;
   }
-  .greeting { 
+  .theme-card-add .theme-name {
+    font-size: 8px !important;
+    white-space: normal !important;
+    line-height: 1 !important;
+  }
+
+  .theme-card-edit {
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 10px !important;
+    top: 2px !important;
+    left: 2px !important;
+  }
+  
+  /* ============ СТАБИЛЬНЫЕ ЗАГОЛОВКИ ============ */
+  .greeting-row {
+    gap: 4px !important;
+    margin-bottom: 16px !important;
+  }
+  .greeting-text {
+    font-size: 26px !important; /* Стабильный размер */
+    margin: 0 !important;
+  }
+  .greeting {
     display: flex !important; 
     flex-direction: column !important; 
     align-items: center !important; 
   }
-  /* Убираем визуальный сдвиг, если он был из-за хинта */
   .greeting-hint {
+    font-size: 10px !important;
     margin-top: 2px !important;
-  }
-
-  /* 2. "Нажми, чтобы изменить" — МЕНЬШЕ */
-  .greeting-hint {
-    font-size: 0.6rem !important; /* было 12px, стало ~10px */
     opacity: 0.8 !important;
   }
-
-  /* 3. "Вот твой план на сегодня" — БОЛЬШЕ */
-  .plan-title { 
-    font-size: clamp(1.15rem, 4.5vw, 1.4rem) !important; /* заметно крупнее */
-    margin-top: 20px !important;
-    margin-bottom: 14px !important;
+  .plan-title {
+    font-size: 20px !important;
+    margin-top: 10px !important;
+    margin-bottom: 15px !important;
   }
 </style>
 </head>
