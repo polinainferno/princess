@@ -20,6 +20,10 @@
 <style>
   :root { color-scheme: light only; }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html {
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+  }
 
   :root, [data-theme="pink"] {
     --pink: #ffb6d5; --pink-deep: #ff7eb3; --pink-soft: #ffe4ef;
@@ -1961,21 +1965,26 @@
   }
   .sort-dir-btn:active { transform: scale(0.92); }
   /* ============ ФИКС РАЗМЕРОВ ДЛЯ ГЛАВНОГО ЭКРАНА ============ */
-  .greeting-text { font-size: 26px !important; }
-  .greeting-hint { font-size: 11px !important; }
+  .greeting-text { font-size: 22px !important; }
+  .greeting-hint { font-size: 10px !important; }
   
-  .balance-value .pts-num { font-size: 44px !important; }
-  .balance-value .pts-emoji { font-size: 22px !important; }
-  .balance-label { font-size: 12px !important; }
+  .balance-value .pts-num { font-size: 36px !important; }
+  .balance-value .pts-emoji { font-size: 20px !important; }
+  .balance-label { font-size: 11px !important; }
   
-  .plan-title { font-size: 17px !important; }
+  .plan-title { font-size: 15px !important; }
   
-  .habit-name { font-size: 15px !important; }
-  .habit-meta { font-size: 11px !important; }
-  .badge { font-size: 10px !important; }
+  /* Убираем разрыв слов и делаем шрифт меньше */
+  .habit-name { 
+    font-size: 13px !important; 
+    word-break: normal !important; 
+    overflow-wrap: break-word !important;
+  }
+  .habit-meta { font-size: 10px !important; }
+  .badge { font-size: 9px !important; padding: 2px 6px !important; }
   
-  .tab { font-size: 10px !important; }
-  .tab .icon { font-size: 21px !important; }
+  .tab { font-size: 9px !important; }
+  .tab .icon { font-size: 20px !important; }
 </style>
 </head>
 <body>
