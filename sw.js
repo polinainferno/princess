@@ -1,5 +1,5 @@
 /* Princess Treatment — Service Worker */
-const CACHE_NAME = 'princess-v8';
+const CACHE_NAME = 'princess-v9';
 const ASSETS = [
   './',
   './index.html',
