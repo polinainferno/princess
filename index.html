@@ -20,12 +20,7 @@
 <style>
   :root { color-scheme: light only; }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html {
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-  }
 
-  :root, [data-theme="pink"] {
   :root, [data-theme="pink"] {
     --pink: #ffb6d5; --pink-deep: #ff7eb3; --pink-soft: #ffe4ef;
     --lavender: #d8c4f0; --lavender-deep: #b794e0;
@@ -724,38 +719,18 @@
     to { opacity: 0; transform: translateX(-120%) scale(0.95); max-height: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; }
   }
 
-  .habit-info {
-    flex: 1;
-    min-width: 0;
-    /* ▼▼▼ ДОБАВЛЯЕМ ФИКСИРОВАННУЮ ВЫСОТУ ▼▼▼ */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 44px; 
-  }
-
+  .habit-info { flex: 1; min-width: 0; }
   .habit-name {
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--text);
-    margin-bottom: 3px;
-    word-break: break-word;
-    line-height: 1.25;
+    font-weight: 700; font-size: 15px; color: var(--text);
+    margin-bottom: 3px; word-break: break-word;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
-  .habit-meta {
-    font-size: 11px;
-    color: var(--text-soft);
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
+  .done-badge {
+    font-size: 12px; background: var(--ok-bg); color: var(--ok-color);
+    padding: 2px 8px; border-radius: 10px; font-weight: 700; white-space: nowrap;
   }
-  .badge, .done-badge {
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-weight: 600;
-  }
+  .habit-meta { font-size: 11px; color: var(--text-soft); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .badge { background: var(--pink-soft); color: var(--pink-deep); padding: 2px 8px; border-radius: 10px; font-weight: 600; font-size: 10px; }
   .badge.minus { background: var(--err-bg); color: var(--err-color); }
   .badge.freq { background: var(--lavender); opacity: 0.4; color: var(--text); }
   .badge.time { background: var(--gold-soft); color: var(--gold); }
@@ -1985,15 +1960,6 @@
     justify-content: center;
   }
   .sort-dir-btn:active { transform: scale(0.92); }
-  .habit-info {
-    flex: 1; min-width: 0;
-  }
-  .habit-name {
-    font-weight: 700; font-size: 15px; color: var(--text);
-    margin-bottom: 3px; word-break: break-word;
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  }
-  .habit-meta { font-size: 11px; color: var(--text-soft); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 </style>
 </head>
 <body>
