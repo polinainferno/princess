@@ -2013,6 +2013,89 @@
   
   .tab { font-size: 9px !important; }
   .tab .icon { font-size: 20px !important; }
+  /* ============ ЖЁСТКИЙ ФИКС КАРТОЧЕК ТЕМ ============ */
+  
+  /* Сама сетка */
+  .theme-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 12px !important;
+  }
+
+  /* Карточка */
+  .theme-card {
+    aspect-ratio: 1 / 1.2 !important; /* Жесткая пропорция: чуть выше квадрата */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important; /* Распределяет элементы: эмодзи вверх, кружки вниз */
+    align-items: center !important;
+    padding: 8px 2px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+  }
+
+  /* Эмодзи */
+  .theme-card .theme-emoji {
+    font-size: 22px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Название */
+  .theme-card .theme-name {
+    font-size: 9px !important; /* Жестко 9 пикселей */
+    line-height: 1.1 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; /* Если не влезает — троеточие */
+    flex-shrink: 0 !important;
+  }
+
+  /* Кружочки палитры */
+  .theme-card .theme-palette {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .theme-card .theme-dot {
+    width: 9px !important; 
+    height: 9px !important;
+    border-radius: 50% !important; /* Гарантирует, что они круглые */
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Кнопка "+ Своя тема" */
+  .theme-card-add {
+    aspect-ratio: 1 / 1.2 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+  }
+  .theme-card-add .theme-emoji {
+    font-size: 22px !important;
+    margin: 0 !important;
+  }
+  .theme-card-add .theme-name {
+    font-size: 9px !important;
+    margin: 0 !important;
+    white-space: normal !important;
+    line-height: 1.1 !important;
+  }
 </style>
 </head>
 <body>
