@@ -1978,6 +1978,14 @@
     justify-content: center;
   }
   .sort-dir-btn:active { transform: scale(0.92); }
+  /* ============ ЖЁСТКАЯ ФИКСАЦИЯ ШРИФТОВ ============ */
+  body, .habit-name, .habit-meta, .badge, .done-badge, .plan-title, .greeting-text, .balance-value .pts-num, .tab {
+    -webkit-text-size-adjust: 100% !important; /* Запрещает браузеру (особенно iOS/Android) самовольно менять размер текста */
+    text-size-adjust: 100% !important;
+  }
+  .habit-name { font-size: 15px !important; }
+  .habit-meta { font-size: 11px !important; }
+  .badge, .done-badge { font-size: 10px !important; }
 </style>
 </head>
 <body>
