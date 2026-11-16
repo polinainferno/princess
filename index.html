@@ -1916,6 +1916,50 @@
       display: none !important;
     }
   }
+  /* ============ ПАНЕЛЬ СОРТИРОВКИ РИТУАЛОВ ============ */
+  .sort-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    background: var(--pink-soft);
+    padding: 4px;
+    border-radius: 16px;
+    align-items: center;
+  }
+  .sort-btn {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    color: var(--pink-deep);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sort-btn.active {
+    background: var(--card-bg);
+    box-shadow: 0 2px 8px var(--glow-soft);
+  }
+  .sort-dir-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    border: none;
+    background: var(--card-bg);
+    color: var(--pink-deep);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sort-dir-btn:active { transform: scale(0.92); }
 </style>
 </head>
 <body>
@@ -1985,6 +2029,15 @@
       <div class="plan-title">Твои ритуалы ✨</div>
       <button class="stat-btn" onclick="openStats()" title="Статистика">📊</button>
     </div>
+
+    <!-- ▼▼▼ НОВАЯ ПАНЕЛЬ СОРТИРОВКИ ▼▼▼ -->
+    <div class="sort-bar" id="ritualSortBar" style="display:none;">
+      <button class="sort-btn active" data-sort="freq" onclick="setRitualSort('freq')">По частоте</button>
+      <button class="sort-btn" data-sort="alpha" onclick="setRitualSort('alpha')">По алфавиту</button>
+      <button class="sort-dir-btn" id="sortDirBtn" onclick="toggleRitualSortDir()" title="Изменить направление">↓</button>
+    </div>
+    <!-- ▲▲▲ КОНЕЦ ПАНЕЛИ ▲▲▲ -->
+
     <div id="ritualsList"></div>
     <button class="templates-btn" onclick="openTemplatesModal()"><span>📋</span><span>Шаблоны</span></button>
     <button class="add-btn" onclick="openHabitModal()">+ Добавить новый ритуал</button>
@@ -4908,13 +4961,60 @@ function triggerCompleteFromSwipe(card, dayKey) {
 function renderRituals() {
   const list = document.getElementById('ritualsList');
   const e = getThemeEmoji();
+  const sortBar = document.getElementById('ritualSortBar');
+  
   if (state.habits.length === 0) {
     list.innerHTML = `<div class="empty"><span class="emoji">${e.empty}</span>Пока ничего нет.</div>`;
+    if (sortBar) sortBar.style.display = 'none';
     return;
   }
+
+  // Показываем панель сортировки, если ритуалов больше одного
+  if (sortBar) {
+    sortBar.style.display = state.habits.length > 1 ? 'flex' : 'none';
+    // Обновляем активную кнопку
+    sortBar.querySelectorAll('.sort-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.sort === ritualSort);
+    });
+    // Обновляем стрелочку направления
+    const dirBtn = document.getElementById('sortDirBtn');
+    if (dirBtn) dirBtn.textContent = ritualSortAsc ? '↑' : '↓';
+  }
+
+  // Логика частоты (чем чаще, тем выше вес)
+  function getFreqWeight(h) {
+    switch (h.freq) {
+      case 'daily': return 5;
+      case 'multi': return 4;
+      case 'weekly': return 3;
+      case 'monthly': return 2;
+      case 'once': return 1;
+      default: return 0;
+    }
+  }
+
+  // Сортировка
+  const sorted = state.habits.slice().sort((a, b) => {
+    let res = 0;
+    if (ritualSort === 'alpha') {
+      res = a.name.localeCompare(b.name, 'ru');
+    } else {
+      const wa = getFreqWeight(a);
+      const wb = getFreqWeight(b);
+      if (wa !== wb) {
+        res = wb - wa;
+      } else {
+        res = a.name.localeCompare(b.name, 'ru');
+      }
+    }
+    return ritualSortAsc ? -res : res;
+  });
+
   const today = new Date();
   const key = dateKey(today);
-  list.innerHTML = state.habits.map(h => {
+  
+  // Отрисовка карточек (код полностью сохранён как был)
+  list.innerHTML = sorted.map(h => {
     let doneBadge = '';
     if (h.type === 'numeric') {
       const comp = (state.completions[key] || {})[`num-${h.id}`];
@@ -4948,6 +5048,22 @@ function renderRituals() {
   }).join('');
 }
 
+function setRitualSort(type) {
+  if (ritualSort === type) {
+    // Если кликнули на уже активную — меняем направление
+    ritualSortAsc = !ritualSortAsc;
+  } else {
+    ritualSort = type;
+    // По умолчанию: для частоты — убывание (частые наверх), для алфавита — возрастание (А→Я)
+    ritualSortAsc = (type === 'alpha');
+  }
+  renderRituals();
+}
+
+function toggleRitualSortDir() {
+  ritualSortAsc = !ritualSortAsc;
+  renderRituals();
+}
 /* ========== SPEND ========== */
 function renderSpend() {
   const list = document.getElementById('rewardList');
@@ -5437,6 +5553,8 @@ let habitEditMode = 'main';
 let tplEditingIndex = -1;
 let suggestionsEnabled = false; // включаем подсказки только в «Сегодня»
 const monthlyDaysSelected = new Set(); // выбранные числа месяца
+let ritualSort = 'freq';    // 'freq' или 'alpha'
+let ritualSortAsc = false;  // false = по убыванию, true = по возрастанию
 
 // ========== MINI CALENDAR (для monthly) ==========
 function renderMiniCalendar() {
