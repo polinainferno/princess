@@ -297,6 +297,35 @@
     --glow: rgba(232, 128, 48, 0.5);
     --glow-soft: rgba(232, 128, 48, 0.22);
   }
+    [data-theme="april_hack"] {
+    --pink: #00ff00; --pink-deep: #00cc00; --pink-soft: #003300;
+    --lavender: #00aa00; --lavender-deep: #00ff00;
+    --gold: #00ff00; --gold-soft: #003300;
+    --text: #00ff00; --text-soft: #00aa00;
+    --bg1: #000000; --bg2: #050505; --bg3: #0a0a0a;
+    --card-bg: #0a0a0a; --card-border: #00ff00; --modal-bg: #0a0a0a;
+    --shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+    --card-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+    --balance-bg: linear-gradient(135deg, #000000 0%, #001a00 100%);
+    --emoji-name: "👾"; --emoji-points: "💻";
+    --emoji-tab-today: "💀"; --emoji-tab-rituals: "📟"; --emoji-tab-spend: "💾";
+    --emoji-empty: "⚠️"; --emoji-button: "🔓";
+    --ok-color: #00ff00; --ok-bg: #003300;
+    --err-color: #ff0000; --err-bg: #330000;
+    --bday-outline: #00ff00; --bday-text: #00ff00; --bday-bg: #003300;
+    --glow: rgba(0, 255, 0, 0.5);
+    --glow-soft: rgba(0, 255, 0, 0.2);
+  }
+  
+  /* Делаем шрифт моноширинным для всего приложения в этой теме */
+  [data-theme="april_hack"] body,
+  [data-theme="april_hack"] .greeting-text,
+  [data-theme="april_hack"] .plan-title,
+  [data-theme="april_hack"] .balance-value,
+  [data-theme="april_hack"] .habit-name,
+  [data-theme="april_hack"] .tab {
+    font-family: 'Courier New', Courier, monospace !important;
+  }
    /* ============ SPLASH SCREEN ============ */
   #splash {
     position: fixed;
@@ -1284,6 +1313,9 @@
     z-index: 700;
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     pointer-events: none;
+    max-width: 90vw;
+    text-align: center;
+    line-height: 1.4;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
   .undo-toast {
@@ -1341,24 +1373,15 @@
     display: none;
     align-items: center;
     justify-content: center;
-    pointer-events: none;
+    pointer-events: none; /* Слой не перехватывает клики */
     padding: 24px;
   }
   .all-done-overlay.active {
     display: flex;
   }
   .all-done-card {
-    background: var(--balance-bg);
-    border: 3px solid var(--card-bg);
-    border-radius: 32px;
-    padding: 36px 28px;
-    text-align: center;
-    box-shadow: 0 20px 60px var(--glow);
-    max-width: 380px;
-    width: 100%;
-    animation: allDoneIn 0.5s cubic-bezier(0.34, 1.5, 0.64, 1);
-    position: relative;
-    overflow: hidden;
+    /* ... (остальные стили карточки оставь как были) ... */
+    pointer-events: auto; /* Сама карточка перехватывает клики */
   }
   .all-done-card::before {
     content: "";
@@ -2096,6 +2119,22 @@
     white-space: normal !important;
     line-height: 1.1 !important;
   }
+  /* Фиксы для хакерской темы */
+  [data-theme="april_hack"] .greeting-text,
+  [data-theme="april_hack"] .plan-title,
+  [data-theme="april_hack"] .balance-label {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  [data-theme="april_hack"] .btn-primary,
+  [data-theme="april_hack"] .add-btn,
+  [data-theme="april_hack"] .buy-btn {
+    background: #000 !important;
+    border: 2px solid #00ff00 !important;
+    color: #00ff00 !important;
+    box-shadow: none !important;
+    text-transform: uppercase;
+  }
 </style>
 </head>
 <body>
@@ -2442,6 +2481,9 @@
       <input type="text" class="faq-search" id="faqSearch" placeholder="Поиск по вопросам..." autocomplete="off" oninput="filterFaq()">
     </div>
     <div class="faq-list" id="faqList"></div>
+    <!-- ▼▼▼ КЛЮЧ В FAQ ▼▼▼ -->
+    <div id="key-slot-faq" style="text-align: center; margin-top: 10px; padding-bottom: 10px;"></div>
+    <!-- ▲▲▲ КОНЕЦ ▲▲▲ -->
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="closeModal('faqModal')">Закрыть <span class="btn-emoji">💕</span></button>
     </div>
@@ -2797,7 +2839,7 @@ const FAQ_DATA = [
     items: [
       {
         q: 'Откуда берутся баллы?',
-        a: 'За каждый выполненный ритуал своя сумма (указана на карточке). За провал списывается столько же. Подарки: 100 за регистрацию, 1000 на день рождения, 100 за возвращение после долгого отсутствия. ' + renderAprilKey('faq', 'dim-key'),
+        a: 'За каждый выполненный ритуал своя сумма (указана на карточке). За провал списывается столько же. Подарки: 100 за регистрацию, 1000 на день рождения, 100 за возвращение после долгого отсутствия.',
         k: ['баллы', 'начислить', 'заработать', 'подарок', 'бонус']
       },
       {
@@ -3021,6 +3063,10 @@ function renderFaq() {
   }
 
   list.innerHTML = html;
+  const faqKeySlot = document.getElementById('key-slot-faq');
+  if (faqKeySlot) {
+    faqKeySlot.innerHTML = renderAprilKey('faq', 'dim-key');
+  }
 }
 
 function toggleFaqItem(key) {
@@ -3901,7 +3947,6 @@ function showAllDone() {
   if (keySlot) {
     keySlot.innerHTML = renderAprilKey('allDone', 'bright-key');
   }
-
   overlay.classList.remove('active', 'closing');
   void overlay.offsetWidth;
   overlay.classList.add('active');
@@ -3963,17 +4008,22 @@ function findAprilKey(keyId, element) {
 function claimAprilReward() {
   addBalance(100);
   addHistoryPoint('gift', 'Взлом системы (1 апреля)', +100);
-  save(); updateBalance();
+  
+  // Возвращаем обычную тему
+  state.theme = state.themeBeforeHoliday || 'pink';
+  state.themeBeforeHoliday = '';
+  save();
+  applyTheme(state.theme);
+  
+  updateBalance();
   closeModal('aprilFinalModal');
   showToast(`+100 ${getThemeEmoji().points} Доступ восстановлен!`);
 }
 
 function renderAprilKey(keyId, extraClasses = '') {
   if (!isAprilFools()) return '';
-  const found = getAprilKeysFound();
-  if (found.includes(keyId)) return ''; // Если уже найден — не рендерим
-
-  return `<span class="april-key ${extraClasses}" onclick="event.stopPropagation(); findAprilKey('${keyId}', this)">🔑</span>`;
+  // Убрали проверку found.includes(keyId) — теперь ключ рендерится всегда, если не найден
+  return `<span class="april-key ${extraClasses}" onclick="event.stopPropagation(); findAprilKey('${keyId}', this)" style="display: inline-block; cursor: pointer;">🔑</span>`;
 }
 function isHolidayPeriod() {
   const now = new Date();
@@ -7567,6 +7617,9 @@ load();
 
 // Определяем, какую тему применить при старте
 function resolveInitialTheme() {
+  if (isAprilFools() && getAprilKeysFound().length < 5) {
+    return 'april_hack';
+  }
   const currentYear = new Date().getFullYear();
   const savedTheme = state.theme || 'pink';
 
