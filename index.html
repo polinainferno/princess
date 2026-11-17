@@ -2140,16 +2140,25 @@
     background: #000000 !important;
     border: 2px solid #00ff00 !important;
     box-shadow: 0 0 30px rgba(0, 255, 0, 0.3) !important;
+    padding: 35px 25px !important; /* Больше воздуха внутри */
+    text-align: center !important; /* Выравниваем весь текст по центру */
   }
+  
   [data-theme="april_hack"] .all-done-title {
     color: #00ff00 !important;
     font-family: 'Courier New', monospace !important;
     text-transform: uppercase !important;
     text-shadow: 0 0 10px #00ff00 !important;
+    margin-bottom: 20px !important; /* Отступ от заголовка до текста */
+    line-height: 1.4 !important;
   }
+  
   [data-theme="april_hack"] .all-done-subtitle {
     color: #aaffaa !important;
     font-family: 'Courier New', monospace !important;
+    font-size: 16px !important;
+    margin-bottom: 25px !important; /* Отступ от текста до ключа */
+    display: block !important;
   }
   /* Убираем зеленые пятна с фона карточки */
   [data-theme="april_hack"] .all-done-card::before,
@@ -2763,8 +2772,8 @@
   <div class="all-done-card">
     <div class="all-done-title">Все ритуалы на сегодня выполнены</div>
     <div class="all-done-subtitle">Отличная работа!</div>
-    <!-- ▼▼▼ КЛЮЧ ВНИЗУ, ПО ЦЕНТРУ ▼▼▼ -->
-    <div id="key-slot-allDone" style="margin-top: 20px; text-align: center; min-height: 30px;"></div>
+    <!-- Ключ должен быть здесь, отдельным блоком -->
+    <div id="key-slot-allDone" style="margin-top: 10px; text-align: center; min-height: 30px;"></div>
   </div>
 </div>
 
