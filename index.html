@@ -4022,7 +4022,9 @@ function claimAprilReward() {
 
 function renderAprilKey(keyId, extraClasses = '') {
   if (!isAprilFools()) return '';
-  // Убрали проверку found.includes(keyId) — теперь ключ рендерится всегда, если не найден
+  const found = getAprilKeysFound();
+  if (found.includes(keyId)) return ''; // Если ключ уже найден, ничего не рисуем
+  
   return `<span class="april-key ${extraClasses}" onclick="event.stopPropagation(); findAprilKey('${keyId}', this)" style="display: inline-block; cursor: pointer;">🔑</span>`;
 }
 function isHolidayPeriod() {
