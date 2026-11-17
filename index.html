@@ -2165,6 +2165,48 @@
   [data-theme="april_hack"] .all-done-card::after {
     display: none !important;
   }
+  /* ============ ВОЗВРАЩАЕМ КАРТОЧКЕ "ВСЕ ВЫПОЛНЕНО" НОРМАЛЬНЫЙ ВИД ============ */
+  .all-done-card {
+    background: var(--balance-bg) !important;
+    border: 3px solid var(--card-bg) !important;
+    box-shadow: 0 20px 60px var(--glow) !important;
+    border-radius: 32px !important;
+    padding: 36px 28px !important;
+    text-align: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+    max-width: 380px !important;
+    width: 100% !important;
+  }
+
+  /* Убираем старые зеленые пятна с фона карточки во всех темах */
+  .all-done-card::before,
+  .all-done-card::after {
+    display: none !important;
+  }
+
+  /* ============ А ЭТО ТОЛЬКО ДЛЯ ХАКЕРСКОЙ ТЕМЫ ============ */
+  [data-theme="april_hack"] .all-done-card {
+    background: #000000 !important;
+    border: 2px solid #00ff00 !important;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3) !important;
+    padding: 35px 25px !important;
+  }
+  [data-theme="april_hack"] .all-done-title {
+    color: #00ff00 !important;
+    font-family: 'Courier New', monospace !important;
+    text-transform: uppercase !important;
+    text-shadow: 0 0 10px #00ff00 !important;
+    margin-bottom: 20px !important;
+    line-height: 1.4 !important;
+  }
+  [data-theme="april_hack"] .all-done-subtitle {
+    color: #aaffaa !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 16px !important;
+    margin-bottom: 25px !important;
+    display: block !important;
+  }
 </style>
 </head>
 <body>
