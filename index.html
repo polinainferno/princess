@@ -2134,6 +2134,7 @@
 <input type="file" id="welcomeImportFile" accept=".json,application/json" style="display:none" onchange="handleWelcomeImport(event)">
 
 <div class="app">
+  <div id="key-slot-bg" style="position: absolute; top: 10px; right: 15px; z-index: 0; pointer-events: auto; opacity: 0.4;"></div>
 <div class="greeting-row">
   <div class="greeting" id="greetingWrap">
     <div class="greeting-text" id="greetingText" onclick="editName()">Имя <span id="greetingEmoji">💕</span></div>
@@ -2221,7 +2222,35 @@
     <button class="tab" data-tab="calendar" onclick="switchTab('calendar')"><span class="icon">📅</span>Календарь</button>
   </div>
 </div>
-
+<!-- 🕵️‍♀️ Первоапрельский взлом -->
+<div class="gift-overlay" id="aprilHackModal">
+  <div class="gift-modal" style="border-color: #00ff00; box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);">
+    <div class="gift-emoji" style="font-size: 40px; animation: none;">👾</div>
+    <div class="gift-title" style="color: #00ff00; font-family: monospace; font-size: 22px; text-transform: uppercase; text-shadow: 0 0 10px #00ff00;">System Hacked</div>
+    <div class="gift-text" style="font-family: monospace; color: #aaffaa; text-align: left; font-size: 14px; line-height: 1.6; background: #000; padding: 15px; border-radius: 10px; border: 1px solid #00ff00; margin-bottom: 20px;">
+      > СИСТЕМА ВЗЛОМАНА.<br>
+      > ТВОИ ДАННЫЕ ЗАШИФРОВАНЫ.<br>
+      > МЫ СПРЯТАЛИ 5 КЛЮЧЕЙ.<br>
+      > НАЙДИ ИХ ВСЕ, И МЫ ОТСТУПИМ.<br>
+      > ИНАЧЕ ТВОИ БАЛЛЫ БУДУТ УДАЛЕНЫ.
+    </div>
+    <button class="gift-btn" style="background: #000; color: #00ff00; border: 2px solid #00ff00; font-family: monospace; box-shadow: none;" onclick="closeModal('aprilHackModal')">ПРИНЯТЬ ВЫЗОВ</button>
+  </div>
+</div>
+<!-- 🕵️‍♀️ Финальная модалка взлома -->
+<div class="gift-overlay" id="aprilFinalModal">
+  <div class="gift-modal" style="border-color: #00ff00; box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);">
+    <div class="gift-emoji" style="font-size: 40px; animation: none;">🔓</div>
+    <div class="gift-title" style="color: #00ff00; font-family: monospace; font-size: 22px; text-transform: uppercase; text-shadow: 0 0 10px #00ff00;">Access Granted</div>
+    <div class="gift-text" style="font-family: monospace; color: #aaffaa; text-align: left; font-size: 14px; line-height: 1.6; background: #000; padding: 15px; border-radius: 10px; border: 1px solid #00ff00; margin-bottom: 20px;">
+      > ВСЕ КЛЮЧИ НАЙДЕНЫ.<br>
+      > СИСТЕМА ОТСТУПИЛА.<br>
+      > ТВОИ ДАННЫЕ В БЕЗОПАСНОСТИ.<br>
+      > ВОТ ТВОЯ НАГРАДА ЗА ВЗЛОМ: 100 БАЛЛОВ.
+    </div>
+    <button class="gift-btn" style="background: #000; color: #00ff00; border: 2px solid #00ff00; font-family: monospace; box-shadow: none;" onclick="claimAprilReward()">ЗАБРАТЬ НАГРАДУ</button>
+  </div>
+</div>
 <!-- Name+Bday modal -->
 <div class="modal-overlay" id="nameModal">
   <div class="modal">
@@ -2526,6 +2555,7 @@
         <div class="preview-tab"><span class="preview-tab-icon" id="ctPreviewTabRituals">🎀</span>Ритуалы</div>
         <div class="preview-tab"><span class="preview-tab-icon" id="ctPreviewTabSpend">🎁</span>Потратить</div>
       </div>
+      <div id="key-slot-preview" style="text-align: center; margin-top: 10px; font-size: 18px; height: 20px;"></div>
     </div>
     <div class="backup-footer" style="margin-top: 4px; margin-bottom: 8px;">
       <button class="backup-link" id="ctShareBtn" onclick="exportCustomTheme()" style="display:none;">
@@ -2670,6 +2700,8 @@
   <div class="all-done-card">
     <div class="all-done-title">Все ритуалы на сегодня выполнены</div>
     <div class="all-done-subtitle">Отличная работа!</div>
+    <!-- ▼▼▼ МЕСТО ДЛЯ КЛЮЧА ▼▼▼ -->
+    <div id="key-slot-allDone" style="margin-top: 15px; font-size: 24px; min-height: 24px;"></div>
   </div>
 </div>
 
@@ -2765,7 +2797,7 @@ const FAQ_DATA = [
     items: [
       {
         q: 'Откуда берутся баллы?',
-        a: 'За каждый выполненный ритуал своя сумма (указана на карточке). За провал списывается столько же. Подарки: 100 за регистрацию, 1000 на день рождения, 100 за возвращение после долгого отсутствия.',
+        a: 'За каждый выполненный ритуал своя сумма (указана на карточке). За провал списывается столько же. Подарки: 100 за регистрацию, 1000 на день рождения, 100 за возвращение после долгого отсутствия. ' + renderAprilKey('faq', 'dim-key'),
         k: ['баллы', 'начислить', 'заработать', 'подарок', 'бонус']
       },
       {
@@ -3433,6 +3465,10 @@ function updateCtPreview() {
   } else {
     warn.classList.remove('show');
   }
+  const previewKeySlot = document.getElementById('key-slot-preview');
+  if (previewKeySlot) {
+    previewKeySlot.innerHTML = renderAprilKey('preview', 'dim-key');
+  }
 }
 
 function openCustomThemeEditor() {
@@ -3860,13 +3896,16 @@ function showAllDone() {
   const overlay = document.getElementById('allDoneOverlay');
   if (!overlay) return;
 
-  // Если уже показано — сначала сбрасываем
+  // Вставляем ключ в контейнер (если он ещё не найден)
+  const keySlot = document.getElementById('key-slot-allDone');
+  if (keySlot) {
+    keySlot.innerHTML = renderAprilKey('allDone', 'bright-key');
+  }
+
   overlay.classList.remove('active', 'closing');
-  // Форсируем перерисовку для повторной анимации
   void overlay.offsetWidth;
   overlay.classList.add('active');
 
-  // Через 2 секунды — плавно скрываем
   clearTimeout(overlay._t1);
   clearTimeout(overlay._t2);
   overlay._t1 = setTimeout(() => {
@@ -3885,6 +3924,56 @@ function dateKey(d) {
   const m = String(d.getMonth()+1).padStart(2,'0');
   const day = String(d.getDate()).padStart(2,'0');
   return `${y}-${m}-${day}`;
+}
+function isAprilFools() {
+  const now = new Date();
+  return now.getMonth() === 3 && now.getDate() === 1; // Месяцы считаются с 0, поэтому 3 — это апрель
+}
+
+function getAprilKeysFound() {
+  if (!state.aprilKeysFound) state.aprilKeysFound = [];
+  return state.aprilKeysFound;
+}
+function findAprilKey(keyId, element) {
+  if (!isAprilFools()) return;
+  
+  const found = getAprilKeysFound();
+  if (found.includes(keyId)) return; // Уже найден
+
+  // Добавляем в найденные
+  found.push(keyId);
+  save(); // Сохраняем в localStorage
+
+  // Скрываем элемент (исчезает)
+  if (element) {
+    element.style.display = 'none';
+  }
+
+  // Показываем тост
+  if (found.length < 5) {
+    showToast(`Ключ доступа ${found.length}/5 восстановлен...`);
+  }
+
+  // Если нашли все 5 — показываем финальную модалку
+  if (found.length >= 5) {
+    document.getElementById('aprilFinalModal').classList.add('active');
+  }
+}
+
+function claimAprilReward() {
+  addBalance(100);
+  addHistoryPoint('gift', 'Взлом системы (1 апреля)', +100);
+  save(); updateBalance();
+  closeModal('aprilFinalModal');
+  showToast(`+100 ${getThemeEmoji().points} Доступ восстановлен!`);
+}
+
+function renderAprilKey(keyId, extraClasses = '') {
+  if (!isAprilFools()) return '';
+  const found = getAprilKeysFound();
+  if (found.includes(keyId)) return ''; // Если уже найден — не рендерим
+
+  return `<span class="april-key ${extraClasses}" onclick="event.stopPropagation(); findAprilKey('${keyId}', this)">🔑</span>`;
 }
 function isHolidayPeriod() {
   const now = new Date();
@@ -4418,7 +4507,10 @@ function renderToday() {
   const list = document.getElementById('todayList');
   const bdayNote = document.getElementById('todayBdayNote');
   const e = getThemeEmoji();
-
+  const bgKeySlot = document.getElementById('key-slot-bg');
+  if (bgKeySlot) {
+    bgKeySlot.innerHTML = renderAprilKey('bg', 'dim-key');
+  }
   if (state.birthday) {
     const bd = new Date(state.birthday);
     const sameDay = today.getDate() === bd.getDate() && today.getMonth() === bd.getMonth();
@@ -5391,7 +5483,9 @@ function renderCalDayList() {
         </div>
       `;
     }).join('');
-    list.innerHTML = noteHtml + itemsHtml;
+    // ▼▼▼ ДОБАВЛЯЕМ КЛЮЧ В КОНЕЦ СПИСКА ▼▼▼
+    const aprilKeyHtml = `<div style="text-align: center; margin-top: 15px; font-size: 20px;">${renderAprilKey('calendar', 'dim-key')}</div>`;
+    list.innerHTML = noteHtml + itemsHtml + aprilKeyHtml;
   }
   // Блок добавления — только для сегодня и будущих
   const addSection = document.getElementById('calAddSection');
@@ -7371,6 +7465,12 @@ function neverRemindBackup() {
 
 /* ========== STARTUP CHECKS ========== */
 function runStartupChecks() {
+  // 1 апреля показываем хакерскую модалку
+  if (isAprilFools() && getAprilKeysFound().length < 5) {
+    document.getElementById('aprilHackModal').classList.add('active');
+    return; // не показываем другие подарки в этот день, чтобы не смешивать
+  }
+
   if (checkBirthday()) return;
   if (checkReturn()) return;
   if (checkSeasonalGift()) return;
