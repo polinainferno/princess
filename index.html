@@ -2232,33 +2232,6 @@
     margin-bottom: 25px !important;
     display: block !important;
   }
-  
-  /* ============ ВЕКТОРНЫЕ ИКОНКИ ============ */
-  .svg-icon {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    background-color: currentColor; /* Берет цвет текста родителя */
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    mask-position: center;
-    vertical-align: middle;
-  }
-  
-  /* Иконка алмаза (для баллов) */
-  .svg-diamond {
-    -webkit-mask-image: url('icon-diamond.png');
-    mask-image: url('icon-diamond.png');
-  }
-  
-  /* Иконка солнца (для вкладки) */
-  .svg-sun {
-    -webkit-mask-image: url('icon-sun.png');
-    mask-image: url('icon-sun.png');
-  }
 </style>
 </head>
 <body>
@@ -2311,7 +2284,7 @@
     <div class="balance-label">Твои баллы</div>
     <div class="balance-value" id="balanceValue">
       <span class="pts-num">0</span>
-            <span class="svg-icon svg-diamond" id="balanceEmoji" style="width: 24px; height: 24px; margin-bottom: 4px;"></span>
+      <span class="pts-emoji" id="balanceEmoji">💖</span>
     </div>
   </div>
 
@@ -2377,7 +2350,7 @@
 
 <div class="tabs">
   <div class="tabs-inner">
-    <span class="icon" id="tabIconToday"><span class="svg-icon svg-sun" style="width: 22px; height: 22px;"></span></span>
+    <button class="tab active" data-tab="today" onclick="switchTab('today')"><span class="icon" id="tabIconToday">🏠</span>Сегодня</button>
     <button class="tab" data-tab="rituals" onclick="switchTab('rituals')"><span class="icon" id="tabIconRituals">🎀</span>Ритуалы</button>
     <button class="tab" data-tab="spend" onclick="switchTab('spend')"><span class="icon" id="tabIconSpend">🎁</span>Потратить</button>
     <button class="tab" data-tab="calendar" onclick="switchTab('calendar')"><span class="icon">📅</span>Календарь</button>
@@ -3260,6 +3233,8 @@ function refreshThemeEmoji() {
   if (gE) gE.textContent = e.name;
   const bE = document.getElementById('balanceEmoji');
   if (bE) bE.textContent = e.points;
+  const tT = document.getElementById('tabIconToday');
+  if (tT) tT.textContent = e.tabToday;
   const tR = document.getElementById('tabIconRituals');
   if (tR) tR.textContent = e.tabRituals;
   const tS = document.getElementById('tabIconSpend');
@@ -4365,9 +4340,9 @@ function freqToText(h) {
 
 /* ========== BALANCE / GREETING ========== */
 function updateBalance() {
-  // Оставляем иконку, просто обновляем цифру
+  const e = getThemeEmoji();
   document.getElementById('balanceValue').innerHTML = 
-    `<span class="pts-num">${state.balance}</span> <span class="svg-icon svg-diamond" style="width: 24px; height: 24px; margin-left: 8px; margin-bottom: 4px;"></span>`;
+    `<span class="pts-num">${state.balance}</span> <span class="pts-emoji" id="balanceEmoji">${e.points}</span>`;
 }
 function renderGreeting() {
   const e = getThemeEmoji();
