@@ -5019,6 +5019,8 @@ function toggleMulti(id, slot, dayKey) {
 function failMulti(id, slot, dayKey) {
   const h = state.habits.find(x => x.id === id);
   if (!h) return;
+  if (navigator.vibrate) navigator.vibrate(10);
+
   if (!state.completions[dayKey]) state.completions[dayKey] = {};
   const comp = state.completions[dayKey];
   const key = `multi-${id}-${slot}`;
@@ -5036,8 +5038,22 @@ function failMulti(id, slot, dayKey) {
     addHistoryPoint('earn', h.name + ' (провалено)', -h.points);
     showToast(`−${h.points} ${getThemeEmoji().points}`);
   }
-  save(); updateBalance(); renderToday();
-  checkAllDone();
+  save(); updateBalance();
+
+  // Анимация
+  const cardEl = document.querySelector(`.swipe-wrapper[data-key="multi-${id}-${slot}"]`);
+  if (cardEl) {
+    cardEl.style.transition = 'transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease';
+    cardEl.style.transform = 'translateY(20px)';
+    cardEl.style.opacity = '0';
+    setTimeout(() => {
+      renderToday();
+      checkAllDone();
+    }, 300);
+  } else {
+    renderToday();
+    checkAllDone();
+  }
 }
 
 /* ========== NUMERIC ========== */
@@ -5055,11 +5071,13 @@ function liveNumericCheck(id, dayKey) {
 function saveNumeric(id, dayKey) {
   const h = state.habits.find(x => x.id === id);
   if (!h) return;
-  if (navigator.vibrate) navigator.vibrate(10);
   const input = document.getElementById(`ninp-${id}`);
   if (!input) return;
   const v = parseFloat(input.value);
   if (isNaN(v)) { showToast('Введи число'); return; }
+  
+  if (navigator.vibrate) navigator.vibrate(10);
+
   if (!state.completions[dayKey]) state.completions[dayKey] = {};
   const comp = state.completions[dayKey];
   const key = `num-${id}`;
@@ -5084,12 +5102,28 @@ function saveNumeric(id, dayKey) {
     addHistoryPoint('earn', `${h.name}: ${v}`, -h.points, numericKey);
     showToast(`−${h.points} ${getThemeEmoji().points} Условие не выполнено`);
   }
-  save(); updateBalance(); renderToday();
-  checkAllDone();
+  save(); updateBalance();
+
+  // Анимация уезжания
+  const cardEl = document.querySelector(`.swipe-wrapper[data-key="num-${id}"]`);
+  if (cardEl) {
+    cardEl.style.transition = 'transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease';
+    cardEl.style.transform = 'translateY(20px)';
+    cardEl.style.opacity = '0';
+    setTimeout(() => {
+      renderToday();
+      checkAllDone();
+    }, 300);
+  } else {
+    renderToday();
+    checkAllDone();
+  }
 }
 function failNumeric(id, dayKey) {
   const h = state.habits.find(x => x.id === id);
   if (!h) return;
+  if (navigator.vibrate) navigator.vibrate(10);
+
   if (!state.completions[dayKey]) state.completions[dayKey] = {};
   const comp = state.completions[dayKey];
   const key = `num-${id}`;
@@ -5111,8 +5145,22 @@ function failNumeric(id, dayKey) {
     addHistoryPoint('earn', h.name + ' (провалено)', -h.points, numericKey);
     showToast(`−${h.points} ${getThemeEmoji().points} Провал`);
   }
-  save(); updateBalance(); renderToday();
-  checkAllDone();
+  save(); updateBalance();
+
+  // Анимация
+  const cardEl = document.querySelector(`.swipe-wrapper[data-key="num-${id}"]`);
+  if (cardEl) {
+    cardEl.style.transition = 'transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease';
+    cardEl.style.transform = 'translateY(20px)';
+    cardEl.style.opacity = '0';
+    setTimeout(() => {
+      renderToday();
+      checkAllDone();
+    }, 300);
+  } else {
+    renderToday();
+    checkAllDone();
+  }
 }
 
 /* ========== SWIPE + TAP ========== */
