@@ -2259,6 +2259,11 @@
     border-color: var(--pink) !important;
     box-shadow: 0 0 0 4px var(--glow-soft) !important;
   }
+  .card-fade-out {
+    transform: translateY(30px) !important;
+    opacity: 0 !important;
+    transition: all 0.3s ease !important;
+  }
 </style>
 </head>
 <body>
@@ -4911,13 +4916,31 @@ function toggleSimple(id, dayKey) {
     addBalance(h.points);
     addHistoryPoint('earn', h.name, +h.points);
   }
-  save(); updateBalance(); renderToday();
-  if (comp[key] === 'done') showToast(`+${h.points} ${getThemeEmoji().points}`);
-  checkAllDone();
+  save(); updateBalance();
+
+  // ▼▼▼ НОВАЯ ЛОГИКА АНИМАЦИИ ▼▼▼
+  const cardEl = document.querySelector(`.swipe-wrapper[data-key="simple-${id}"]`);
+  if (cardEl) {
+    cardEl.style.transition = 'transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease';
+    cardEl.style.transform = 'translateY(20px)';
+    cardEl.style.opacity = '0';
+    
+    setTimeout(() => {
+      renderToday();
+      if (comp[`simple-${id}`] === 'done') showToast(`+${h.points} ${getThemeEmoji().points}`);
+      checkAllDone();
+    }, 300); // Ждём, пока анимация закончится
+  } else {
+    renderToday();
+    if (comp[`simple-${id}`] === 'done') showToast(`+${h.points} ${getThemeEmoji().points}`);
+    checkAllDone();
+  }
 }
 function failSimple(id, dayKey) {
   const h = state.habits.find(x => x.id === id);
   if (!h) return;
+  if (navigator.vibrate) navigator.vibrate(10); // Вибрация
+
   if (!state.completions[dayKey]) state.completions[dayKey] = {};
   const comp = state.completions[dayKey];
   const key = `simple-${id}`;
@@ -4935,13 +4958,29 @@ function failSimple(id, dayKey) {
     addHistoryPoint('earn', h.name + ' (провалено)', -h.points);
     showToast(`−${h.points} ${getThemeEmoji().points}`);
   }
-  save(); updateBalance(); renderToday();
-  checkAllDone();
+  save(); updateBalance();
+
+  // ▼▼▼ АНИМАЦИЯ УЕЗЖАНИЯ ▼▼▼
+  const cardEl = document.querySelector(`.swipe-wrapper[data-key="simple-${id}"]`);
+  if (cardEl) {
+    cardEl.style.transition = 'transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease';
+    cardEl.style.transform = 'translateY(20px)';
+    cardEl.style.opacity = '0';
+    
+    setTimeout(() => {
+      renderToday();
+      checkAllDone();
+    }, 300);
+  } else {
+    renderToday();
+    checkAllDone();
+  }
 }
 function toggleMulti(id, slot, dayKey) {
   const h = state.habits.find(x => x.id === id);
   if (!h) return;
-  if (navigator.vibrate) navigator.vibrate(10);
+  if (navigator.vibrate) navigator.vibrate(10); // Вибрация
+
   if (!state.completions[dayKey]) state.completions[dayKey] = {};
   const comp = state.completions[dayKey];
   const key = `multi-${id}-${slot}`;
@@ -4957,9 +4996,25 @@ function toggleMulti(id, slot, dayKey) {
     addBalance(h.points);
     addHistoryPoint('earn', h.name, +h.points);
   }
-  save(); updateBalance(); renderToday();
-  if (comp[key] === 'done') showToast(`+${h.points} ${getThemeEmoji().points}`);
-  checkAllDone();
+  save(); updateBalance();
+
+  // ▼▼▼ АНИМАЦИЯ УЕЗЖАНИЯ ▼▼▼
+  const cardEl = document.querySelector(`.swipe-wrapper[data-key="multi-${id}-${slot}"]`);
+  if (cardEl) {
+    cardEl.style.transition = 'transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease';
+    cardEl.style.transform = 'translateY(20px)';
+    cardEl.style.opacity = '0';
+    
+    setTimeout(() => {
+      renderToday();
+      if (comp[key] === 'done') showToast(`+${h.points} ${getThemeEmoji().points}`);
+      checkAllDone();
+    }, 300);
+  } else {
+    renderToday();
+    if (comp[key] === 'done') showToast(`+${h.points} ${getThemeEmoji().points}`);
+    checkAllDone();
+  }
 }
 function failMulti(id, slot, dayKey) {
   const h = state.habits.find(x => x.id === id);
