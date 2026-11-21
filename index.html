@@ -2280,10 +2280,38 @@
     opacity: 0 !important;
     transition: all 0.3s ease !important;
   }
+  /* ============ СКРОЛЛ-БАР В ЦВЕТ ТЕМЫ ============ */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--pink);
+    border-radius: 10px;
+  }
+
+  /* ============ ФОН ЗВЕЗД ДЛЯ MOONLIGHT ============ */
+  #starsCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Под контентом (у .app z-index: 2) */
+    pointer-events: none;
+    display: none; /* По умолчанию скрыт */
+  }
+  
+  /* Показываем только в теме Moonlight */
+  [data-theme="midnight"] #starsCanvas {
+    display: block;
+  }
 </style>
 </head>
 <body>
 <canvas id="effectCanvas" aria-hidden="true"></canvas>
+<canvas id="starsCanvas" aria-hidden="true"></canvas>
 <!-- Splash Screen -->
 <div id="splash">
   <div id="splash-text">Princess Treatment</div>
@@ -8419,6 +8447,98 @@ themeModalObserver.observe(document.getElementById('themeModal'), { attributes: 
   }, 1500);
 })();
 </script>
+/* ============ ЗВЕЗДЫ ДЛЯ ТЕМЫ MOONLIGHT ============ */
+(function initStars() {
+  const canvas = document.getElementById('starsCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  let stars = [];
+  let rafId = null;
+  
+  // Проверка на уменьшение движения
+  const isReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * window.devicePixelRatio;
+    canvas.height = H * window.devicePixelRatio;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    
+    // Создаём звезды (1 на каждые 8000 квадратных пикселей, чтобы не перегружать)
+    const count = Math.round((W * H) / 8000);
+    stars = [];
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        size: Math.random() * 1.5 + 0.5, // Размер от 0.5 до 2 px
+        phase: Math.random() * Math.PI * 2, // Случайная фаза для мерцания
+        speed: 0.5 + Math.random() * 1.5 // Скорость мерцания
+      });
+    }
+  }
+
+  function draw(time) {
+    ctx.clearRect(0, 0, W, H);
+    if (!isReduced) {
+      const t = time / 1000; // Переводим в секунды
+      stars.forEach(s => {
+        // Мерцание: прозрачность плавно меняется от 0.2 до 0.9
+        const opacity = 0.2 + Math.abs(Math.sin(t * s.speed + s.phase)) * 0.7;
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+    rafId = requestAnimationFrame(draw);
+  }
+
+  function start() {
+    if (rafId !== null) return;
+    resize();
+    if (isReduced) {
+      // Если анимации отключены, просто рисуем статичные звезды
+      stars.forEach(s => {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    } else {
+      rafId = requestAnimationFrame(draw);
+    }
+  }
+
+  function stop() {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    ctx.clearRect(0, 0, W, H);
+  }
+
+  // Следим за сменой темы
+  const observer = new MutationObserver(() => {
+    const theme = document.documentElement.getAttribute('data-theme');
+    if (theme === 'midnight') start();
+    else stop();
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  window.addEventListener('resize', () => {
+    if (document.documentElement.getAttribute('data-theme') === 'midnight') {
+      resize();
+    }
+  });
+
+  // Запускаем при загрузке, если тема уже Moonlight
+  if (document.documentElement.getAttribute('data-theme') === 'midnight') start();
+})();
 <script>
 // ============ SERVICE WORKER ============
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
