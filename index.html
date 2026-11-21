@@ -2038,23 +2038,39 @@
   .tab .icon { font-size: 20px !important; }
   
   /* ============ ЖЁСТКАЯ ФИКСАЦИЯ ШРИФТА НА ГЛАВНОМ ЭКРАНЕ ============ */
+  
+  /* ЗАПРЕЩАЕМ БРАУЗЕРУ САМОВОЛЬНО УВЕЛИЧИВАТЬ ТЕКСТ */
+  .card, .habit-info {
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+  }
+
   .habit-name { 
     font-family: 'Quicksand', sans-serif !important;
-    font-size: 14px !important; /* Чуть уменьшили, чтобы точно как на 1 скрине */
+    font-size: 13px !important; /* Уменьшили до 13px, чтобы точно влезало в узкий экран */
     font-weight: 700 !important;
     line-height: 1.2 !important;
+    
+    /* Запрещаем тексту вылезать за пределы карточки */
+    white-space: normal !important;
+    word-break: normal !important; 
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
   
   .habit-meta { 
     font-family: 'Quicksand', sans-serif !important;
     font-size: 10px !important; 
     font-weight: 600 !important;
+    flex-wrap: wrap !important; /* Разрешаем бейджам переноситься на новую строку */
   }
   
   .badge, .done-badge { 
     font-family: 'Quicksand', sans-serif !important;
     font-size: 9px !important;
     font-weight: 600 !important;
+    white-space: nowrap !important;
   }
   
   /* Фиксируем и остальные элементы, чтобы они не прыгали */
