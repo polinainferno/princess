@@ -4260,7 +4260,6 @@ const TIMES = ['Утро', 'День', 'Вечер', 'Ночь'];
 function isHabitScheduled(habit, date) {
   const d = new Date(date); d.setHours(0,0,0,0);
   const key = dateKey(d);
-
   if (habit.createdAt && key < habit.createdAt) return false;
 
   // 1. Попадает ли он в расписание на СЕГОДНЯ (без учёта выполнений)?
@@ -4282,14 +4281,11 @@ function isHabitScheduled(habit, date) {
     default: scheduledToday = false;
   }
 
-  // Если это обычный ритуал или "до победного" не включён — просто возвращаем результат
   if (!habit.untilDone || habit.freq === 'daily' || habit.freq === 'multi') {
     return scheduledToday;
   }
 
-  // === ЛОГИКА ДЛЯ "ДО ПОБЕДНОГО" (weekly, monthly, once) ===
-
-  // Если сегодня день старта цикла — показываем в любом случае
+  // 2. Логика "Открытой даты" (висит, пока не выполнено)
   if (scheduledToday) return true;
 
   const completions = state.completions || {};
@@ -4305,69 +4301,63 @@ function isHabitScheduled(habit, date) {
     return comp[`simple-${habit.id}`] === 'done';
   };
 
-  // --- Для weekly ---
+  // Проверяем, выполнен ли он ВООБЩЕ в период с начала цикла до сегодня
+  let cycleStartDate = null;
+
   if (habit.freq === 'weekly') {
     const weekdays = habit.weekdays || [];
     if (weekdays.length === 0) return false;
-
-    // Ищем последний прошедший день из расписания (не сегодня)
-    const wdToday = (d.getDay() + 6) % 7;
+    // Ищем последний прошедший день расписания
     for (let i = 1; i <= 7; i++) {
       const prev = new Date(d);
       prev.setDate(prev.getDate() - i);
       const prevWd = (prev.getDay() + 6) % 7;
       if (weekdays.includes(prevWd)) {
-        // Нашли последний день цикла. Если он НЕ выполнен — висит.
-        return !isDoneOn(dateKey(prev));
+        cycleStartDate = prev;
+        break;
       }
     }
-    return false;
-  }
-
-  // --- Для monthly ---
-  if (habit.freq === 'monthly') {
+  } else if (habit.freq === 'monthly') {
     const days = (habit.monthlyDays || [habit.monthlyDay || 1]).slice().sort((a,b)=>a-b);
     if (days.length === 0) return false;
     const currentDay = d.getDate();
-
-    // Ищем последнее прошедшее число в этом месяце
-    let lastDayThisMonth = null;
+    let lastDay = null;
     for (let i = days.length - 1; i >= 0; i--) {
-      if (days[i] < currentDay) { lastDayThisMonth = days[i]; break; }
+      if (days[i] < currentDay) { lastDay = days[i]; break; }
     }
-
-    let lastDate = null;
-    if (lastDayThisMonth !== null) {
-      lastDate = new Date(d.getFullYear(), d.getMonth(), lastDayThisMonth);
+    if (lastDay !== null) {
+      cycleStartDate = new Date(d.getFullYear(), d.getMonth(), lastDay);
     } else {
-      // Иначе — последнее число в прошлом месяце
       const prevMonth = new Date(d.getFullYear(), d.getMonth() - 1, 1);
       const daysInPrev = new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate();
       for (let i = days.length - 1; i >= 0; i--) {
         if (days[i] <= daysInPrev) {
-          lastDate = new Date(prevMonth.getFullYear(), prevMonth.getMonth(), days[i]);
+          cycleStartDate = new Date(prevMonth.getFullYear(), prevMonth.getMonth(), days[i]);
           break;
         }
       }
     }
-
-    if (lastDate) {
-      return !isDoneOn(dateKey(lastDate));
+  } else if (habit.freq === 'once') {
+    if (habit.onceDate && key > habit.onceDate) {
+      cycleStartDate = new Date(habit.onceDate);
     }
-    return false;
   }
 
-  // --- Для once ---
-  if (habit.freq === 'once') {
-    if (!habit.onceDate) return false;
-    // Если дата уже прошла, а ритуал не выполнен — висит
-    if (key > habit.onceDate) {
-      return !isDoneOn(habit.onceDate);
+  if (!cycleStartDate) return false;
+
+  // Теперь проверяем: есть ли галочка за ЛЮБОЙ день с начала цикла до сегодня?
+  // Если есть — значит, задача выполнена, и висеть не должна.
+  const checkDate = new Date(cycleStartDate);
+  const today = new Date(d);
+  while (checkDate <= today) {
+    if (isDoneOn(dateKey(checkDate))) {
+      return false; // Выполнено в этом цикле — не показываем
     }
-    return false;
+    checkDate.setDate(checkDate.getDate() + 1);
   }
 
-  return false;
+  // Если дошли до сюда — за весь цикл галочки нет, значит, висит
+  return true;
 }
 
 function freqToText(h) {
@@ -8549,3 +8539,4 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 </script>
 </body>
 </html>
+
