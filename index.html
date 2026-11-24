@@ -2039,19 +2039,31 @@
   
   /* ============ ЖЁСТКАЯ ФИКСАЦИЯ ШРИФТА НА ГЛАВНОМ ЭКРАНЕ ============ */
   
-  /* ЗАПРЕЩАЕМ БРАУЗЕРУ САМОВОЛЬНО УВЕЛИЧИВАТЬ ТЕКСТ */
-  .card, .habit-info {
+  /* ГЛОБАЛЬНЫЙ ЗАПРЕТ НА УВЕЛИЧЕНИЕ ТЕКСТА БРАУЗЕРОМ */
+  body, .app, .card, .habit-info, .habit-name, .habit-meta, .badge, .done-badge, .greeting-text, .plan-title, .balance-label, .balance-value .pts-num {
     -webkit-text-size-adjust: 100% !important;
     text-size-adjust: 100% !important;
   }
 
+  .greeting-text { 
+    font-size: 22px !important; 
+    font-family: 'Pacifico', cursive !important; 
+  }
+  
+  .plan-title { 
+    font-size: 15px !important; 
+    font-family: 'Pacifico', cursive !important; 
+  }
+  
+  .balance-label { font-size: 11px !important; }
+  .balance-value .pts-num { font-size: 36px !important; font-family: 'Quicksand', sans-serif !important; }
+  .balance-value .pts-emoji { font-size: 20px !important; }
+
   .habit-name { 
     font-family: 'Quicksand', sans-serif !important;
-    font-size: 13px !important; /* Уменьшили до 13px, чтобы точно влезало в узкий экран */
+    font-size: 13px !important; 
     font-weight: 700 !important;
     line-height: 1.2 !important;
-    
-    /* Запрещаем тексту вылезать за пределы карточки */
     white-space: normal !important;
     word-break: normal !important; 
     overflow-wrap: break-word !important;
@@ -2063,7 +2075,7 @@
     font-family: 'Quicksand', sans-serif !important;
     font-size: 10px !important; 
     font-weight: 600 !important;
-    flex-wrap: wrap !important; /* Разрешаем бейджам переноситься на новую строку */
+    flex-wrap: wrap !important; 
   }
   
   .badge, .done-badge { 
@@ -2073,10 +2085,8 @@
     white-space: nowrap !important;
   }
   
-  /* Фиксируем и остальные элементы, чтобы они не прыгали */
-  .greeting-text { font-size: 22px !important; font-family: 'Pacifico', cursive !important; }
-  .plan-title { font-size: 15px !important; font-family: 'Pacifico', cursive !important; }
-  .balance-value .pts-num { font-size: 36px !important; font-family: 'Quicksand', sans-serif !important; }
+  .tab { font-size: 9px !important; }
+  .tab .icon { font-size: 20px !important; }
   
   /* ============ ЖЁСТКИЙ ФИКС КАРТОЧЕК ТЕМ ============ */
   /* Сама сетка */
